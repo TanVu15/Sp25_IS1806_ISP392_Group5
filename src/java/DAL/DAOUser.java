@@ -179,7 +179,7 @@ public class DAOUser {
                 u.setDeletedAt(rs.getDate("DeletedAt"));
                 
                 // Lấy thông tin người tạo 
-                Users userCreate = DAO.INSTANCE.getUserByID(u.getCreateBy());
+                Users userCreate = DAO.INSTANCE.getUserByID(u.getCreateBy()); 
 
                 // Chuyển thông tin của user thành một chuỗi
                 String userData = (u.getUsername() + " "
