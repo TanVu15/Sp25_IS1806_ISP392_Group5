@@ -59,7 +59,7 @@ public class DeleteCustomerServlet extends HttpServlet {
         
         try {
             DAOCustomers.INSTANCE.deleteCustomers(deleteid,userid); // Gọi phương thức xóa người dùng
-            response.sendRedirect("listusers"); // Chuyển hướng về danh sách người dùng
+            response.sendRedirect("listcustomer"); // Chuyển hướng về danh sách người dùng
         } catch (Exception e) {
             e.printStackTrace();
         }

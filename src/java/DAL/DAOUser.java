@@ -187,10 +187,20 @@ public class DAOUser {
                         + u.getRoleid() + " "
                         + u.getFullName() + " "
                         + u.getCreateAt() + " "
-                        + u.getCreateBy() + " "
+                        + userCreate.getFullName().toLowerCase()+ " "
                         + u.getIsDelete() + " "
                         + u.getDeleteBy() + " "
                         + u.getDeletedAt()).toLowerCase(); // Chuyển về chữ thường để tránh phân biệt hoa/thường
+                
+                //Lấy thông tin người xóa nếu có
+                if (u.getIsDelete() != 0) {
+                    Users userDelete = DAO.INSTANCE.getUserByID(u.getDeleteBy());
+                    userData += ("ban" + u.getIsDelete() + " "
+                            + u.getDeletedAt() + " "
+                            + userDelete.getFullName().toLowerCase());
+                }else{
+                    userData += "active";
+                }
 
                 // Kiểm tra nếu information xuất hiện trong bất kỳ trường nào của user
                 if (userData.contains(information.toLowerCase())) {

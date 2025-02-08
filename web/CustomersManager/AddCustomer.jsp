@@ -1,6 +1,6 @@
 <%-- 
-    Document   : register
-    Created on : Feb 3, 2025, 9:34:47 PM
+    Document   : AddCustomer
+    Created on : Feb 8, 2025, 7:54:20 PM
     Author     : ADMIN
 --%>
 
@@ -9,29 +9,28 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Register</title>
+        <title>Add Customers</title>
     </head>
     <body>
-        <h2>Register</h2>
-        <form action="register" method="post">
+        <h2>Add Customers</h2>
+        <form action="addcustomer" method="post">
             <table border="0">
                 <tbody>
                     <tr>
-                        <td>Username:</td>
+                        <td>Name</td>
                         <td> <input type="text" name="name" required></td>
                     </tr>
                     <tr>
-                        <td>Password:</td>
-                        <td><input type="password" name="password" required></td>
+                        <td>Phone:</td>
+                        <td><input type="text" name="phone" required></td>
                     </tr>
                     <tr>
-                        <td>Recheck Password:</td>
-                        <td><input type="password" name="password2" required></td>
+                        <td>Address:</td>
+                        <td><input type="text" name="address" required></td>
                     </tr>
-                <input type="hidden" name="role" value=$>
                 </tbody>
             </table>
-            <input type="submit" value="Register">
+            <input type="submit" value="Add">
             <%
             String errorMessage = (String) request.getAttribute("errorMessage");
             if (errorMessage != null) {
@@ -40,7 +39,7 @@
             <%
                 }
             %>
-            <button onclick="location.href = 'listusers'">Back to User List</button>
+            <button onclick="location.href = 'listcustomers'">Back to Customer List</button>
         </form>
     </body>
 </html>

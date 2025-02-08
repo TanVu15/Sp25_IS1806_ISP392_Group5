@@ -111,6 +111,22 @@ public class DAOCustomers {
         }
         return null;
     }
+    
+    public void AddCustomer(Customers customer, int userid) {
+        String sql = "INSERT INTO Customers (Name, Phone, Address, CreateAt, CreateBy, isDelete) VALUES ( ?, ?, ?, ?, ?, ?) ";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, customer.getName());
+            ps.setString(2, customer.getPhone());
+            ps.setString(3, customer.getAddress());
+            ps.setDate(4, today);
+            ps.setInt(5, userid);
+            ps.setInt(6, 0);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 
     public ArrayList<Customers> getCustomersBySearch(String information) throws Exception {
         information = information.toLowerCase();

@@ -6,6 +6,7 @@
 
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Model.Customers" %>
+<%@ page import="Model.Users" %>
 <%@ page import="DAL.DAOCustomers" %>
 <%@ page import="DAL.DAOUser" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -48,7 +49,8 @@
                 <th>action </th>
             </tr>
             <%  
-                DAOUser daouser = new DAOUser();
+                DAOUser dao = new DAOUser();
+                Users u = (Users) request.getAttribute("user");
                 ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
                 for (Customers cus : customers) {
             %>
@@ -60,7 +62,7 @@
                 <td><%= cus.getAddress() %></td>
                 <td><%= cus.getCreateAt() %></td>
                 <td><%= cus.getUpdateAt() %></td>
-                <td><%= daouser.getUserByID(cus.getCreateBy()).getFullName() %></td>
+                <td><%= dao.getUserByID(cus.getCreateBy()).getFullName() %></td>
                 <td>
                     <% if (cus.getIsDelete() == 0) { %>
                     Active
@@ -74,12 +76,12 @@
                     <% if (cus.getIsDelete() == 0) { %>
                     Null
                     <% } else { %>
-                    <%= daouser.getUserByID(cus.getDeleteBy()).getFullName() %>
+                    <%= dao.getUserByID(cus.getDeleteBy()).getFullName() %>
                     <% } %>
                 </td>
                 <td>
                     <button onclick="window.location.href = 'updatecustomer?id=<%= cus.getID() %>'">Edit</button>
-                    <button onclick="window.location.href = 'deletecustomer?deleteid=<%= user.getID() %>&userid=<%= u.getID() %>'">
+                    <button onclick="window.location.href = 'deletecustomer?deleteid=<%= cus.getID() %>&userid=<%= u.getID() %>'">
                         Ban
                     </button>
                 </td>
@@ -90,7 +92,7 @@
         </table>
         <br>
         <div>
-            <button onclick="location.href = 'InsertUser'">Insert Customer</button>
+            <button onclick="location.href = 'addcustomer'">Insert Customer</button>
             <button onclick="location.href = 'Admin/Admin.jsp'">Back to Admin</button>
         </div>
     </body>

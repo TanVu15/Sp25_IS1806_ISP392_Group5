@@ -16,5 +16,6 @@
         
         <a href="../register">Register</a>
         <a href="../listusers">List Users</a>
+        <a href="../listcustomers">List Customers</a>
     </body>
 </html>

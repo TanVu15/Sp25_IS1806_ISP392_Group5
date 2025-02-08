@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -81,15 +83,21 @@ public class ListUsersServlet extends HttpServlet {
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
         
-        ArrayList<Users> users = dao.getUsersBySearch(information);
-
-        if (users == null || users.isEmpty()) {
+        ArrayList<Users> users;
+        try {
+            users = dao.getUsersBySearch(information);
+            if (users == null || users.isEmpty()) {
             request.setAttribute("message", "Không tìm thấy kết quả nào.");
             users = dao.getUsers();
             request.setAttribute("users", users);
         } else {
             request.setAttribute("users", users);
         }
+        } catch (Exception ex) {
+            Logger.getLogger(ListUsersServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsers.jsp");
         requestDispatcher.forward(request, response);

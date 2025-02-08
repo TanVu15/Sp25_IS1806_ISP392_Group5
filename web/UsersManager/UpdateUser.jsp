@@ -43,7 +43,7 @@
             }
         %>
         
-        <button onclick="window.location.href='listuser'">Back to User List</button>
+        <button onclick="window.location.href='listusers'">Back to User List</button>
         <button onclick="location.href = '${pageContext.request.contextPath}/logout'">Logout</button>
     </form>
 </html>

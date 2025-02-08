@@ -36,6 +36,10 @@
         <servlet-name>UpdateCustomerServlet</servlet-name>
         <servlet-class>Controller.CustomersManager.UpdateCustomerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddCustomerServlet</servlet-name>
+        <servlet-class>Controller.CustomersManager.AddCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -67,5 +71,9 @@
     <servlet-mapping>
         <servlet-name>UpdateCustomerServlet</servlet-name>
         <url-pattern>/updatecustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCustomerServlet</servlet-name>
+        <url-pattern>/addcustomer</url-pattern>
     </servlet-mapping>
 </web-app>
