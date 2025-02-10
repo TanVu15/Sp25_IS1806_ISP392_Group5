@@ -100,4 +100,8 @@
         <servlet-name>ListCustomerDebtRecordsServlet</servlet-name>
         <url-pattern>/listcustomerdebtrecords</url-pattern>
     </servlet-mapping>
+    
+    <welcome-file-list>
+        <welcome-file>HomePage/Home.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>
