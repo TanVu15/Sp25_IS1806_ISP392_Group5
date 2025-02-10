@@ -4,6 +4,7 @@
  */
 package DAL;
 
+import Model.Customers;
 import Model.DebtRecords;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -83,7 +84,7 @@ public class DAODebtRecords {
 }
 
 
-    public void AddDebtRecords(DebtRecords debtrecords, int userid) {
+    public void AddDebtRecords(DebtRecords debtrecords, int userid) throws Exception {
         String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, debtrecords.getCustomerID());
@@ -97,6 +98,18 @@ public class DAODebtRecords {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
+        
+        //Lấy wallet để update cus
+        Customers customer = DAOCustomers.INSTANCE.getCustomersByID(debtrecords.getCustomerID());
+        
+        int wallet = customer.getWallet();
+        if(debtrecords.getPaymentStatus()==1){
+            wallet += debtrecords.getAmountOwed();
+        }else{
+            wallet -= debtrecords.getAmountOwed();
+        }
+        customer.setWallet(wallet);
+        DAOCustomers.INSTANCE.setCustomerWallet(customer);
     }
 
     public void deleteDebtRecords(int deleteid, int userid) {

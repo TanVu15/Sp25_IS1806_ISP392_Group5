@@ -3,23 +3,28 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/ISP/ISP/web/DebtRecordsManager/AddDebtRecord.jsp</file>
             <file>file:/D:/ISP/ISP/web/WEB-INF/web.xml</file>
-            <file>file:/D:/ISP/ISP/web/UsersManager/ListUsers.jsp</file>
-            <file>file:/D:/ISP/ISP/src/java/Controller/UsersManager/ListUsersServlet.java</file>
             <file>file:/D:/ISP/ISP/web/CustomersManager/UpdateCustomer.jsp</file>
-            <file>file:/D:/ISP/ISP/src/java/Controller/UsersManager/DeleteUserServlet.java</file>
-            <file>file:/D:/ISP/ISP/web/HomePage/Home.jsp</file>
+            <file>file:/D:/ISP/ISP/src/java/Model/Customers.java</file>
             <file>file:/D:/ISP/ISP/src/java/DAL/DAOCustomers.java</file>
-            <file>file:/D:/ISP/ISP/web/Admin/Admin.jsp</file>
+            <file>file:/D:/ISP/ISP/web/DebtRecordsManager/ListCustomerDebtRecords.jsp</file>
+            <file>file:/D:/ISP/ISP/web/DebtRecordsManager/ListDebtRecords.jsp</file>
             <file>file:/D:/ISP/ISP/web/CustomersManager/ListCustomers.jsp</file>
+            <file>file:/D:/ISP/ISP/src/java/Controller/Login/LoginServlet.java</file>
             <file>file:/D:/ISP/ISP/src/java/DAL/DAOUser.java</file>
+            <file>file:/D:/ISP/ISP/src/java/DAL/DAODebtRecords.java</file>
+            <file>file:/D:/ISP/ISP/src/java/Controller/DebtRecordsManager/ListDebtRecordsServlet.java</file>
             <file>file:/D:/ISP/ISP/src/java/Controller/CustomersManager/UpdateCustomerServlet.java</file>
-            <file>file:/D:/ISP/ISP/src/java/DAL/DAO.java</file>
-            <file>file:/D:/ISP/ISP/web/UsersManager/UpdateUser.jsp</file>
+            <file>file:/D:/ISP/ISP/src/java/Controller/DebtRecordsManager/AddDebtRecordsServlet.java</file>
+            <file>file:/D:/ISP/ISP/src/java/Model/DebtRecords.java</file>
+            <file>file:/D:/ISP/ISP/src/java/Controller/DebtRecordsManager/ListCustomerDebtRecordsServlet.java</file>
             <file>file:/D:/ISP/ISP/src/java/Controller/CustomersManager/ListCustomersServlet.java</file>
             <file>file:/D:/ISP/ISP/src/java/Controller/CustomersManager/AddCustomerServlet.java</file>
             <file>file:/D:/ISP/ISP/web/CustomersManager/AddCustomer.jsp</file>
+            <file>file:/D:/ISP/ISP/web/UsersManager/UpdateUser.jsp</file>
             <file>file:/D:/ISP/ISP/src/java/Controller/CustomersManager/DeleteCustomerServlet.java</file>
+            <file>file:/D:/ISP/ISP/src/java/Controller/UsersManager/RegisterServlet.java</file>
             <file>file:/D:/ISP/ISP/web/UsersManager/register.jsp</file>
         </group>
     </open-files>
