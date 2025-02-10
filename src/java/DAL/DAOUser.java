@@ -184,13 +184,21 @@ public class DAOUser {
                 // Chuyển thông tin của user thành một chuỗi
                 String userData = (u.getUsername() + " "
                         + u.getPasswordHash() + " "
-                        + u.getRoleid() + " "
                         + u.getFullName() + " "
                         + u.getCreateAt() + " "
-                        + userCreate.getFullName().toLowerCase()+ " "
-                        + u.getIsDelete() + " "
-                        + u.getDeleteBy() + " "
-                        + u.getDeletedAt()).toLowerCase(); // Chuyển về chữ thường để tránh phân biệt hoa/thường
+                        + userCreate.getFullName().toLowerCase()+ " ") ;
+                
+                
+                //Lấy role 
+                if(u.getRoleid()==1){
+                    userData+="admin ";
+                }
+                if(u.getRoleid()==2){
+                    userData+="owner ";
+                }
+                if(u.getRoleid()==3){
+                    userData+="staff ";
+                }
                 
                 //Lấy thông tin người xóa nếu có
                 if (u.getIsDelete() != 0) {
@@ -203,7 +211,7 @@ public class DAOUser {
                 }
 
                 // Kiểm tra nếu information xuất hiện trong bất kỳ trường nào của user
-                if (userData.contains(information.toLowerCase())) {
+                if (userData.toLowerCase().contains(information.toLowerCase())) {
                     users.add(u);
                 }
             }

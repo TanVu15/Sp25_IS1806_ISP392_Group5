@@ -171,7 +171,7 @@ public class DAOCustomers {
                 }
 
                 // Kiểm tra nếu information xuất hiện trong dữ liệu khách hàng
-                if (customerData.contains(information.toLowerCase())) {
+                if (customerData.toLowerCase().contains(information.toLowerCase())) {
                     customers.add(cs);
                 }
             }
