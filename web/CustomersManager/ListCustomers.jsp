@@ -84,6 +84,9 @@
                     <button onclick="window.location.href = 'deletecustomer?deleteid=<%= cus.getID() %>&userid=<%= u.getID() %>'">
                         Ban
                     </button>
+                    <button onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= cus.getID() %>'">
+                        Công nợ
+                    </button>   
                 </td>
             </tr>
             <%

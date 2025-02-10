@@ -40,6 +40,18 @@
         <servlet-name>AddCustomerServlet</servlet-name>
         <servlet-class>Controller.CustomersManager.AddCustomerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddDebtRecordsServlet</servlet-name>
+        <servlet-class>Controller.DebtRecordsManager.AddDebtRecordsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListDebtRecordsServlet</servlet-name>
+        <servlet-class>Controller.DebtRecordsManager.ListDebtRecordsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListCustomerDebtRecordsServlet</servlet-name>
+        <servlet-class>Controller.DebtRecordsManager.ListCustomerDebtRecordsServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -75,5 +87,17 @@
     <servlet-mapping>
         <servlet-name>AddCustomerServlet</servlet-name>
         <url-pattern>/addcustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddDebtRecordsServlet</servlet-name>
+        <url-pattern>/adddebtrecords</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListDebtRecordsServlet</servlet-name>
+        <url-pattern>/listdebtrecords</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListCustomerDebtRecordsServlet</servlet-name>
+        <url-pattern>/listcustomerdebtrecords</url-pattern>
     </servlet-mapping>
 </web-app>

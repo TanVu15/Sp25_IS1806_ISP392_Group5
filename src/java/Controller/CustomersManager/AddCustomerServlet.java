@@ -35,11 +35,6 @@ public class AddCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DAOCustomers dao = new DAOCustomers();
-        Customers cus = new Customers();
-        HttpSession session = request.getSession();
-        cus = (Customers) session.getAttribute("cus");
-
         RequestDispatcher dispatcher = request.getRequestDispatcher("CustomersManager/AddCustomer.jsp");
         dispatcher.forward(request, response);
     }

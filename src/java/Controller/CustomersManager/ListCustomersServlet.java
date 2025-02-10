@@ -82,9 +82,7 @@ public class ListCustomersServlet extends HttpServlet {
         requestDispatcher.forward(request, response);
         } catch (Exception ex) {
             Logger.getLogger(ListCustomersServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        
+        }    
     }
 
     /** 
