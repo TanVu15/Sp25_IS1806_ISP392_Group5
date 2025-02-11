@@ -19,34 +19,7 @@
         <title>Trang chủ Quản lý</title>
         <link rel="stylesheet" href="css/home2.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <script>
-            function openModal(code, name, wallet, phone, address, createAt, updateAt, createBy, isDelete, deleteAt, deleteBy) {
-                document.getElementById('modal-product-code').innerText = code;
-                document.getElementById('modal-product-name').innerText = name;
-                document.getElementById('modal-product-wallet').innerText = wallet;
-                document.getElementById('modal-product-phone').innerText = phone;
-                document.getElementById('modal-product-address').innerText = address;
-                document.getElementById('modal-product-create-at').innerText = createAt;
-                document.getElementById('modal-product-update-at').innerText = updateAt;
-                document.getElementById('modal-product-create-by').innerText = createBy;
-                document.getElementById('modal-product-is-delete').innerText = isDelete;
-                document.getElementById('modal-product-delete-at').innerText = deleteAt;
-                document.getElementById('modal-product-delete-by').innerText = deleteBy;
-
-                document.getElementById('product-detail-modal').style.display = 'block';
-            }
-
-            function closeModal() {
-                document.getElementById('product-detail-modal').style.display = 'none';
-            }
-
-            window.onclick = function (event) {
-                const modal = document.getElementById('product-detail-modal');
-                if (event.target === modal) {
-                    closeModal();
-                }
-            }
-        </script>
+        
     </head>
 
     <body>
@@ -57,7 +30,7 @@
                                 
         %>
         <div class="header">
-            <div class="container">
+      s      <div class="container">
                 <img src="Image/logo.png" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
