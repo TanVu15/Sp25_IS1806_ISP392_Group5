@@ -60,6 +60,60 @@
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="" class="navbar__info--item">Đăng xuất</a>
+        </div>
+    </div>
+    <div class="body">
+        <div class="body-container">
+            <!-- Menu sidebar  -->
+            <div class="mainmenu">
+                <ul class="mainmenu-list row no-gutters">
+                    <li class="mainmenu__list-item">
+                        <a href="">
+                            <i class="fa-solid fa-bowl-rice list-item-icon"></i>
+                            Sản Phẩm
+                        </a>
+                    </li>
+                    <li class="mainmenu__list-item">
+                        <a href="">
+                            <i class="fa-solid fa-box list-item-icon"></i>
+                            Kho
+                        </a>
+                    </li>
+                    <li class="mainmenu__list-item">
+                        <a href="">
+                            <i class="fa-solid fa-dollar-sign list-item-icon"></i>
+                            Bán Hàng
+                        </a>
+                    </li>
+                    <li class="mainmenu__list-item">
+                        <a href="">
+                            <i class="fa-solid fa-person list-item-icon"></i>
+                            Khách Hàng
+                        </a>
+                    </li>
+                    <li class="mainmenu__list-item">
+                        <a href="">
+                            <i class="fa-solid fa-wallet list-item-icon"></i>
+                            Công Nợ
+                        </a>
+                    </li>
+                    <li class="mainmenu__list-item">
+                        <a href="">
+                            <i class="fa-solid fa-user list-item-icon"></i>
+                            Tài Khoản
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- HomePage Body -->
+            <div class="homepage-body">
+                <div class="body-head">
+                    <h3 class="body__head-title">Thông tin sản phẩm</h3>
+                    <div class="search-container">
+                        <input type="text" placeholder="Tìm kiếm sản phẩm..." class="search-input">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+>>>>>>> origin/master
                     </div>
                 </div>
             </div>
