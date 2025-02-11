@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,28 +44,35 @@ public class UpdateUserServlet extends HttpServlet {
             throws ServletException, IOException {
 
         // Lấy thông tin người dùng từ form
-        
         int userid = Integer.parseInt(request.getParameter("id"));
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String password2 = request.getParameter("password2");
-        if (!password.endsWith(password2)) {
-            request.setAttribute("errorMessage", "Please check again your password. Please enter a different name.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
-            dispatcher.forward(request, response);
-            return;
+        Users user;
+        try {
+            user = DAOUser.INSTANCE.getUserByID(userid);
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+            String password2 = request.getParameter("password2");
+
+            String fullname = request.getParameter("fullname");
+            request.setAttribute("user", user);
+            // Cập nhật người dùng trong database
+
+            user.setPasswordHash(password2);
+            user.setFullName(fullname);
+
+            if (!password.endsWith(password2)) {
+                request.setAttribute("errorMessage", "Please check again your password. Please enter a different name.");
+                request.setAttribute("user", user);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/UpdateUser.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
+            DAOUser.INSTANCE.updateUser(user);
+            // Chuyển hướng tới trang danh sách người dùng sau khi cập nhật thành công
+            response.sendRedirect("listusers");
+        } catch (Exception ex) {
+            Logger.getLogger(UpdateUserServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String fullname = request.getParameter("fullname");
 
-        // Cập nhật người dùng trong database
-        Users user = new Users();
-        user.setID(userid);
-        user.setPasswordHash(password2);
-        user.setFullName(fullname);
-        DAOUser.INSTANCE.updateUser(user);
-
-        // Chuyển hướng tới trang danh sách người dùng sau khi cập nhật thành công
-        response.sendRedirect("listusers");
     }
 
     @Override

@@ -71,9 +71,10 @@ public class AddDebtRecordsServlet extends HttpServlet {
         } catch (Exception ex) {
             Logger.getLogger(AddDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         int amountOwed = Integer.parseInt(request.getParameter("amountowed"));
         int paymentStatus = Integer.parseInt(request.getParameter("paymentstatus"));
-
+        String note = request.getParameter("note");
         Users user = new Users();
         HttpSession session = request.getSession();
         user = (Users) session.getAttribute("user");
@@ -85,7 +86,7 @@ public class AddDebtRecordsServlet extends HttpServlet {
                 debtRecord.setCustomerID(customerID);
                 debtRecord.setAmountOwed(amountOwed);
                 debtRecord.setPaymentStatus(paymentStatus);
-
+                debtRecord.setNote(note);
                 dao.AddDebtRecords(debtRecord, user.getID());
                 response.sendRedirect("listcustomerdebtrecords?customerid=" + customerID);
             } else {
