@@ -103,7 +103,14 @@ public class DAODebtRecords {
         }
        
         Customers customer = DAOCustomers.INSTANCE.getCustomersByID(debtrecords.getCustomerID());
-        
+        long startTime = System.currentTimeMillis();
+        long duration = 1000; // 10 seconds in milliseconds
+
+        while (true) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - startTime >= duration) {
+                break;
+            }}
         int wallet = customer.getWallet();
         if(debtrecords.getPaymentStatus()==1){
             wallet += debtrecords.getAmountOwed();

@@ -106,6 +106,7 @@
                         <button class="pagination-button" id="prev-button" onclick="prevPage()">Trước</button>
                         <span class="pagination-info">Trang <span class="current-page" id="current-page">1</span> / <span class="total-pages" id="total-pages">5</span></span>
                         <button class="pagination-button" id="next-button" onclick="nextPage()">Sau</button>
+                        <button class="action-button" onclick="window.location.href = 'adddebtrecords?customerid=<%= customer.getID() %>'">Thêm công nợ</button>
                     </div>
                 </div>
             </div>
