@@ -188,19 +188,34 @@ public class DAOProducts {
         }
         return products;
     }
+    
+ 
 
     public static void main(String[] args) throws Exception {
 
         DAOProducts dao = DAOProducts.INSTANCE;
-        //ArrayList<Products> productList = dao.getAllProducts();
+        ArrayList<Products> productList = dao.getAllProducts();
 
-        //for (Products product : productList) {
-        //    System.out.println(product);
-        //}
+        for (Products product : productList) {
+            System.out.println(product);
+        }
         //dao.deleteProducts(3, 1);
         //Products updatedProduct = new Products(1, "Laptop Dell XPS", "Mô tả mới", 2500, 10, today, today, 1, 0, null, 0);
         //dao.updateProducts(updatedProduct);
         System.out.println(dao.getProductByID(3));
+        
+        // Kiểm tra tính năng tìm kiếm
+    String searchKeyword = "A"; // Thay đổi từ khóa tìm kiếm theo ý muốn
+    ArrayList<Products> searchResults = dao.getProductsBySearch(searchKeyword);
+    
+    if (searchResults.isEmpty()) {
+        System.out.println("Không tìm thấy sản phẩm nào với từ khóa: " + searchKeyword);
+    } else {
+        System.out.println("Kết quả tìm kiếm cho từ khóa: " + searchKeyword);
+        for (Products product : searchResults) {
+            System.out.println(product);
+        }
+    }
     }
 
 }
