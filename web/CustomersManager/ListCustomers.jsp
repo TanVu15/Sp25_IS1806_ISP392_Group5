@@ -16,13 +16,21 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
         <title>Quản lý Khách Hàng</title>
         <link rel="stylesheet" href="css/home2.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+=======
+        <title>Trang chủ Quản lý</title>
+        <link rel="stylesheet" href="css/home2.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        
+>>>>>>> origin/master
     </head>
 
     <body>
         <% 
+<<<<<<< HEAD
                 DAOUser dao = new DAOUser();
                 Users u = (Users) request.getAttribute("user");
                 ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
@@ -30,6 +38,15 @@
         %>
         <div class="header">
             <div class="container">
+=======
+                                DAOUser dao = new DAOUser();
+                                Users u = (Users) request.getAttribute("user");
+                                ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
+                                
+        %>
+        <div class="header">
+      s      <div class="container">
+>>>>>>> origin/master
                 <img src="Image/logo.png" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
@@ -44,6 +61,7 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
 
         <div class="body">
             <div class="body-container">
@@ -58,6 +76,22 @@
                     </ul>
                 </div>
 
+=======
+
+        <div class="body">
+            <div class="body-container">
+                <div class="mainmenu">
+                    <ul class="mainmenu-list row no-gutters">
+                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
+                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
+                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
+                    </ul>
+                </div>
+
+>>>>>>> origin/master
                 <div class="homepage-body">
                     <div class="body-head">
                         <h3 class="body__head-title">Thông tin khách hàng</h3>
@@ -125,6 +159,32 @@
             </div>
         </div>
 
+<<<<<<< HEAD
+=======
+        <div id="product-detail-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Chi tiết khách hàng</h2>
+                <div class="modal-body">
+                    <p><strong>ID:</strong> <span id="modal-product-code"></span></p>
+                    <p><strong>Tên:</strong> <span id="modal-product-name"></span></p>
+                    <p><strong>Ví:</strong> <span id="modal-product-wallet"></span></p>
+                    <p><strong>Điện thoại:</strong> <span id="modal-product-phone"></span></p>
+                    <p><strong>Địa chỉ:</strong> <span id="modal-product-address"></span></p>
+                    <p><strong>Ngày tạo:</strong> <span id="modal-product-create-at"></span></p>
+                    <p><strong>Ngày cập nhật:</strong> <span id="modal-product-update-at"></span></p>
+                    <p><strong>Người tạo:</strong> <span id="modal-product-create-by"></span></p>
+                    <p><strong>Xóa:</strong> <span id="modal-product-is-delete"></span></p>
+                    <p><strong>Ngày xóa:</strong> <span id="modal-product-delete-at"></span></p>
+                    <p><strong>Người xóa:</strong> <span id="modal-product-delete-by"></span></p>
+                    <div class="modal-actions">
+                        <button class="action-button">Sửa</button>
+                        <button class="action-button" id="delete-button">Xóa</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+>>>>>>> origin/master
 
         <div class="footer">
             <div class="container">

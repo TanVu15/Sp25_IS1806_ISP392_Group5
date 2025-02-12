@@ -13,32 +13,55 @@ import java.sql.Date;
 public class Products {
     
     private int ID;
+    private String Image;
     private String ProductName;
     private String Description;
     private int Price;
     private int Quantity;
-    private Date CreateAt;
+    private String Location;
+     private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
     private int isDelete;
     private Date deletedAt;
     private int deleteBy;
 
+
+    public String getLocation() {
+        return Location;
+    }
+
+    public void setLocation(String Location) {
+        this.Location = Location;
+    }
+   
     public Products() {
     }
 
-    public Products(int ID, String ProductName, String Description, int Price, int Quantity, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
+    public Products(int ID, String image, String ProductName, String Description, int Price, int Quantity, String Location, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
         this.ID = ID;
+        this.Image = Image;
         this.ProductName = ProductName;
         this.Description = Description;
         this.Price = Price;
         this.Quantity = Quantity;
+        this.Location = Location;
         this.CreateAt = CreateAt;
         this.UpdateAt = UpdateAt;
         this.CreateBy = CreateBy;
         this.isDelete = isDelete;
         this.deletedAt = deletedAt;
         this.deleteBy = deleteBy;
+    }
+
+   
+
+    public String getImage() {
+        return Image;
+    }
+
+    public void setImage(String image) {
+        this.Image = Image;
     }
 
     public int getID() {
@@ -128,7 +151,8 @@ public class Products {
     public void setDeleteBy(int deleteBy) {
         this.deleteBy = deleteBy;
     }
-    
+
+   
     
     
 }
