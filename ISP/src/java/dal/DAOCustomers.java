@@ -45,6 +45,7 @@ public class DAOCustomers {
                 cs.setWallet(rs.getInt("Wallet"));
                 cs.setName(rs.getString("Name"));
                 cs.setPhone(rs.getString("Phone"));
+                cs.setAddress(rs.getString("Address"));
                 cs.setCreateAt(rs.getDate("CreateAt"));
                 cs.setUpdateAt(rs.getDate("UpdateAt"));
                 cs.setCreateBy(rs.getInt("CreateBy"));
@@ -143,6 +144,7 @@ public class DAOCustomers {
                 cs.setWallet(rs.getInt("Wallet"));
                 cs.setName(rs.getString("Name"));
                 cs.setPhone(rs.getString("Phone"));
+                cs.setAddress(rs.getString("Address"));
                 cs.setCreateAt(rs.getDate("CreateAt"));
                 cs.setUpdateAt(rs.getDate("UpdateAt"));
                 cs.setCreateBy(rs.getInt("CreateBy"));
