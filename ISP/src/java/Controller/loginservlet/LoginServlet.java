@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package Controller.loginservlet;
 
 import dal.DAO;
@@ -21,13 +20,24 @@ import jakarta.servlet.http.HttpSession;
  * @author ADMIN
  */
 public class LoginServlet extends HttpServlet {
-   
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
-        dispatcher.forward(request, response);
-
+        HttpSession session = request.getSession();
+        if (session.getAttribute("user") != null) {
+            Users user = (Users) session.getAttribute("user");
+            if (user.getRoleid() == 1) {
+                response.sendRedirect("Admin/Admin.jsp");
+            } else if (user.getRoleid() == 2) {
+                response.sendRedirect("Owner/Owner.jsp");
+            } else if (user.getRoleid() == 3) {
+                response.sendRedirect("Staff/Staff.jsp");
+            }
+        } else {
+            RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
+            dispatcher.forward(request, response);
+        }
     }
 
     @Override
@@ -41,16 +51,16 @@ public class LoginServlet extends HttpServlet {
                 DAO userDAO = new DAO();
                 Users user = userDAO.getUserByName(name);
 
-                if (user != null && user.getPasswordHash().equals(password)) {
-                    if (user.getIsDelete()!= 0) {  
-                        request.setAttribute("errorMessage", "User is not exist.");
+                if (user != null && (user.getPasswordHash().equals(password) || user.getIsDelete() == 1)) {
+                    if (user.getIsDelete() != 0) {
+                        request.setAttribute("errorMessage", "Hãy xem lại tài khoản và mật khẩu!");
                         RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
                         dispatcher.forward(request, response);
                     } else {
                         HttpSession session = request.getSession();
                         session.setAttribute("user", user);
 
-                        if (user.getRoleid() == 1 ) {
+                        if (user.getRoleid() == 1) {
                             response.sendRedirect("Admin/Admin.jsp");
                         } else if (user.getRoleid() == 2) {
                             response.sendRedirect("Owner/Owner.jsp");
@@ -72,8 +82,9 @@ public class LoginServlet extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
             dispatcher.forward(request, response);
         }
-        
+
     }
+
     @Override
     public String getServletInfo() {
         return "Short description";
