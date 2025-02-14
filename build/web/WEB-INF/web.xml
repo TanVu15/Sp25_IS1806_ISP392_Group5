@@ -52,6 +52,24 @@
         <servlet-name>ListCustomerDebtRecordsServlet</servlet-name>
         <servlet-class>Controller.DebtRecordsManager.ListCustomerDebtRecordsServlet</servlet-class>
     </servlet>
+     <servlet>
+        <servlet-name>ListProductsServlet</servlet-name>
+        <servlet-class>Controller.ProductsManager.ListProductsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddProductServlet</servlet-name>
+        <servlet-class>Controller.ProductsManager.AddProductServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <servlet-class>Controller.ProductsManager.UpdateProductServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <servlet-class>Controller.ProductsManager.DeleteProductServlet</servlet-class>
+    </servlet>
+    
+    
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -100,8 +118,28 @@
         <servlet-name>ListCustomerDebtRecordsServlet</servlet-name>
         <url-pattern>/listcustomerdebtrecords</url-pattern>
     </servlet-mapping>
-    
+     <servlet-mapping>
+        <servlet-name>ListProductsServlet</servlet-name>
+        <url-pattern>/listproducts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddProductServlet</servlet-name>
+        <url-pattern>/addproduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <url-pattern>/updateproduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <url-pattern>/deleteproduct</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>HomePage/Home.jsp</welcome-file>
+        <welcome-file>Login/login.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

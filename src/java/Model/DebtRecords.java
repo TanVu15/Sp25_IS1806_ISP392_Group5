@@ -17,6 +17,7 @@ public class DebtRecords {
     private int CustomerID;
     private int AmountOwed;
     private int PaymentStatus;
+    private String Note;
     private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
@@ -28,11 +29,12 @@ public class DebtRecords {
     }
     
     
-    public DebtRecords(int ID, int CustomerID, int AmountOwed, int PaymentStatus, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
+    public DebtRecords(int ID, int CustomerID, int AmountOwed, int PaymentStatus, String Note,Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
         this.ID = ID;
         this.CustomerID = CustomerID;
         this.AmountOwed = AmountOwed;
         this.PaymentStatus = PaymentStatus;
+        this.Note = Note;
         this.CreateAt = CreateAt;
         this.UpdateAt = UpdateAt;
         this.CreateBy = CreateBy;
@@ -71,6 +73,14 @@ public class DebtRecords {
 
     public void setPaymentStatus(int PaymentStatus) {
         this.PaymentStatus = PaymentStatus;
+    }
+    
+    public String getNote() {
+        return Note;
+    }
+
+    public void setNote(String Note) {
+        this.Note = Note;
     }
 
     public Date getCreateAt() {

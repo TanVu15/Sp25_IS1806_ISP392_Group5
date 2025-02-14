@@ -38,6 +38,10 @@
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                        <td>Note:</td>
+                        <td><input type="text" name="note" required></td>
+                    </tr>
                 </tbody>
             </table>
             <input type="submit" value="Add">

@@ -134,7 +134,11 @@
         <servlet-name>DeleteProductServlet</servlet-name>
         <url-pattern>/deleteproduct</url-pattern>
     </servlet-mapping>
-    
+
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Login/login.jsp</welcome-file>
     </welcome-file-list>

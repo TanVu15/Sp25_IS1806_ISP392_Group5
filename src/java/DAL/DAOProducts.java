@@ -179,7 +179,7 @@ public class DAOProducts {
                 }
 
                 // Kiểm tra nếu information xuất hiện trong dữ liệu sản phẩm
-                if (productData.contains(information.toLowerCase())) {
+                if (productData.toLowerCase().contains(information.toLowerCase())) {
                     products.add(product);
                 }
             }

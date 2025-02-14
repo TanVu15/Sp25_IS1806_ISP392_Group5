@@ -47,6 +47,7 @@ public class DAODebtRecords {
                 debt.setIsDelete(rs.getInt("isDelete"));
                 debt.setDeletedAt(rs.getDate("DeletedAt"));
                 debt.setDeleteBy(rs.getInt("DeleteBy"));
+                debt.setNote(rs.getString("Note"));
                 debtRecordses.add(debt);
             }
         } catch (SQLException e) {
@@ -74,6 +75,7 @@ public class DAODebtRecords {
                 debt.setIsDelete(rs.getInt("isDelete"));
                 debt.setDeletedAt(rs.getDate("DeletedAt"));
                 debt.setDeleteBy(rs.getInt("DeleteBy"));
+                debt.setNote(rs.getString("Note"));
                 debtRecordses.add(debt);
             }
         }
@@ -85,7 +87,7 @@ public class DAODebtRecords {
 
 
     public void AddDebtRecords(DebtRecords debtrecords, int userid) throws Exception {
-        String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, CreateAt, CreateBy, isDelete, Note) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, debtrecords.getCustomerID());
             ps.setInt(2, debtrecords.getAmountOwed());
@@ -93,15 +95,22 @@ public class DAODebtRecords {
             ps.setDate(4, today);
             ps.setInt(5, userid);
             ps.setInt(6, 0);
+            ps.setString(7, debtrecords.getNote());
             ps.executeUpdate();
 
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-        
-        //Lấy wallet để update cus
+       
         Customers customer = DAOCustomers.INSTANCE.getCustomersByID(debtrecords.getCustomerID());
-        
+        long startTime = System.currentTimeMillis();
+        long duration = 1000; // 10 seconds in milliseconds
+
+        while (true) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - startTime >= duration) {
+                break;
+            }}
         int wallet = customer.getWallet();
         if(debtrecords.getPaymentStatus()==1){
             wallet += debtrecords.getAmountOwed();
@@ -137,6 +146,47 @@ public class DAODebtRecords {
             e.printStackTrace();
         }
     }
+    
+    public ArrayList<DebtRecords> getCustomerDebtRecordsSeach(String information, int customerID) throws Exception {
+    ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
+    String sql = "SELECT * FROM DebtRecords WHERE customerID = ?";
+    
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setInt(1, customerID); // Đặt giá trị customerID vào câu SQL trước khi chạy
+        try (ResultSet rs = ps.executeQuery()) { // Thực thi sau khi thiết lập tham số
+            while (rs.next()) {
+                DebtRecords debt = new DebtRecords();
+                debt.setID(rs.getInt("ID"));
+                debt.setCustomerID(rs.getInt("customerID"));
+                debt.setAmountOwed(rs.getInt("AmountOwed"));
+                debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                debt.setCreateAt(rs.getDate("CreateAt"));
+                debt.setUpdateAt(rs.getDate("UpdateAt"));
+                debt.setCreateBy(rs.getInt("CreateBy"));
+                debt.setIsDelete(rs.getInt("isDelete"));
+                debt.setDeletedAt(rs.getDate("DeletedAt"));
+                debt.setDeleteBy(rs.getInt("DeleteBy"));
+                debt.setNote(rs.getString("Note"));
+                
+                
+                String debtSeach = debt.getID() + " " +
+                                   debt.getCustomerID() + " " +
+                                   debt.getAmountOwed() + " " +
+                                   debt.getPaymentStatus() + " " +
+                                   debt.getCreateAt() + " " +
+                                   debt.getUpdateAt() + " " +
+                                   DAOUser.INSTANCE.getUserByID(debt.getCreateBy()).getFullName() + " " +
+                                   debt.getNote();
+                if(debtSeach.toLowerCase().contains(information.toLowerCase())){
+                    debtRecordses.add(debt);
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Xử lý lỗi SQL
+    }
+    return debtRecordses;
+}
 
     public static void main(String[] args) throws Exception {
         DAODebtRecords dao = new DAODebtRecords();

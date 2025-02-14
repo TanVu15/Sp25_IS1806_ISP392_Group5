@@ -55,6 +55,7 @@ public class DAOUser {
                 u.setRoleid(rs.getInt("roleid"));
                 u.setFullName(rs.getString("FullName"));
                 u.setCreateAt(rs.getDate("CreateAt"));
+                u.setUpdateAt(rs.getDate("UpdateAt"));
                 u.setCreateBy(rs.getInt("CreateBy"));
                 u.setIsDelete(rs.getInt("isDelete"));
                 u.setDeleteBy(rs.getInt("DeleteBy"));
@@ -149,6 +150,7 @@ public class DAOUser {
             user.setRoleid(rs.getInt("Roleid"));
             user.setFullName(rs.getString("FullName"));
             user.setCreateAt(rs.getDate("CreateAt"));
+            user.setUpdateAt(rs.getDate("UpdateAt"));
             user.setCreateBy(rs.getInt("CreateBy"));
             user.setIsDelete(rs.getInt("isDelete"));
             user.setDeleteBy(rs.getInt("DeleteBy"));
@@ -173,6 +175,7 @@ public class DAOUser {
                 u.setRoleid(rs.getInt("roleid"));
                 u.setFullName(rs.getString("FullName"));
                 u.setCreateAt(rs.getDate("CreateAt"));
+                u.setUpdateAt(rs.getDate("UpdateAt"));
                 u.setCreateBy(rs.getInt("CreateBy"));
                 u.setIsDelete(rs.getInt("isDelete"));
                 u.setDeleteBy(rs.getInt("DeleteBy"));
