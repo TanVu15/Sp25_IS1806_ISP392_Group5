@@ -4,8 +4,8 @@
     Author     : Admin
 --%>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Model.Users" %>
-<%@ page import="DAL.DAOUser" %>
+<%@ page import="model.Users" %>
+<%@ page import="dal.DAOUser" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>

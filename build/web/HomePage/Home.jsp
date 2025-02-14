@@ -1,9 +1,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Model.Products" %>
-<%@ page import="Model.Users" %>
-<%@ page import="DAL.DAOProducts" %>
-<%@ page import="DAL.DAOUser" %>
+<%@ page import="model.Products" %>
+<%@ page import="model.Users" %>
+<%@ page import="dal.DAOProducts" %>
+<%@ page import="dal.DAOUser" %>
 <!DOCTYPE html>
 <html lang="en">
 

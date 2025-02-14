@@ -5,10 +5,10 @@
 --%>
 
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Model.Customers" %>
-<%@ page import="Model.Users" %>
-<%@ page import="DAL.DAOCustomers" %>
-<%@ page import="DAL.DAOUser" %>
+<%@ page import="model.Customers" %>
+<%@ page import="model.Users" %>
+<%@ page import="dal.DAOCustomers" %>
+<%@ page import="dal.DAOUser" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
