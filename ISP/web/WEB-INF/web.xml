@@ -2,55 +2,71 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>Controller.UsersManager.RegisterServlet</servlet-class>
+        <servlet-class>Controller.usersservlet.RegisterServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>Controller.Login.LoginServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ListUsersServlet</servlet-name>
-        <servlet-class>Controller.UsersManager.ListUsersServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UpdateUserServlet</servlet-name>
-        <servlet-class>Controller.UsersManager.UpdateUserServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DeleteUserServlet</servlet-name>
-        <servlet-class>Controller.UsersManager.DeleteUserServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ListCustomersServlet</servlet-name>
-        <servlet-class>Controller.CustomersManager.ListCustomersServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DeleteCustomerServlet</servlet-name>
-        <servlet-class>Controller.CustomersManager.DeleteCustomerServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UpdateCustomerServlet</servlet-name>
-        <servlet-class>Controller.CustomersManager.UpdateCustomerServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AddCustomerServlet</servlet-name>
-        <servlet-class>Controller.CustomersManager.AddCustomerServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AddDebtRecordsServlet</servlet-name>
-        <servlet-class>Controller.DebtRecordsManager.AddDebtRecordsServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ListDebtRecordsServlet</servlet-name>
-        <servlet-class>Controller.DebtRecordsManager.ListDebtRecordsServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ListCustomerDebtRecordsServlet</servlet-name>
-        <servlet-class>Controller.DebtRecordsManager.ListCustomerDebtRecordsServlet</servlet-class>
+        <servlet-class>Controller.loginservlet.LoginServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>Controller.Login.LogoutServlet</servlet-class>
+        <servlet-class>Controller.loginservlet.LogutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListUsersServlet</servlet-name>
+        <servlet-class>Controller.usersservlet.ListUsersServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateUserServlet</servlet-name>
+        <servlet-class>Controller.usersservlet.UpdateUserServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteUserServlet</servlet-name>
+        <servlet-class>Controller.usersservlet.DeleteUserServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListCustomersServlet</servlet-name>
+        <servlet-class>Controller.customerservlet.ListCustomersServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCustomerServlet</servlet-name>
+        <servlet-class>Controller.customerservlet.DeleteCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateCustomerServlet</servlet-name>
+        <servlet-class>Controller.customerservlet.UpdateCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddCustomerServlet</servlet-name>
+        <servlet-class>Controller.customerservlet.AddCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddDebtRecordsServlet</servlet-name>
+        <servlet-class>Controller.debtrecordservlet.AddDebtRecordsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListDebtRecordsServlet</servlet-name>
+        <servlet-class>Controller.debtrecordservlet.ListDebtRecordsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListCustomerDebtRecordsServlet</servlet-name>
+        <servlet-class>Controller.debtrecordservlet.ListCustomerDebtRecordsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListProductsServlet</servlet-name>
+        <servlet-class>Controller.productsservlet.ListProductsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddProductServlet</servlet-name>
+        <servlet-class>Controller.productsservlet.AddProductServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <servlet-class>Controller.productsservlet.UpdateProductServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <servlet-class>Controller.productsservlet.DeleteProductServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
@@ -99,6 +115,22 @@
     <servlet-mapping>
         <servlet-name>ListCustomerDebtRecordsServlet</servlet-name>
         <url-pattern>/listcustomerdebtrecords</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListProductsServlet</servlet-name>
+        <url-pattern>/listproducts</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddProductServlet</servlet-name>
+        <url-pattern>/addproduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateProductServlet</servlet-name>
+        <url-pattern>/updateproduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <url-pattern>/deleteproduct</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>

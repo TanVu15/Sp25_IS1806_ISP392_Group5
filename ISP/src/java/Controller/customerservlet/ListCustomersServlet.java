@@ -3,11 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package Controller.CustomersManager;
+package Controller.customerservlet;
 
-import DAL.DAOCustomers;
-import Model.Customers;
-import Model.Users;
+import dal.DAOCustomers;
+import model.Customers;
+import model.Users;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;

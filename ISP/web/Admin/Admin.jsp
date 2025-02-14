@@ -18,5 +18,6 @@
         <a href="../listusers">List Users</a>
         <a href="../listcustomers">List Customers</a>
         <a href="../logout">Logout</a>
+        <a href="../listproducts">List Products</a>
     </body>
 </html>

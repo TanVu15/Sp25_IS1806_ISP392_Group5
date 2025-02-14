@@ -2,13 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller.DebtRecordsManager;
+package controller.debtrecordservlet;
 
-import DAL.DAOCustomers;
-import DAL.DAODebtRecords;
-import Model.Customers;
-import Model.DebtRecords;
-import Model.Users;
+import dal.DAOCustomers;
+import dal.DAODebtRecords;
+import model.Customers;
+import model.DebtRecords;
+import model.Users;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -3,9 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package Controller.UsersManager;
+package Controller.customerservlet;
 
-import DAL.DAOUser;
+import dal.DAOCustomers;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,9 +15,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-public class DeleteUserServlet extends HttpServlet {
+public class DeleteCustomerServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -34,10 +34,10 @@ public class DeleteUserServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DeleteUserServlet</title>");  
+            out.println("<title>Servlet DeleteCustomerServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DeleteUserServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet DeleteCustomerServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -58,8 +58,8 @@ public class DeleteUserServlet extends HttpServlet {
         int userid = Integer.parseInt(request.getParameter("userid"));
         
         try {
-            DAOUser.INSTANCE.deleteUser(deleteid,userid); // Gọi phương thức xóa người dùng
-            response.sendRedirect("listusers"); // Chuyển hướng về danh sách người dùng
+            DAOCustomers.INSTANCE.deleteCustomers(deleteid,userid); // Gọi phương thức xóa người dùng
+            response.sendRedirect("listcustomer"); // Chuyển hướng về danh sách người dùng
         } catch (Exception e) {
             e.printStackTrace();
         }

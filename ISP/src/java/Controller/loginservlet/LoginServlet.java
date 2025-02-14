@@ -3,10 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package Controller.Login;
+package Controller.loginservlet;
 
-import DAL.DAO;
-import Model.Users;
+import dal.DAO;
+import model.Users;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;

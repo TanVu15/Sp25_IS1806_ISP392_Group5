@@ -5,8 +5,8 @@
 --%>
 
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Model.Customers" %>
-<%@ page import="DAL.DAOCustomers" %>
+<%@ page import="model.Customers" %>
+<%@ page import="dal.DAOCustomers" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
