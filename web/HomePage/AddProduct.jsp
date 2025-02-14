@@ -49,9 +49,9 @@
                 <label for="location">Vị trí:</label>
                 <input type="text" id="location" name="location" required>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Thêm Sản Phẩm">
-                <a href="listproducts" class="cancel-button">Hủy</a>
+            <div class="button-container">
+                <input type="submit"class="btn add-button" value="Thêm Sản Phẩm">
+                <a href="listproducts" class="btn cancel-button">Hủy</a>
             </div>
         </form>
     </div>

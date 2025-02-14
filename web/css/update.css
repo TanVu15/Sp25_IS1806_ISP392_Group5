@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f1ea; /* Light beige background */
+    background-color: #f4f1ea; 
     margin: 0;
     padding: 20px;
 }
@@ -16,19 +16,20 @@ body {
 
 h2 {
     text-align: center;
-    color: #6b4423; /* Brown color for rice theme */
+    color: #7ab452;
     margin-bottom: 20px;
 }
 
 .form-group {
     margin-bottom: 15px;
+    margin-right: 22px;
 }
 
 label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #6b4423; /* Brown color for rice theme */
+    color: #6b4423; 
 }
 
 input[type="text"],
@@ -49,7 +50,6 @@ textarea:focus {
 }
 
 .btn {
-    background-color: #a9d18e; /* Green color for rice plants */
     color: white;
     border: none;
     padding: 10px 15px;
@@ -60,25 +60,28 @@ textarea:focus {
     display: inline-block;
     margin-right: 10px;
 }
+.btn-primary{
+background-color: #7ab452;    
+}
 
 .btn-secondary {
-    background-color: #c4d79b; /* Lighter green for secondary button */
-    text-decoration: none; /* Remove underline from Cancel button */
+    background-color: black;
+    text-decoration: none;
 }
 
 .btn:hover {
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
 .alert {
-    padding: 10px;
+    padding: 15px;
     margin-bottom: 15px;
     border: 1px solid transparent;
     border-radius: 4px;
 }
 
 .alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
+    color: red;
+    background-color: #ffffff;
+    border-color: #ffffff;
 }

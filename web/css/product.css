@@ -272,6 +272,7 @@ a {
     border-radius: 4px;
     color: white;
     cursor: pointer;
+    line-height: 22px;
 }
 /* add btn */
 .add-product-button {

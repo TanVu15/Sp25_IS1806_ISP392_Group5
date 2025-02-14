@@ -14,7 +14,7 @@
 <body>
 
 <div class="container">
-    <h2>Update Product</h2>
+    <h2>Cập Nhập Sản Phẩm</h2>
 
     <c:if test="${not empty errorMessage}">
         <div class="alert alert-danger">${errorMessage}</div>
@@ -24,42 +24,42 @@
         <input type="hidden" name="id" value="${product.ID}"/>
 
         <div class="form-group">
-            <label for="productName">Product Name:</label>
+            <label for="productName">Tên sản phẩm:</label>
             <input type="text" id="productName" name="productName" class="form-control" 
                    value="${product.productName}" required>
         </div>
 
         <div class="form-group">
-            <label for="description">Description:</label>
+            <label for="description">Mô tả:</label>
             <textarea id="description" name="description" class="form-control" required>${product.description}</textarea>
         </div>
 
         <div class="form-group">
-            <label for="image">Image URL:</label>
+            <label for="image">Hình ảnh:</label>
             <input type="text" id="image" name="image" class="form-control" 
                    value="${product.image}" required>
         </div>
 
         <div class="form-group">
-            <label for="price">Price:</label>
+            <label for="price">Giá tiền:</label>
             <input type="number" id="price" name="price" class="form-control" 
                    value="${product.price}" required>
         </div>
 
         <div class="form-group">
-            <label for="quantity">Quantity:</label>
+            <label for="quantity">Số lượng:</label>
             <input type="number" id="quantity" name="quantity" class="form-control" 
                    value="${product.quantity}" required>
         </div>
 
         <div class="form-group">
-            <label for="location">Location:</label>
+            <label for="location">Vị trí:</label>
             <input type="text" id="location" name="location" class="form-control" 
                    value="${product.location}" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Update Product</button>
-        <a href="listproducts" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary">Cập Nhập</button>
+        <a href="listproducts" class="btn btn-secondary">Hủy</a>
     </form>
 </div>
 
