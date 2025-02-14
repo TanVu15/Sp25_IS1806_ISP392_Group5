@@ -266,6 +266,13 @@ a {
     border-color: var(--primary-color); /* Đổi màu viền khi ô tìm kiếm được chọn */
 }
 
+.Search-btn{
+    background-color: var(--primary-color);
+    padding:5px 8px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
 /* add btn */
 .add-product-button {
     background-color: var(--primary-color);

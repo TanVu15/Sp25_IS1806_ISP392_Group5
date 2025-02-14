@@ -94,7 +94,7 @@
                     <div class="search-container">
                         <form action="listproducts" method="post">
                             <input type="text" id="information" name="information" placeholder="Tìm kiếm sản phẩm..." class="search-input">
-                            <input class="Search-btn" type="submit" value="Search">
+                            <input type="submit" value="Search">
                         </form>
                         <% String message = (String) request.getAttribute("message");
                         if (message != null && !message.isEmpty()) {%>
@@ -102,7 +102,6 @@
                             alert("<%= message%>");
                         </script>
                         <% } %>
-                        <a href="addproduct" class="add-product-button">Thêm sản phẩm</a>
                     </div>
                 </div>
                 <!-- Product List -->
@@ -117,8 +116,6 @@
                                 <th class="table-header-item">Số lượng</th>
                                 <th class="table-header-item">Vị trí</th>
                                 <th class="table-header-item">Mô tả</th>
-                                <th class="table-header-item">Hành động</th>
-                                <th class="table-header-item">Trạng thái</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -134,22 +131,6 @@
                                 <td class="table-cell"><%= product.getQuantity()%></td>
                                 <td class="table-cell"><%= product.getLocation()%></td>
                                 <td class="table-cell description"><%= product.getDescription()%></td>
-                                <td class="table-cell">
-                                    <a href="updateproduct?id=<%= product.getID()%>" class="action-button">Sửa</a>
-                                    <%
-                                        if (product.getIsDelete() == 0) {
-                                    %>
-                                    <form action="updateproduct" method="get" style="display:inline;">
-                                        <input type="hidden" name="deleteid" value="<%= product.getID()%>">
-                                        <button type="submit" class="action-button" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</button>
-                                    </form>
-                                    <%
-                                        }
-                                    %>
-                                </td>
-                                <td class="table-cell">
-                                    <%= product.getIsDelete() == 0 ? "Hoạt động" : "Đã xóa" %>
-                                </td>
                             </tr>
                             <% }%>
                         </tbody>
@@ -168,5 +149,7 @@
             <p>&copy; 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
         </div>
     </div>
+
+</body>
 
 </html>

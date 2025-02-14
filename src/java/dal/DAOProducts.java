@@ -85,25 +85,25 @@ public class DAOProducts {
         }
     }
 
-    public void AddProducts(Products product, int userid) {
-        String sql = "INSERT INTO Products (Image, ProductName, Description, "
-                + "Price, Quantity, Location, CreateAt, CreateBy, isDelete) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setString(1, product.getImage());
-            ps.setString(2, product.getProductName());
-            ps.setString(3, product.getDescription());
-            ps.setInt(4, product.getPrice());
-            ps.setInt(5, product.getQuantity());
-            ps.setString(6, product.getLocation());
-            ps.setDate(7, today);
-            ps.setInt(8, userid);
-            ps.setInt(9, 0);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
+public void AddProducts(Products product, int userid) {
+    String sql = "INSERT INTO Products (Image, ProductName, Description, "
+            + "Price, Quantity, Location, CreateAt, CreateBy, UpdateAt, isDelete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setString(1, product.getImage());
+        ps.setString(2, product.getProductName());
+        ps.setString(3, product.getDescription());
+        ps.setInt(4, product.getPrice());
+        ps.setInt(5, product.getQuantity());
+        ps.setString(6, product.getLocation());
+        ps.setDate(7, today);
+        ps.setInt(8, userid);
+        ps.setDate(9, today); // Set UpdateAt to the current date
+        ps.setInt(10, 0); // Set isDelete to 0 (not deleted)
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        System.out.println("Error: " + e.getMessage());
     }
+}
 
     public Products getProductByID(int ID) throws Exception {
         String query = "SELECT * FROM Products WHERE ID=? ";
@@ -195,27 +195,51 @@ public class DAOProducts {
 
         DAOProducts dao = DAOProducts.INSTANCE;
         ArrayList<Products> productList = dao.getAllProducts();
+//        check add product
+        Products newProduct = new Products();
+    newProduct.setImage("path/to/image.jpg");
+    newProduct.setProductName("New Product");
+    newProduct.setDescription("This is a new product description.");
+    newProduct.setPrice(1500);
+    newProduct.setQuantity(20);
+    newProduct.setLocation("Warehouse A");
+    
+     int userId = 1;
+    
+    // Adding the new product
+    dao.AddProducts(newProduct, userId);
+    System.out.println("Product added successfully!");
 
+
+//    check list product
         for (Products product : productList) {
             System.out.println(product);
         }
-        //dao.deleteProducts(3, 1);
-        //Products updatedProduct = new Products(1, "Laptop Dell XPS", "Mô tả mới", 2500, 10, today, today, 1, 0, null, 0);
-        //dao.updateProducts(updatedProduct);
-        System.out.println(dao.getProductByID(3));
+       
+        // Delete check
+    int productIdToDelete = 8;
+    dao.deleteProducts(productIdToDelete, userId);
+    System.out.println("Product with ID " + productIdToDelete + " marked as deleted.");
+    
+    // Retrieve and print the updated list of products
+    ArrayList<Products> updatedProductList = dao.getAllProducts();
+    System.out.println("Updated product list after deletion:");
+    for (Products product : updatedProductList) {
+        System.out.println(product);
+    }
         
         // Kiểm tra tính năng tìm kiếm
-    String searchKeyword = "A"; // Thay đổi từ khóa tìm kiếm theo ý muốn
-    ArrayList<Products> searchResults = dao.getProductsBySearch(searchKeyword);
-    
-    if (searchResults.isEmpty()) {
-        System.out.println("Không tìm thấy sản phẩm nào với từ khóa: " + searchKeyword);
-    } else {
-        System.out.println("Kết quả tìm kiếm cho từ khóa: " + searchKeyword);
-        for (Products product : searchResults) {
-            System.out.println(product);
-        }
-    }
+//    String searchKeyword = "A"; // Thay đổi từ khóa tìm kiếm theo ý muốn
+//    ArrayList<Products> searchResults = dao.getProductsBySearch(searchKeyword);
+//    
+//    if (searchResults.isEmpty()) {
+//        System.out.println("Không tìm thấy sản phẩm nào với từ khóa: " + searchKeyword);
+//    } else {
+//        System.out.println("Kết quả tìm kiếm cho từ khóa: " + searchKeyword);
+//        for (Products product : searchResults) {
+//            System.out.println(product);
+//        }
+//    }
     }
 
 }

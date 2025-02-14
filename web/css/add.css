@@ -1,0 +1,31 @@
+.container {
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.error-message {
+    color: red;
+    margin-bottom: 15px;
+}
+.cancel-button {
+    margin-left: 10px;
+    text-decoration: none;
+    color: #007BFF;
+}
