@@ -56,35 +56,34 @@ public class DAODebtRecords {
         return debtRecordses;
     }
 
-   public ArrayList<DebtRecords> getCustomerDebtRecords(int customerID) {
-    ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
-    String sql = "SELECT * FROM DebtRecords WHERE customerID = ?";
-    
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setInt(1, customerID); // Đặt giá trị customerID vào câu SQL trước khi chạy
-        try (ResultSet rs = ps.executeQuery()) { // Thực thi sau khi thiết lập tham số
-            while (rs.next()) {
-                DebtRecords debt = new DebtRecords();
-                debt.setID(rs.getInt("ID"));
-                debt.setCustomerID(rs.getInt("customerID"));
-                debt.setAmountOwed(rs.getInt("AmountOwed"));
-                debt.setPaymentStatus(rs.getInt("PaymentStatus"));
-                debt.setCreateAt(rs.getDate("CreateAt"));
-                debt.setUpdateAt(rs.getDate("UpdateAt"));
-                debt.setCreateBy(rs.getInt("CreateBy"));
-                debt.setIsDelete(rs.getInt("isDelete"));
-                debt.setDeletedAt(rs.getDate("DeletedAt"));
-                debt.setDeleteBy(rs.getInt("DeleteBy"));
-                debt.setNote(rs.getString("Note"));
-                debtRecordses.add(debt);
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace(); // Xử lý lỗi SQL
-    }
-    return debtRecordses;
-}
+    public ArrayList<DebtRecords> getCustomerDebtRecords(int customerID) {
+        ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
+        String sql = "SELECT * FROM DebtRecords WHERE customerID = ?";
 
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, customerID); // Đặt giá trị customerID vào câu SQL trước khi chạy
+            try (ResultSet rs = ps.executeQuery()) { // Thực thi sau khi thiết lập tham số
+                while (rs.next()) {
+                    DebtRecords debt = new DebtRecords();
+                    debt.setID(rs.getInt("ID"));
+                    debt.setCustomerID(rs.getInt("customerID"));
+                    debt.setAmountOwed(rs.getInt("AmountOwed"));
+                    debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                    debt.setCreateAt(rs.getDate("CreateAt"));
+                    debt.setUpdateAt(rs.getDate("UpdateAt"));
+                    debt.setCreateBy(rs.getInt("CreateBy"));
+                    debt.setIsDelete(rs.getInt("isDelete"));
+                    debt.setDeletedAt(rs.getDate("DeletedAt"));
+                    debt.setDeleteBy(rs.getInt("DeleteBy"));
+                    debt.setNote(rs.getString("Note"));
+                    debtRecordses.add(debt);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý lỗi SQL
+        }
+        return debtRecordses;
+    }
 
     public void AddDebtRecords(DebtRecords debtrecords, int userid) throws Exception {
         String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, CreateAt, CreateBy, isDelete, Note) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -97,28 +96,34 @@ public class DAODebtRecords {
             ps.setInt(6, 0);
             ps.setString(7, debtrecords.getNote());
             ps.executeUpdate();
-
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-       
-        Customers customer = DAOCustomers.INSTANCE.getCustomersByID(debtrecords.getCustomerID());
-        long startTime = System.currentTimeMillis();
-        long duration = 1000; // 10 seconds in milliseconds
 
-        while (true) {
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - startTime >= duration) {
-                break;
-            }}
-        int wallet = customer.getWallet();
-        if(debtrecords.getPaymentStatus()==1){
-            wallet += debtrecords.getAmountOwed();
-        }else{
-            wallet -= debtrecords.getAmountOwed();
+        boolean success = false;
+        while (!success) { // Lặp đến khi cập nhật thành công
+            // Lấy dữ liệu mới nhất từ DB
+            Customers customer = DAOCustomers.INSTANCE.getCustomersByID(debtrecords.getCustomerID());
+            int currentWallet = customer.getWallet();
+
+            // Tính toán số dư mới
+            int newWallet = (debtrecords.getPaymentStatus() == 1) ? currentWallet + debtrecords.getAmountOwed() : currentWallet - debtrecords.getAmountOwed();
+
+            // Cập nhật Wallet (chỉ tiếp tục nếu giá trị chưa bị thay đổi bởi máy khác)
+            String updateSQL = "UPDATE Customers SET Wallet = ? WHERE ID = ? AND Wallet = ?";
+
+            try (PreparedStatement ps = connect.prepareStatement(updateSQL)) {
+                ps.setInt(1, newWallet);
+                ps.setInt(2, debtrecords.getCustomerID());
+                ps.setInt(3, currentWallet); // Điều kiện kiểm tra xung đột
+                int updatedRows = ps.executeUpdate();
+                if (updatedRows > 0) {
+                    success = true; // Cập nhật thành công, thoát vòng lặp
+                }
+            } catch (SQLException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
         }
-        customer.setWallet(wallet);
-        DAOCustomers.INSTANCE.setCustomerWallet(customer);
     }
 
     public void deleteDebtRecords(int deleteid, int userid) {
@@ -146,47 +151,46 @@ public class DAODebtRecords {
             e.printStackTrace();
         }
     }
-    
+
     public ArrayList<DebtRecords> getCustomerDebtRecordsSeach(String information, int customerID) throws Exception {
-    ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
-    String sql = "SELECT * FROM DebtRecords WHERE customerID = ?";
-    
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setInt(1, customerID); // Đặt giá trị customerID vào câu SQL trước khi chạy
-        try (ResultSet rs = ps.executeQuery()) { // Thực thi sau khi thiết lập tham số
-            while (rs.next()) {
-                DebtRecords debt = new DebtRecords();
-                debt.setID(rs.getInt("ID"));
-                debt.setCustomerID(rs.getInt("customerID"));
-                debt.setAmountOwed(rs.getInt("AmountOwed"));
-                debt.setPaymentStatus(rs.getInt("PaymentStatus"));
-                debt.setCreateAt(rs.getDate("CreateAt"));
-                debt.setUpdateAt(rs.getDate("UpdateAt"));
-                debt.setCreateBy(rs.getInt("CreateBy"));
-                debt.setIsDelete(rs.getInt("isDelete"));
-                debt.setDeletedAt(rs.getDate("DeletedAt"));
-                debt.setDeleteBy(rs.getInt("DeleteBy"));
-                debt.setNote(rs.getString("Note"));
-                
-                
-                String debtSeach = debt.getID() + " " +
-                                   debt.getCustomerID() + " " +
-                                   debt.getAmountOwed() + " " +
-                                   debt.getPaymentStatus() + " " +
-                                   debt.getCreateAt() + " " +
-                                   debt.getUpdateAt() + " " +
-                                   DAOUser.INSTANCE.getUserByID(debt.getCreateBy()).getFullName() + " " +
-                                   debt.getNote();
-                if(debtSeach.toLowerCase().contains(information.toLowerCase())){
-                    debtRecordses.add(debt);
+        ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
+        String sql = "SELECT * FROM DebtRecords WHERE customerID = ?";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, customerID); // Đặt giá trị customerID vào câu SQL trước khi chạy
+            try (ResultSet rs = ps.executeQuery()) { // Thực thi sau khi thiết lập tham số
+                while (rs.next()) {
+                    DebtRecords debt = new DebtRecords();
+                    debt.setID(rs.getInt("ID"));
+                    debt.setCustomerID(rs.getInt("customerID"));
+                    debt.setAmountOwed(rs.getInt("AmountOwed"));
+                    debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                    debt.setCreateAt(rs.getDate("CreateAt"));
+                    debt.setUpdateAt(rs.getDate("UpdateAt"));
+                    debt.setCreateBy(rs.getInt("CreateBy"));
+                    debt.setIsDelete(rs.getInt("isDelete"));
+                    debt.setDeletedAt(rs.getDate("DeletedAt"));
+                    debt.setDeleteBy(rs.getInt("DeleteBy"));
+                    debt.setNote(rs.getString("Note"));
+
+                    String debtSeach = debt.getID() + " "
+                            + debt.getCustomerID() + " "
+                            + debt.getAmountOwed() + " "
+                            + debt.getPaymentStatus() + " "
+                            + debt.getCreateAt() + " "
+                            + debt.getUpdateAt() + " "
+                            + DAOUser.INSTANCE.getUserByID(debt.getCreateBy()).getFullName() + " "
+                            + debt.getNote();
+                    if (debtSeach.toLowerCase().contains(information.toLowerCase())) {
+                        debtRecordses.add(debt);
+                    }
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý lỗi SQL
         }
-    } catch (SQLException e) {
-        e.printStackTrace(); // Xử lý lỗi SQL
+        return debtRecordses;
     }
-    return debtRecordses;
-}
 
     public static void main(String[] args) throws Exception {
         DAODebtRecords dao = new DAODebtRecords();
