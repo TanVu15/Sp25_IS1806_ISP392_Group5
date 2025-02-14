@@ -14,7 +14,7 @@
     </servlet>
     <servlet>
         <servlet-name>ListUsersServlet</servlet-name>
-        <servlet-class>Controller.usersservlet.ListUsersServlet</servlet-class>
+        <servlet-class>Controller.userservlet.ListUsersServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>UpdateUserServlet</servlet-name>

@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controller.debtrecordservlet;
+package Controller.debtrecordservlet;
 
 import dal.DAODebtRecords;
 import model.Customers;
