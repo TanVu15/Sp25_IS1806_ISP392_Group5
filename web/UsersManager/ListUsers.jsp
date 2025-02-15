@@ -114,7 +114,7 @@
                                     <td class="table-cell"><%= user.getDeletedAt() %></td>
                                     <td class="table-cell"><%= (user.getIsDelete() == 0) ? "Null" : dao.getUserByID(user.getDeleteBy()).getFullName() %></td>
                                     <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'updateuser?id=<%= user.getID() %>'">Edit</button>
+                                        <button class="action-button" onclick="window.location.href = 'updateuser?id=<%= user.getID() %>'">Chỉnh Sửa</button>
                                         <button class="action-button" onclick="window.location.href = 'deleteuser?deleteid=<%= user.getID() %>&userid=<%= u.getID() %>'">Ban</button>
                                     </td>
                                 </tr>
@@ -129,6 +129,7 @@
                         <button class="pagination-button" id="prev-button" onclick="prevPage()">Trước</button>
                         <span class="pagination-info">Trang <span class="current-page" id="current-page">1</span> / <span class="total-pages" id="total-pages">5</span></span>
                         <button class="pagination-button" id="next-button" onclick="nextPage()">Sau</button>
+                        <button class="action-button" onclick="window.location.href = 'register'">Thêm Tài Khoản</button>
                     </div>
                 </div>
             </div>

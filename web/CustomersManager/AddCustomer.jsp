@@ -43,7 +43,7 @@
             </div>
         </div>
         
-                <div class="body">
+            <div class="body">
             <div class="body-container">
 
                 <div class="mainmenu">
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="homepage-body">
-                    <h2>Thêm khách hàng </h2>
+                    <h3>Thêm khách hàng </h3>
                     <div class="table-container">
                         <form action="addcustomer" method="post">
                             <table class="product-table">
