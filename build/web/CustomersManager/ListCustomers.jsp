@@ -129,30 +129,6 @@
         </div>
     </div>
 
-    <div id="product-detail-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Chi tiết khách hàng</h2>
-            <div class="modal-body">
-                <p><strong>ID:</strong> <span id="modal-product-code"></span></p>
-                <p><strong>Tên:</strong> <span id="modal-product-name"></span></p>
-                <p><strong>Ví:</strong> <span id="modal-product-wallet"></span></p>
-                <p><strong>Điện thoại:</strong> <span id="modal-product-phone"></span></p>
-                <p><strong>Địa chỉ:</strong> <span id="modal-product-address"></span></p>
-                <p><strong>Ngày tạo:</strong> <span id="modal-product-create-at"></span></p>
-                <p><strong>Ngày cập nhật:</strong> <span id="modal-product-update-at"></span></p>
-                <p><strong>Người tạo:</strong> <span id="modal-product-create-by"></span></p>
-                <p><strong>Xóa:</strong> <span id="modal-product-is-delete"></span></p>
-                <p><strong>Ngày xóa:</strong> <span id="modal-product-delete-at"></span></p>
-                <p><strong>Người xóa:</strong> <span id="modal-product-delete-by"></span></p>
-                <div class="modal-actions">
-                    <button class="action-button">Sửa</button>
-                    <button class="action-button" id="delete-button">Xóa</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="footer">
         <div class="container">
             <p>&copy; 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
