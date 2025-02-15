@@ -60,6 +60,7 @@
 
                 <div class="homepage-body">
                     <h3 class="body__head-title">Thông tin Công Nợ</h3>
+                    
                     <div class="table-container">
                         <form action="adddebtrecords" method="post">
                             
@@ -98,9 +99,11 @@
                         </form>
                     </div>
                     <div class="pagination">
+                        
                         <button class="pagination-button" id="prev-button" onclick="prevPage()">Trước</button>
                         <span class="pagination-info">Trang <span class="current-page" id="current-page">1</span> / <span class="total-pages" id="total-pages">5</span></span>
                         <button class="pagination-button" id="next-button" onclick="nextPage()">Sau</button>
+                        <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= customer.getID() %>'">Quay lại danh sách công nợ</button>
                     </div>
                 </div>
             </div>
