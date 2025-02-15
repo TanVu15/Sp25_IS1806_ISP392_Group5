@@ -15,7 +15,7 @@
         <%  
                 DAOCustomers dao1 = new DAOCustomers();
                 Customers customer = (Customers) request.getAttribute("customer");
-            %>
+        %>
         <h2>Add Debt Records</h2>
         <form action="adddebtrecords" method="post">
             <table border="0">
@@ -24,24 +24,34 @@
                         <td>Name:</td>
                         <td> <%= customer.getName() %></td>
                     </tr>
-                     <input type="hidden" name="customerid" value="<%= customer.getID() %>">
-                    <tr>
-                        <td>Amount Owed</td>
-                        <td><input type="number" name="amountowed" required></td>
-                    </tr>
-                    <tr>
-                        <td>Payment status:</td>
-                        <td>
-                            <select name="paymentstatus" required>
-                                <option value="1">Trả Nợ</option>
-                                <option value="-1">Vay Nợ</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Note:</td>
-                        <td><input type="text" name="note" required></td>
-                    </tr>
+                <input type="hidden" name="customerid" value="<%= customer.getID() %>">
+                <tr>
+                    <td>Amount Owed</td>
+                    <td><input type="number" name="amountowed" required></td>
+                </tr>
+                <tr>
+                    <td>Payment status:</td>
+                    <td>
+                        <select name="paymentstatus" required>
+                            <option value="1">Trả Nợ</option>
+                            <option value="-1">Vay Nợ</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Ngày lập phiếu:</td>
+                    <td>
+                        <input type="date" name="invoicedate" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Image Path:</td>
+                    <td><input type="text" name="imagepath" required></td>
+                </tr>
+                <tr>
+                    <td>Note:</td>
+                    <td><input type="text" name="note" required></td>
+                </tr>
                 </tbody>
             </table>
             <input type="submit" value="Add">
