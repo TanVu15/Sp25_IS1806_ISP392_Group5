@@ -101,7 +101,7 @@
                                     <td class="table-cell"><%= debt.getDeletedAt() %></td>
                                     <td class="table-cell"><%= (debt.getIsDelete() == 0) ? "Null" : dao.getUserByID(debt.getDeleteBy()).getFullName() %></td>
                                     <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'updatedebtrecords?id=<%= debt.getID() %>'">Edit</button>
+                                        <button class="action-button" onclick="window.location.href = 'updatedebtrecords?id=<%= debt.getID() %>'">Chỉnh sửa</button>
                                         <button class="action-button" onclick="window.location.href = 'deletedebtrecords?deleteid=<%= debt.getID() %>&userid=<%= u.getID() %>'">Ban</button>
                                     </td>
                                 </tr>
