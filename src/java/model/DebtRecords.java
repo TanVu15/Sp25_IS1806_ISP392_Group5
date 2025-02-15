@@ -11,13 +11,14 @@ import java.sql.Date;
  * @author ADMIN
  */
 public class DebtRecords {
-    
-    
+
     private int ID;
     private int CustomerID;
     private int AmountOwed;
     private int PaymentStatus;
+    private Date InvoiceDate;
     private String Note;
+    private String ImagePath;
     private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
@@ -27,14 +28,15 @@ public class DebtRecords {
 
     public DebtRecords() {
     }
-    
-    
-    public DebtRecords(int ID, int CustomerID, int AmountOwed, int PaymentStatus, String Note,Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
+
+    public DebtRecords(int ID, int CustomerID, int AmountOwed, int PaymentStatus, Date InvoiceDate, String Note, String ImagePath, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
         this.ID = ID;
         this.CustomerID = CustomerID;
         this.AmountOwed = AmountOwed;
         this.PaymentStatus = PaymentStatus;
+        this.InvoiceDate = InvoiceDate;
         this.Note = Note;
+        this.ImagePath = ImagePath;
         this.CreateAt = CreateAt;
         this.UpdateAt = UpdateAt;
         this.CreateBy = CreateBy;
@@ -74,13 +76,29 @@ public class DebtRecords {
     public void setPaymentStatus(int PaymentStatus) {
         this.PaymentStatus = PaymentStatus;
     }
-    
+
+    public Date getInvoiceDate() {
+        return InvoiceDate;
+    }
+
+    public void setInvoiceDate(Date InvoiceDate) {
+        this.InvoiceDate = InvoiceDate;
+    }
+
     public String getNote() {
         return Note;
     }
 
     public void setNote(String Note) {
         this.Note = Note;
+    }
+
+    public String getImagePath() {
+        return ImagePath;
+    }
+
+    public void setImagePath(String ImagePath) {
+        this.ImagePath = ImagePath;
     }
 
     public Date getCreateAt() {
@@ -130,6 +148,4 @@ public class DebtRecords {
     public void setDeleteBy(int deleteBy) {
         this.deleteBy = deleteBy;
     }
-    
-    
 }

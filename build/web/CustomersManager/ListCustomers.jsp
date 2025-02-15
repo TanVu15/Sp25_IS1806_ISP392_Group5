@@ -9,6 +9,8 @@
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,6 +28,8 @@
         DAOUser dao = new DAOUser();
         Users u = (Users) request.getAttribute("user");
         ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
+        // Định dạng số tiền theo chuẩn VN (có dấu phân tách hàng nghìn)
+        NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
     %>
     <div class="header">
         <div class="container">
@@ -94,7 +98,7 @@
                             <tr class="table-row">
                                 <td class="table-cell"><%= cus.getID() %></td>
                                 <td class="table-cell"><%= cus.getName() %></td>
-                                <td class="table-cell"><%= cus.getWallet() %></td>
+                                <td class="table-cell"><%= currencyFormat.format(cus.getWallet()) + " VND"%></td>
                                 <td class="table-cell"><%= cus.getPhone() %></td>
                                 <td class="table-cell"><%= cus.getAddress() %></td>
                                 <td class="table-cell"><%= cus.getCreateAt() %></td>

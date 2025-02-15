@@ -2,71 +2,71 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>controller.usersservlet.RegisterServlet</servlet-class>
+        <servlet-class>Controller.usersservlet.RegisterServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>controller.loginservlet.LoginServlet</servlet-class>
+        <servlet-class>Controller.loginservlet.LoginServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>controller.loginservlet.LogutServlet</servlet-class>
+        <servlet-class>Controller.loginservlet.LogoutServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ListUsersServlet</servlet-name>
-        <servlet-class>controller.usersservlet.ListUsersServlet</servlet-class>
+        <servlet-class>Controller.userservlet.ListUsersServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>UpdateUserServlet</servlet-name>
-        <servlet-class>controller.usersservlet.UpdateUserServlet</servlet-class>
+        <servlet-class>Controller.userservlet.UpdateUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteUserServlet</servlet-name>
-        <servlet-class>controller.usersservlet.DeleteUserServlet</servlet-class>
+        <servlet-class>Controller.userservlet.DeleteUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ListCustomersServlet</servlet-name>
-        <servlet-class>controller.customerservlet.ListCustomersServlet</servlet-class>
+        <servlet-class>Controller.customerservlet.ListCustomersServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteCustomerServlet</servlet-name>
-        <servlet-class>controller.customerservlet.DeleteCustomerServlet</servlet-class>
+        <servlet-class>Controller.customerservlet.DeleteCustomerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>UpdateCustomerServlet</servlet-name>
-        <servlet-class>controller.customerservlet.UpdateCustomerServlet</servlet-class>
+        <servlet-class>Controller.customerservlet.UpdateCustomerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddCustomerServlet</servlet-name>
-        <servlet-class>controller.customerservlet.AddCustomerServlet</servlet-class>
+        <servlet-class>Controller.customerservlet.AddCustomerServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddDebtRecordsServlet</servlet-name>
-        <servlet-class>controller.debtrecordservlet.AddDebtRecordsServlet</servlet-class>
+        <servlet-class>Controller.debtrecordservlet.AddDebtRecordsServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ListDebtRecordsServlet</servlet-name>
-        <servlet-class>controller.debtrecordservlet.ListDebtRecordsServlet</servlet-class>
+        <servlet-class>Controller.debtrecordservlet.ListDebtRecordsServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ListCustomerDebtRecordsServlet</servlet-name>
-        <servlet-class>controller.debtrecordservlet.ListCustomerDebtRecordsServlet</servlet-class>
+        <servlet-class>Controller.debtrecordservlet.ListCustomerDebtRecordsServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ListProductsServlet</servlet-name>
-        <servlet-class>controller.productsservlet.ListProductsServlet</servlet-class>
+        <servlet-class>Controller.productsservlet.ListProductsServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddProductServlet</servlet-name>
-        <servlet-class>controller.productsservlet.AddProductServlet</servlet-class>
+        <servlet-class>Controller.productsservlet.AddProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>UpdateProductServlet</servlet-name>
-        <servlet-class>controller.productsservlet.UpdateProductServlet</servlet-class>
+        <servlet-class>Controller.productsservlet.UpdateProductServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteProductServlet</servlet-name>
-        <servlet-class>controller.productsservlet.DeleteProductServlet</servlet-class>
+        <servlet-class>Controller.productsservlet.DeleteProductServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>

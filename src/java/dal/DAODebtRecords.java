@@ -41,6 +41,8 @@ public class DAODebtRecords {
                 debt.setCustomerID(rs.getInt("customerid"));
                 debt.setAmountOwed(rs.getInt("AmountOwed"));
                 debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                debt.setInvoiceDate(rs.getDate("InvoiceDate"));
+                debt.setImagePath(rs.getString("ImagePath"));
                 debt.setCreateAt(rs.getDate("CreateAt"));
                 debt.setUpdateAt(rs.getDate("UpdateAt"));
                 debt.setCreateBy(rs.getInt("CreateBy"));
@@ -61,14 +63,16 @@ public class DAODebtRecords {
     String sql = "SELECT * FROM DebtRecords WHERE customerID = ?";
     
     try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setInt(1, customerID); // Đặt giá trị customerID vào câu SQL trước khi chạy
-        try (ResultSet rs = ps.executeQuery()) { // Thực thi sau khi thiết lập tham số
+        ps.setInt(1, customerID);
+        try (ResultSet rs = ps.executeQuery()) { 
             while (rs.next()) {
                 DebtRecords debt = new DebtRecords();
                 debt.setID(rs.getInt("ID"));
                 debt.setCustomerID(rs.getInt("customerID"));
                 debt.setAmountOwed(rs.getInt("AmountOwed"));
                 debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                debt.setInvoiceDate(rs.getDate("InvoiceDate"));
+                debt.setImagePath(rs.getString("ImagePath"));
                 debt.setCreateAt(rs.getDate("CreateAt"));
                 debt.setUpdateAt(rs.getDate("UpdateAt"));
                 debt.setCreateBy(rs.getInt("CreateBy"));
@@ -86,16 +90,18 @@ public class DAODebtRecords {
 }
 
 
-    public void AddDebtRecords(DebtRecords debtrecords, int userid) throws Exception {
-        String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, CreateAt, CreateBy, isDelete, Note) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        public void AddDebtRecords(DebtRecords debtrecords, int userid) throws Exception {
+        String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, InvoiceDate, CreateAt, CreateBy, isDelete, ImagePath, Note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, debtrecords.getCustomerID());
             ps.setInt(2, debtrecords.getAmountOwed());
             ps.setInt(3, debtrecords.getPaymentStatus());
-            ps.setDate(4, today);
-            ps.setInt(5, userid);
-            ps.setInt(6, 0);
-            ps.setString(7, debtrecords.getNote());
+            ps.setDate(4, debtrecords.getInvoiceDate());
+            ps.setDate(5, today);
+            ps.setInt(6, userid);
+            ps.setInt(7, 0);
+            ps.setString(8, debtrecords.getImagePath());
+            ps.setString(9, debtrecords.getNote());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -194,7 +200,7 @@ public class DAODebtRecords {
         System.out.println(dao.getDebtRecords());
         //DebtRecords debtRecords = new DebtRecords(0, 4, 500, -1, today, today, 0, 0, today, 0);
         //dao.AddDebtRecords(debtRecords, 0);
-        dao.getCustomerDebtRecords(3);
+        //dao.getCustomerDebtRecords(3);
 
     }
 
