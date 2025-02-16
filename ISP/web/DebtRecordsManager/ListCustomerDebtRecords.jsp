@@ -40,7 +40,7 @@
                         <a href="" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
-                        <a href="../logout" class="navbar__info--item">Đăng xuất</a>
+                        <a href="logout" class="navbar__info--item">Đăng xuất</a>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
             <div class="body-container">
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
-                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
+                        <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
                         <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
                         <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>

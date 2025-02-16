@@ -5,6 +5,7 @@
 
 package Controller.debtrecordservlet;
 
+import dal.DAOCustomers;
 import dal.DAODebtRecords;
 import model.Customers;
 import model.DebtRecords;
@@ -18,6 +19,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -41,8 +44,6 @@ public class ListDebtRecordsServlet extends HttpServlet {
         DAODebtRecords dao = new DAODebtRecords();
         HttpSession session = request.getSession();
         request.setAttribute("message", "");
-        Customers customer = (Customers) session.getAttribute("customer");
-        request.setAttribute("customer", customer);
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
         ArrayList<DebtRecords> debtrecords = dao.getDebtRecords();
@@ -61,6 +62,32 @@ public class ListDebtRecordsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        String information = request.getParameter("information");
+        DAODebtRecords dao = new DAODebtRecords();
+        DAOCustomers dao1 = new DAOCustomers();
+        HttpSession session = request.getSession();
+        ArrayList<DebtRecords> debtrecords;
+        Customers customer;
+        
+        //lay user người đang đăng nhập
+        Users user = (Users) session.getAttribute("user");
+        request.setAttribute("user", user);
+        // lay líst debt của customer
+
+        try {
+            debtrecords = dao.getDebtRecordsSearch(information);
+            if (debtrecords == null || debtrecords.isEmpty()) {
+                debtrecords = dao.getDebtRecords();
+                request.setAttribute("message", "Không tìm thấy kết quả nào.");
+                request.setAttribute("debtrecords", debtrecords);
+            } else {
+                request.setAttribute("debtrecords", debtrecords);
+            }
+
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListDebtRecords.jsp");
+            requestDispatcher.forward(request, response);
+        } catch (Exception ex) {
+        }
     }
 
     /** 

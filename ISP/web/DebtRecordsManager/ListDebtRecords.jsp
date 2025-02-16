@@ -54,7 +54,7 @@
             <div class="body-container">
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
-                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
+                        <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
                         <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
                         <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
@@ -65,7 +65,30 @@
 
                 <div class="homepage-body">
                     <div class="body-head">
-                        <h3 class="body__head-title">Thông tin Công Nợ </h3>
+                        <h3 class="body__head-title">Công Nợ</h3>
+                        <div class="search-container">
+                            <form action='listdebtrecords' method="post">
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm khách hàng..." class="search-input">
+                                <button type="submit" class="search-button">Search</button>
+                            </form>
+                            <% String message = (String) request.getAttribute("message"); %>
+                            <% if (message != null && !message.isEmpty()) { %>
+                            <div id="toast-message" class="toast-message"><%= message %></div>
+                            <% } %>
+
+                            <script>
+                                window.onload = function () {
+                                    var toast = document.getElementById("toast-message");
+                                    if (toast) {
+                                        toast.style.display = "block"; // Hiển thị thông báo
+                                        setTimeout(function () {
+                                            toast.style.opacity = "0";
+                                            setTimeout(() => toast.style.display = "none", 500);
+                                        }, 3000);
+                                    }
+                                };
+                            </script>
+                        </div>
 
                     </div>
                     <div class="table-container">
@@ -82,7 +105,6 @@
                                     <th class="table-header-item">Xóa</th>
                                     <th class="table-header-item">Ngày xóa</th>
                                     <th class="table-header-item">Người xóa</th>
-                                    <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,19 +125,11 @@
                                     <td class="table-cell"><%= (debt.getIsDelete() == 0) ? "Active" : "Ban" %></td>
                                     <td class="table-cell"><%= debt.getDeletedAt() %></td>
                                     <td class="table-cell"><%= (debt.getIsDelete() == 0) ? "Null" : dao.getUserByID(debt.getDeleteBy()).getFullName() %></td>
-                                    <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'updatedebtrecords?id=<%= debt.getID() %>'">Chỉnh sửa</button>
-                                        <button class="action-button" onclick="window.location.href = 'deletedebtrecords?deleteid=<%= debt.getID() %>&userid=<%= u.getID() %>'">Ban</button>
-                                    </td>
+
                                 </tr>
                                 <% }} %>
                             </tbody>
                         </table>
-                    </div>
-                    <div class="pagination">
-                        <button class="pagination-button" id="prev-button" onclick="prevPage()">Trước</button>
-                        <span class="pagination-info">Trang <span class="current-page" id="current-page">1</span> / <span class="total-pages" id="total-pages">5</span></span>
-                        <button class="pagination-button" id="next-button" onclick="nextPage()">Sau</button>
                     </div>
                 </div>
             </div>
