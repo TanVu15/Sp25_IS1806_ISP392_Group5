@@ -76,7 +76,7 @@
                                         <td class="table-cell"><input type="text" name="phone" ></td>
                                         <td class="table-cell"><input type="text" name="address" ></td>
                                         <td class="table-cell">
-                                            <button onclick="submit" class="submit-button">Thêm</button>
+                                            <button onclick="submit" class="add-product-button">Thêm</button>
                                         </td>
                                     </tr>
                                 </tbody>

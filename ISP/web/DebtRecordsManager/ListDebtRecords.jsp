@@ -105,7 +105,6 @@
                                     <th class="table-header-item">Xóa</th>
                                     <th class="table-header-item">Ngày xóa</th>
                                     <th class="table-header-item">Người xóa</th>
-                                    <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -126,19 +125,11 @@
                                     <td class="table-cell"><%= (debt.getIsDelete() == 0) ? "Active" : "Ban" %></td>
                                     <td class="table-cell"><%= debt.getDeletedAt() %></td>
                                     <td class="table-cell"><%= (debt.getIsDelete() == 0) ? "Null" : dao.getUserByID(debt.getDeleteBy()).getFullName() %></td>
-                                    <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'updatedebtrecords?id=<%= debt.getID() %>'">Chỉnh sửa</button>
-                                        <button class="action-button" onclick="window.location.href = 'deletedebtrecords?deleteid=<%= debt.getID() %>&userid=<%= u.getID() %>'">Ban</button>
-                                    </td>
+
                                 </tr>
                                 <% }} %>
                             </tbody>
                         </table>
-                    </div>
-                    <div class="pagination">
-                        <button class="pagination-button" id="prev-button" onclick="prevPage()">Trước</button>
-                        <span class="pagination-info">Trang <span class="current-page" id="current-page">1</span> / <span class="total-pages" id="total-pages">5</span></span>
-                        <button class="pagination-button" id="next-button" onclick="nextPage()">Sau</button>
                     </div>
                 </div>
             </div>

@@ -59,8 +59,8 @@
                 </div>
 
                 <div class="homepage-body">
-                    <h3 class="body__head-title">Thông tin Công Nợ</h3>
                     
+                    <h3 class="body__head-title">Thông tin Công Nợ</h3>
                     <div class="table-container">
                         <form action="adddebtrecords" method="post">
                             
@@ -93,7 +93,7 @@
                                         <td class="table-cell"><input type="text" name="imagepath" ></td>
                                         <td class="table-cell"><input type="text" name="note" ></td>
                                         <td class="table-cell">
-                                            <button onclick="submit" class="submit-button">Add</button>
+                                            <button onclick="submit" class="add-product-button">Add</button>
                                         </td>
                                     </tr>
                                 </tbody>
