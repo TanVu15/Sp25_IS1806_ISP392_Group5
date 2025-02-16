@@ -211,6 +211,53 @@ public class DAODebtRecords {
         }
         return debtRecordses;
     }
+    
+    public ArrayList<DebtRecords> getDebtRecordsSearch(String information) throws Exception {
+        ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
+        String sql = "SELECT * FROM DebtRecords ";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) { // Thực thi sau khi thiết lập tham số
+                while (rs.next()) {
+                    DebtRecords debt = new DebtRecords();
+                    debt.setID(rs.getInt("ID"));
+                    debt.setCustomerID(rs.getInt("customerID"));
+                    debt.setAmountOwed(rs.getInt("AmountOwed"));
+                    debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                    debt.setCreateAt(rs.getDate("CreateAt"));
+                    debt.setUpdateAt(rs.getDate("UpdateAt"));
+                    debt.setCreateBy(rs.getInt("CreateBy"));
+                    debt.setIsDelete(rs.getInt("isDelete"));
+                    debt.setDeletedAt(rs.getDate("DeletedAt"));
+                    debt.setDeleteBy(rs.getInt("DeleteBy"));
+                    debt.setNote(rs.getString("Note"));
+                    debt.setInvoiceDate(rs.getDate("InvoiceDate"));
+                        
+                    String name = DAOCustomers.INSTANCE.getCustomersByID(debt.getCustomerID()).getName();
+                    String status = "";
+                    if(debt.getPaymentStatus()==1){
+                        status+="Trả Nợ";
+                    }else{
+                        status+="Vay Nợ";
+                    }
+                    String debtSeach = debt.getID() + " "
+                            + name + " "
+                            + debt.getAmountOwed() + " "
+                            + status + " "
+                            + debt.getCreateAt() + " "
+                            + debt.getUpdateAt() + " "
+                            + DAOUser.INSTANCE.getUserByID(debt.getCreateBy()).getFullName() + " "
+                            + debt.getNote();
+                    if (debtSeach.toLowerCase().contains(information.toLowerCase())) {
+                        debtRecordses.add(debt);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý lỗi SQL
+        }
+        return debtRecordses;
+    }
 
     public static void main(String[] args) throws Exception {
         DAODebtRecords dao = new DAODebtRecords();
@@ -219,6 +266,7 @@ public class DAODebtRecords {
         //DebtRecords debtRecords = new DebtRecords(0, 4, 500, -1, today, today, 0, 0, today, 0);
         //dao.AddDebtRecords(debtRecords, 0);
         //dao.getCustomerDebtRecords(3);
+        System.out.println(dao.getDebtRecordsSearch("1000"));
 
     }
 

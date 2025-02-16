@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
         if (session.getAttribute("user") != null) {
             Users user = (Users) session.getAttribute("user");
             if (user.getRoleid() == 1) {
-                response.sendRedirect("Admin/Admin.jsp");
+                response.sendRedirect("listusers");
             } else if (user.getRoleid() == 2) {
                 response.sendRedirect("Owner/Owner.jsp");
             } else if (user.getRoleid() == 3) {
@@ -61,7 +61,7 @@ public class LoginServlet extends HttpServlet {
                         session.setAttribute("user", user);
 
                         if (user.getRoleid() == 1) {
-                            response.sendRedirect("Admin/Admin.jsp");
+                            response.sendRedirect("listusers");
                         } else if (user.getRoleid() == 2) {
                             response.sendRedirect("Owner/Owner.jsp");
                         } else if (user.getRoleid() == 3) {

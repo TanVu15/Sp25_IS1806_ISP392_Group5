@@ -37,10 +37,10 @@
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="updateuser?id=<%= u.getID() %>" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
-                        <a href="" class="navbar__info--item">Đăng xuất</a>
+                        <a href="logout" class="navbar__info--item">Đăng xuất</a>
                     </div>
                 </div>
             </div>
@@ -102,7 +102,6 @@
                             </script>
                         </form>
                     </div>
-                    
                 </div>
             </div>
         </div>
