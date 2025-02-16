@@ -448,3 +448,72 @@ a {
     justify-content: space-between;
     margin-top: 20px;
 }
+
+/* add btn */
+.add-product-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+    margin-left: 48px;
+}
+
+.add-product-button:hover {
+    background-color: #66c32c; 
+}
+
+.search-input {
+    width: 500px; /* Độ dài thanh tìm kiếm */
+    padding: 8px 12px; /* Padding cho nội dung bên trong */
+    border: 1px solid var(--border-color); /* Viền cho thanh tìm kiếm */
+    border-radius: 4px; /* Bo góc */
+    font-size: 14px; /* Kích thước chữ */
+}
+
+.search-icon {
+    margin-left: 10px; /* Khoảng cách giữa ô tìm kiếm và biểu tượng */
+    cursor: pointer; /* Thay đổi con trỏ khi di chuột qua */
+    color: var(--primary-color); /* Màu sắc biểu tượng */
+    font-size: 16px; /* Kích thước biểu tượng */
+}
+
+.search-input:focus {
+    outline: none; /* Bỏ viền khi ô tìm kiếm được chọn */
+    border-color: var(--primary-color); /* Đổi màu viền khi ô tìm kiếm được chọn */
+}
+
+.search-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+    margin-left: 48px;
+}
+
+.search-button:hover {
+    background-color: #66c32c; /* Màu xanh lá đậm hơn khi hover */
+}
+
+.toast-message {
+    position: fixed;
+    top: 20px; /* Đưa thông báo lên góc trên */
+    right: 20px; /* Căn lề phải */
+    background: #28a745; /* Màu xanh lá */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+    z-index: 1000;
+    display: none;
+}

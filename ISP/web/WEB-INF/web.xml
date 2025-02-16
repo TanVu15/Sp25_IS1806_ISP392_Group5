@@ -2,7 +2,7 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>Controller.usersservlet.RegisterServlet</servlet-class>
+        <servlet-class>Controller.userservlet.RegisterServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -10,7 +10,7 @@
     </servlet>
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
-        <servlet-class>Controller.loginservlet.LogutServlet</servlet-class>
+        <servlet-class>Controller.loginservlet.LogoutServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ListUsersServlet</servlet-name>
@@ -18,11 +18,11 @@
     </servlet>
     <servlet>
         <servlet-name>UpdateUserServlet</servlet-name>
-        <servlet-class>Controller.usersservlet.UpdateUserServlet</servlet-class>
+        <servlet-class>Controller.userservlet.UpdateUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteUserServlet</servlet-name>
-        <servlet-class>Controller.usersservlet.DeleteUserServlet</servlet-class>
+        <servlet-class>Controller.userservlet.DeleteUserServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ListCustomersServlet</servlet-name>

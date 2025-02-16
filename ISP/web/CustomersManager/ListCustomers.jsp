@@ -9,6 +9,8 @@
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,6 +28,7 @@
             DAOUser dao = new DAOUser();
             Users u = (Users) request.getAttribute("user");
             ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
+            NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
         <div class="header">
             <div class="container">
@@ -38,7 +41,7 @@
                         <a href="" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
-                        <a href="" class="navbar__info--item">Đăng xuất</a>
+                        <a href="../logout" class="navbar__info--item">Đăng xuất</a>
                     </div>
                 </div>
             </div>
@@ -63,11 +66,26 @@
                         <div class="search-container">
                             <form action="listcustomers" method="post">
                                 <input type="text" id="information" name="information" placeholder="Tìm kiếm khách hàng..." class="search-input">
-                                <input type="submit" value="Search">
+                                <button type="submit" class="search-button">Search</button>
                             </form>
-                            <% String message = (String) request.getAttribute("message"); if (message != null && !message.isEmpty()) { %>
-                            <p style="color: red;"><%= message %></p>
+                            <% String message = (String) request.getAttribute("message"); %>
+                            <% if (message != null && !message.isEmpty()) { %>
+                            <div id="toast-message" class="toast-message"><%= message %></div>
                             <% } %>
+
+                            <script>
+                                window.onload = function () {
+                                    var toast = document.getElementById("toast-message");
+                                    if (toast) {
+                                        toast.style.display = "block"; // Hiển thị thông báo
+                                        setTimeout(function () {
+                                            toast.style.opacity = "0";
+                                            setTimeout(() => toast.style.display = "none", 500);
+                                        }, 3000);
+                                    }
+                                };
+                            </script>
+                            <a href="addcustomer" class="add-product-button">Thêm khách hàng</a>
                         </div>
                     </div>
                     <div class="table-container">
@@ -98,7 +116,7 @@
                                 <tr class="table-row">
                                     <td class="table-cell"><%= cus.getID() %></td>
                                     <td class="table-cell"><%= cus.getName() %></td>
-                                    <td class="table-cell"><%= cus.getWallet() %></td>
+                                    <td class="table-cell"><%= currencyFormat.format(cus.getWallet()) + " VND"%></td>
                                     <td class="table-cell"><%= cus.getPhone() %></td>
                                     <td class="table-cell"><%= cus.getAddress() %></td>
                                     <td class="table-cell"><%= cus.getCreateAt() %></td>
@@ -119,38 +137,12 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="pagination">
-                        <button class="pagination-button" id="prev-button" onclick="prevPage()">Trước</button>
-                        <span class="pagination-info">Trang <span class="current-page" id="current-page">1</span> / <span class="total-pages" id="total-pages">5</span></span>
-                        <button class="pagination-button" id="next-button" onclick="nextPage()">Sau</button>
-                    </div>
+
                 </div>
             </div>
         </div>
 
-        <div id="product-detail-modal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2>Chi tiết khách hàng</h2>
-                <div class="modal-body">
-                    <p><strong>ID:</strong> <span id="modal-product-code"></span></p>
-                    <p><strong>Tên:</strong> <span id="modal-product-name"></span></p>
-                    <p><strong>Ví:</strong> <span id="modal-product-wallet"></span></p>
-                    <p><strong>Điện thoại:</strong> <span id="modal-product-phone"></span></p>
-                    <p><strong>Địa chỉ:</strong> <span id="modal-product-address"></span></p>
-                    <p><strong>Ngày tạo:</strong> <span id="modal-product-create-at"></span></p>
-                    <p><strong>Ngày cập nhật:</strong> <span id="modal-product-update-at"></span></p>
-                    <p><strong>Người tạo:</strong> <span id="modal-product-create-by"></span></p>
-                    <p><strong>Xóa:</strong> <span id="modal-product-is-delete"></span></p>
-                    <p><strong>Ngày xóa:</strong> <span id="modal-product-delete-at"></span></p>
-                    <p><strong>Người xóa:</strong> <span id="modal-product-delete-by"></span></p>
-                    <div class="modal-actions">
-                        <button class="action-button">Sửa</button>
-                        <button class="action-button" id="delete-button">Xóa</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <div class="footer">
             <div class="container">

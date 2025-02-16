@@ -4,6 +4,7 @@
  */
 package Controller.userservlet;
 
+import dal.DAOCustomers;
 import dal.DAOUser;
 import model.Users;
 import jakarta.servlet.RequestDispatcher;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import model.Customers;
 
 /**
  *
@@ -34,11 +36,16 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DAOUser dao = new DAOUser();
-        Users user = new Users();
+        DAOCustomers dao = new DAOCustomers();
         HttpSession session = request.getSession();
-        user = (Users) session.getAttribute("user");
+        request.setAttribute("message", "");
+        Users user = (Users) session.getAttribute("user");
+        request.setAttribute("user", user);
 
+//        DAOUser dao = new DAOUser();
+//        Users user = new Users();
+//        HttpSession session = request.getSession();
+//        user = (Users) session.getAttribute("user");
         RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
         dispatcher.forward(request, response);
     }
@@ -51,7 +58,7 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String password2 = request.getParameter("password2");
         if (!password.endsWith(password2)) {
-            request.setAttribute("errorMessage", "Please check again your password. Please enter a different name.");
+            request.setAttribute("message", "Hãy xem lại mật khẩu của bạn!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
             dispatcher.forward(request, response);
             return;
@@ -64,7 +71,8 @@ public class RegisterServlet extends HttpServlet {
 
             //Check if username already exists
             if (dao.checkUsernameExists(name)) {
-                request.setAttribute("errorMessage", "Username already exists. Please enter a different name.");
+                request.setAttribute("user", user);
+                request.setAttribute("message", "Tên đã được dùng, hãy sử dụng tên khác!");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
                 dispatcher.forward(request, response);
                 return;
@@ -80,7 +88,7 @@ public class RegisterServlet extends HttpServlet {
                 dao.Register(userRegister, user.getID());
                 response.sendRedirect("listusers");
             } else {
-                request.setAttribute("errorMessage", "Invalid role selected.");
+                request.setAttribute("message", "Invalid role selected.");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
                 dispatcher.forward(request, response);
             }

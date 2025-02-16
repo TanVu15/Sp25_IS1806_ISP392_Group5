@@ -96,7 +96,7 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
         // lay líst debt của customer
 
         try {
-            debtrecords = dao.getCustomerDebtRecordsSeach(information, customerID);
+            debtrecords = dao.getCustomerDebtRecordsSearch(information, customerID);
             if (debtrecords == null || debtrecords.isEmpty()) {
                 request.setAttribute("message", "Không tìm thấy kết quả nào.");
                 debtrecords = dao.getCustomerDebtRecords(customerID);

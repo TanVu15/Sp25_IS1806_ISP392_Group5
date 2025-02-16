@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  *
@@ -35,6 +36,14 @@ public class AddCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        DAOCustomers dao = new DAOCustomers();
+        HttpSession session = request.getSession();
+        request.setAttribute("message", "");
+        Users user = (Users) session.getAttribute("user");
+        request.setAttribute("user", user);
+        ArrayList<Customers> customers = dao.getAllCustomers();
+        request.setAttribute("customers", customers);
+        
         RequestDispatcher dispatcher = request.getRequestDispatcher("CustomersManager/AddCustomer.jsp");
         dispatcher.forward(request, response);
     }

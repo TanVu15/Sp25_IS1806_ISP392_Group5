@@ -10,6 +10,8 @@
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,14 +23,16 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-            <%  
-                DAOUser dao = new DAOUser();
-                DAOCustomers dao1 = new DAOCustomers();
-                Users u = (Users) request.getAttribute("user");
-                Customers customer = (Customers) request.getAttribute("customer");
-                ArrayList<DebtRecords> debtrecords = (ArrayList<DebtRecords>) request.getAttribute("debtrecords");
-            %>
-        
+        <%  
+            DAOUser dao = new DAOUser();
+            DAOCustomers dao1 = new DAOCustomers();
+            Users u = (Users) request.getAttribute("user");
+            Customers customer = (Customers) request.getAttribute("customer");
+            ArrayList<DebtRecords> debtrecords = (ArrayList<DebtRecords>) request.getAttribute("debtrecords");
+            // Định dạng số tiền theo chuẩn VN (có dấu phân tách hàng nghìn)
+            NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
+        %>
+
         <div class="header">
             <div class="container">
                 <img src="Image/logo.png" alt="logo" class="home-logo">
@@ -62,7 +66,7 @@
                 <div class="homepage-body">
                     <div class="body-head">
                         <h3 class="body__head-title">Thông tin Công Nợ </h3>
-                        
+
                     </div>
                     <div class="table-container">
                         <table class="product-table">
@@ -84,11 +88,14 @@
                             <tbody>
                                 <% 
                                 for (DebtRecords debt : debtrecords) {
+                                    Users create1 = dao.getUserByID(debt.getCreateBy());
+                                    Users create2 = dao.getUserByID(create1.getCreateBy());
+                                    if(u.getID() == create1.getID() || u.getID() == create2.getID() || u.getID() == debt.getCreateBy()){
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><%= debt.getID() %></td>
                                     <td class="table-cell"><%= dao1.getCustomersByID(debt.getCustomerID()).getName()  %></td>
-                                    <td class="table-cell"><%= debt.getAmountOwed()  %></td>
+                                    <td class="table-cell"><%= currencyFormat.format(debt.getAmountOwed()) +" VND" %></td>
                                     <td class="table-cell"><%= debt.getPaymentStatus() %></td>
                                     <td class="table-cell"><%= debt.getCreateAt() %></td>
                                     <td class="table-cell"><%= debt.getUpdateAt() %></td>
@@ -97,11 +104,11 @@
                                     <td class="table-cell"><%= debt.getDeletedAt() %></td>
                                     <td class="table-cell"><%= (debt.getIsDelete() == 0) ? "Null" : dao.getUserByID(debt.getDeleteBy()).getFullName() %></td>
                                     <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'updatedebtrecords?id=<%= debt.getID() %>'">Edit</button>
+                                        <button class="action-button" onclick="window.location.href = 'updatedebtrecords?id=<%= debt.getID() %>'">Chỉnh sửa</button>
                                         <button class="action-button" onclick="window.location.href = 'deletedebtrecords?deleteid=<%= debt.getID() %>&userid=<%= u.getID() %>'">Ban</button>
                                     </td>
                                 </tr>
-                                <% } %>
+                                <% }} %>
                             </tbody>
                         </table>
                     </div>

@@ -35,7 +35,7 @@
                         <a href="" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
-                        <a href="" class="navbar__info--item">Đăng xuất</a>
+                        <a href="../logout" class="navbar__info--item">Đăng xuất</a>
                     </div>
                 </div>
             </div>
@@ -59,15 +59,27 @@
                         <h3 class="body__head-title">Thông tin tài khoản</h3>
                         <div class="search-container">
                             <form action="listusers" method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm người dùng..." class="search-input">
-                                <input type="submit" value="Search">
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm khách hàng..." class="search-input">
+                                <button type="submit" class="search-button">Search</button>
                             </form>
-                            <% 
-                                String message = (String) request.getAttribute("message");
-                                if (message != null && !message.isEmpty()) { 
-                            %>
-                            <p style="color: red;"><%= message %></p>
+                            <% String message = (String) request.getAttribute("message"); %>
+                            <% if (message != null && !message.isEmpty()) { %>
+                            <div id="toast-message" class="toast-message"><%= message %></div>
                             <% } %>
+
+                            <script>
+                                window.onload = function () {
+                                    var toast = document.getElementById("toast-message");
+                                    if (toast) {
+                                        toast.style.display = "block"; // Hiển thị thông báo
+                                        setTimeout(function () {
+                                            toast.style.opacity = "0";
+                                            setTimeout(() => toast.style.display = "none", 500);
+                                        }, 3000);
+                                    }
+                                };
+                            </script>
+                            <a href="register" class="add-product-button">Thêm tài khoản</a>
                         </div>
                     </div>
                     <div class="table-container">
