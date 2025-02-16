@@ -63,7 +63,7 @@
                     <div class="body-head">
                         <h3 class="body__head-title">
                             Khách Hàng: <%= customer.getName() %> <br> <br> 
-                            Ví: <%= customer.getWallet() %>
+                            Ví: <%= currencyFormat.format(customer.getWallet()) +" VND" %>
                         </h3>
                         <div class="search-container">
                             <form action='listcustomerdebtrecords?customerid=<%= customer.getID() %>' method="post">
@@ -95,7 +95,6 @@
                             <thead>
                                 <tr class="table-header">
                                     <th class="table-header-item">ID</th>
-                                    <th class="table-header-item">Tên Khách Hàng</th>
                                     <th class="table-header-item">Số tiền</th>
                                     <th class="table-header-item">Trạng Thái</th>
                                     <th class="table-header-item">Ngày Tạo Phiếu</th>
@@ -111,7 +110,6 @@
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><%= debt.getID() %></td>
-                                    <td class="table-cell"><%= dao1.getCustomersByID(debt.getCustomerID()).getName() %></td>
                                     <td class="table-cell"><%= currencyFormat.format(debt.getAmountOwed()) +" VND" %></td>
                                     <td class="table-cell"><% if (debt.getPaymentStatus() == 1) { %>
                                         Trả Nợ
