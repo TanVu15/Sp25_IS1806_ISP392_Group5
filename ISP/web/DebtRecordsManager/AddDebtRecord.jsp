@@ -61,7 +61,7 @@
                 <div class="homepage-body">
                     <div class="body-head">
                         <h3 class="body__head-title">Thêm Công Nợ </h3>
-                        
+                        </div>
                     <div class="table-container">
                         <form action="adddebtrecords" method="post">
                             
