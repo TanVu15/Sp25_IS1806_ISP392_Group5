@@ -129,7 +129,7 @@
                                     <td class="table-cell"><%= user.getDeletedAt() %></td>
                                     <td class="table-cell"><%= (user.getIsDelete() == 0) ? "Null" : dao.getUserByID(user.getDeleteBy()).getFullName() %></td>
                                     <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'updateuser?id=<%= user.getID() %>'">Edit</button>
+                                        <button class="action-button" onclick="window.location.href = 'updateuser?id=<%= user.getID() %>'">Chỉnh sửa</button>
                                         <% if(u.getRoleid() < user.getRoleid()){ %>
                                         <button class="action-button" onclick="window.location.href = 'deleteuser?deleteid=<%= user.getID() %>&userid=<%= u.getID() %>'">Ban</button>
                                         <%

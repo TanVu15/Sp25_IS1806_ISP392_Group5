@@ -58,7 +58,12 @@
                 </div>
 
                 <div class="homepage-body">
-                    <h3>Thêm khách hàng </h3>
+                    <div class="body-head">
+                        <h3 class="body__head-title">Thêm khách hàng</h3>
+                        <div class="search-container">
+                            <a href="listcustomers" class="add-product-button">Quay lại danh sách khách hàng</a>
+                        </div>
+                    </div>
                     <div class="table-container">
                         <form action="addcustomer" method="post">
                             <table class="product-table">
@@ -76,7 +81,7 @@
                                         <td class="table-cell"><input type="text" name="phone" ></td>
                                         <td class="table-cell"><input type="text" name="address" ></td>
                                         <td class="table-cell">
-                                            <button onclick="submit" class="submit-button">Thêm</button>
+                                            <button onclick="submit" class="add-product-button">Thêm</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -96,7 +101,6 @@
                         <button class="pagination-button" id="prev-button" onclick="prevPage()">Trước</button>
                         <span class="pagination-info">Trang <span class="current-page" id="current-page">1</span> / <span class="total-pages" id="total-pages">5</span></span>
                         <button class="pagination-button" id="next-button" onclick="nextPage()">Sau</button>
-                        <button class="action-button" onclick="window.location.href = 'listcustomers'">Quay lại danh sách khách hàng</button>
                     </div>
                 </div>
             </div>

@@ -28,6 +28,8 @@ public class UpdateUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOUser dao = new DAOUser();
+        HttpSession session = request.getSession();
+        request.setAttribute("message", "");
         int userid = Integer.parseInt(request.getParameter("id"));
 
         try {

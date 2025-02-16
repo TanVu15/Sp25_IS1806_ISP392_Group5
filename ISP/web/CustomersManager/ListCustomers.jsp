@@ -126,7 +126,7 @@
                                     <td class="table-cell"><%= cus.getDeletedAt() %></td>
                                     <td class="table-cell"><%= (cus.getIsDelete() == 0) ? "Null" : dao.getUserByID(cus.getDeleteBy()).getFullName() %></td>
                                     <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'updatecustomer?id=<%= cus.getID() %>'">Edit</button>
+                                        <button class="action-button" onclick="window.location.href = 'updatecustomer?id=<%= cus.getID() %>'">Chỉnh sửa</button>
                                         <button class="action-button" onclick="window.location.href = 'deletecustomer?deleteid=<%= cus.getID() %>&userid=<%= u.getID() %>'">Ban</button>
                                         <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= cus.getID() %>'">Công nợ</button>
                                     </td>

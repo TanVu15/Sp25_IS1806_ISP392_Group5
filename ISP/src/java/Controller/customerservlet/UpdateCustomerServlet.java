@@ -14,6 +14,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import model.Users;
 
 /**
  *
@@ -34,6 +37,12 @@ public class UpdateCustomerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         DAOCustomers dao = new DAOCustomers();
+        HttpSession session = request.getSession();
+        request.setAttribute("message", "");
+        Users user = (Users) session.getAttribute("user");
+        request.setAttribute("user", user);
+        ArrayList<Customers> customers = dao.getAllCustomers();
+        request.setAttribute("customers", customers);
         int userid = Integer.parseInt(request.getParameter("id"));
 
         try {

@@ -6,43 +6,115 @@
 
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.Customers" %>
+<%@ page import="model.DebtRecords" %>
+<%@ page import="model.Users" %>
 <%@ page import="dal.DAOCustomers" %>
+<%@ page import="dal.DAOUser" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    <h1>Edit Customer</h1>
-    <form method="post">
-        <h1>Update User Information</h1>
-
-        <%
-            Customers cus = (Customers) request.getAttribute("cus");
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cập nhật khách hàng</title>
+        <link rel="stylesheet" href="css/home2.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+    
+    <body>
+        <%  
+            DAOUser dao = new DAOUser();
+            Users u = (Users) request.getAttribute("user");
+            ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
         %>
 
+        <div class="header">
+            <div class="container">
+                <img src="Image/logo.png" alt="logo" class="home-logo">
+            </div>
+            <div class="header__navbar-item navbar__user">
+                <span class="navbar__user--name"> <%= u.getFullName() %></span>
+                <div class="navbar__user--info">
+                    <div class="navbar__info--wrapper">
+                        <a href="" class="navbar__info--item">Tài khoản của tôi</a>
+                    </div>
+                    <div class="navbar__info--wrapper">
+                        <a href="../logout" class="navbar__info--item">Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+                
+        <div class="body">
+            <div class="body-container">
 
-        <input type="hidden" name="id" value="<%= cus.getID() %>">
+                <div class="mainmenu">
+                    <ul class="mainmenu-list row no-gutters">
+                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
+                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
+                        <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
+                    </ul>
+                </div>
 
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="<%= cus.getName() %>" readonly><br><br>
-
-        <label for="phone">Phone:</label>
-        <input type="number" id="phone" name="phone" value="<%= cus.getPhone() %> "required><br><br>
-
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" value="<%= cus.getAddress() %> "required><br><br>
-
-        <input type="submit" value="Update Customer">
-    </form>
-    <%
-        String errorMessage = (String) request.getAttribute("errorMessage");
-        if (errorMessage != null) {
-    %>
-    <p style="color:red;"><%= errorMessage %></p>
-    <%
-        }
-    %>
-
-    <button onclick="window.location.href = 'listcustomers'">Back to Customers List</button>
-    <button onclick="location.href = '${pageContext.request.contextPath}/logout'">Logout</button>
-</form>
-
+                <div class="homepage-body">
+                    <div class="body-head">
+                        <h3 class="body__head-title">Cập nhật khách hàng</h3>
+                        <div class="search-container">
+                            <a href="listcustomers" class="add-product-button">Quay lại danh sách khách hàng</a>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <form method="post">
+                            <%
+                                Customers cus = (Customers) request.getAttribute("cus");
+                            %>
+                            <table class="product-table">
+                                <thead>
+                                    <tr class="table-header">
+                                        <th class="table-header-item">Tên</th>
+                                        <th class="table-header-item">Số điện thoại</th>
+                                        <th class="table-header-item">Địa chỉ</th>
+                                        <th class="table-header-item">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <input type="hidden" name="id" value="<%= cus.getID() %>">
+                                    <tr class="table-row">
+                                        <td class="table-cell"><input type="text" id="name" name="name" value="<%= cus.getName() %>" readonly></td>
+                                        <td class="table-cell"><input type="number" id="phone" name="phone" value="<%= cus.getPhone() %> "required></td>
+                                        <td class="table-cell"><input type="text" id="address" name="address" value="<%= cus.getAddress() %> "required></td>
+                                        <td class="table-cell">
+                                            <button onclick="submit" class="add-product-button">Cập Nhật</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <%
+                                String errorMessage = (String) request.getAttribute("errorMessage");
+                                if (errorMessage != null) {
+                                %>
+                                <p style="color:red;"><%= errorMessage %></p>
+                                <%
+                                    }
+                            %>
+                        </form>
+                    </div>
+                    <div class="pagination">
+                        
+                        <button class="pagination-button" id="prev-button" onclick="prevPage()">Trước</button>
+                        <span class="pagination-info">Trang <span class="current-page" id="current-page">1</span> / <span class="total-pages" id="total-pages">5</span></span>
+                        <button class="pagination-button" id="next-button" onclick="nextPage()">Sau</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="container">
+                <p>&copy; 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </body>
 </html>

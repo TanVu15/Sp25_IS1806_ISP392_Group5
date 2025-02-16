@@ -61,7 +61,9 @@
                 </div>
 
                 <div class="homepage-body">
-                    <h3>Đăng kí tài khoản </h3>
+                    <div class="body-head">
+                        <h3 class="body__head-title">Thêm tài khoản</h3>
+                    </div>
                     <div class="table-container">
                         <form action="register" method="post">
                             <table class="product-table">
