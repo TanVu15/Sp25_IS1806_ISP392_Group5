@@ -84,8 +84,8 @@
                                     <input type="hidden" name="id" value="<%= cus.getID() %>">
                                     <tr class="table-row">
                                         <td class="table-cell"><input type="text" id="name" name="name" value="<%= cus.getName() %>" readonly></td>
-                                        <td class="table-cell"><input type="number" id="phone" name="phone" value="<%= cus.getPhone() %> "required></td>
-                                        <td class="table-cell"><input type="text" id="address" name="address" value="<%= cus.getAddress() %> "required></td>
+                                        <td class="table-cell"><input type="number" id="phone" name="phone" value="<%= cus.getPhone() %> "></td>
+                                        <td class="table-cell"><input type="text" id="address" name="address" value="<%= cus.getAddress() %> "></td>
                                         <td class="table-cell">
                                             <button onclick="submit" class="add-product-button">Cập Nhật</button>
                                         </td>

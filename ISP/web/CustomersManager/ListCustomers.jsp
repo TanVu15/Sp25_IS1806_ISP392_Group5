@@ -100,9 +100,6 @@
                                     <th class="table-header-item">Ngày tạo</th>
                                     <th class="table-header-item">Ngày cập nhật</th>
                                     <th class="table-header-item">Người tạo</th>
-                                    <th class="table-header-item">Trạng thái</th>
-                                    <th class="table-header-item">Ngày xóa</th>
-                                    <th class="table-header-item">Người xóa</th>
                                     <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
@@ -122,12 +119,8 @@
                                     <td class="table-cell"><%= cus.getCreateAt() %></td>
                                     <td class="table-cell"><%= cus.getUpdateAt() %></td>
                                     <td class="table-cell"><%= dao.getUserByID(cus.getCreateBy()).getFullName() %></td>
-                                    <td class="table-cell"><%= (cus.getIsDelete() == 0) ? "Active" : "Ban" %></td>
-                                    <td class="table-cell"><%= cus.getDeletedAt() %></td>
-                                    <td class="table-cell"><%= (cus.getIsDelete() == 0) ? "Null" : dao.getUserByID(cus.getDeleteBy()).getFullName() %></td>
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'updatecustomer?id=<%= cus.getID() %>'">Chỉnh sửa</button>
-                                        <button class="action-button" onclick="window.location.href = 'deletecustomer?deleteid=<%= cus.getID() %>&userid=<%= u.getID() %>'">Ban</button>
                                         <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= cus.getID() %>'">Công nợ</button>
                                     </td>
                                 </tr>
