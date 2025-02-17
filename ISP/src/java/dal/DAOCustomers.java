@@ -203,6 +203,5 @@ public class DAOCustomers {
         //dao.deleteCustomers(4, 1);
         //Customers cu = new Customers(3, 500, "Viet", 388258116, "vn", today, today, 0, 0, today, 0);
         //dao.updateCustomers(cu);
-
     }
 }

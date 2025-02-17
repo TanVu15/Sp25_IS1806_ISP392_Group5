@@ -16,7 +16,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Cập nhật khách hàng</title>
+        <title>Cập Nhật Khách Hàng</title>
         <link rel="stylesheet" href="css/home2.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
@@ -101,12 +101,6 @@
                                     }
                             %>
                         </form>
-                    </div>
-                    <div class="pagination">
-                        
-                        <button class="pagination-button" id="prev-button" onclick="prevPage()">Trước</button>
-                        <span class="pagination-info">Trang <span class="current-page" id="current-page">1</span> / <span class="total-pages" id="total-pages">5</span></span>
-                        <button class="pagination-button" id="next-button" onclick="nextPage()">Sau</button>
                     </div>
                 </div>
             </div>

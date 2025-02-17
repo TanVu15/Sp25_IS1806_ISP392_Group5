@@ -25,6 +25,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
+        
         if (session.getAttribute("user") != null) {
             Users user = (Users) session.getAttribute("user");
             if (user.getRoleid() == 1) {
@@ -35,6 +36,7 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("Staff/Staff.jsp");
             }
         } else {
+            request.setAttribute("message", "");
             RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
             dispatcher.forward(request, response);
         }
@@ -53,7 +55,7 @@ public class LoginServlet extends HttpServlet {
 
                 if (user != null && (user.getPasswordHash().equals(password) || user.getIsDelete() == 1)) {
                     if (user.getIsDelete() != 0) {
-                        request.setAttribute("errorMessage", "Hãy xem lại tài khoản và mật khẩu!");
+                        request.setAttribute("message", "Hãy xem lại tài khoản và mật khẩu!");
                         RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
                         dispatcher.forward(request, response);
                     } else {
@@ -69,7 +71,7 @@ public class LoginServlet extends HttpServlet {
                         }
                     }
                 } else {
-                    request.setAttribute("errorMessage", "Invalid username or password.");
+                    request.setAttribute("message", "Hãy xem lại tài khoản và mật khẩu!");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
                     dispatcher.forward(request, response);
                 }
@@ -78,7 +80,7 @@ public class LoginServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Something went wrong. Please try again.");
+            request.setAttribute("message", "Something went wrong. Please try again.");
             RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
             dispatcher.forward(request, response);
         }

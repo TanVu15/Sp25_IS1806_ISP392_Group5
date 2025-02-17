@@ -95,16 +95,16 @@
                         <table class="product-table">
                             <thead>
                                 <tr class="table-header">
+                                    
                                     <th class="table-header-item">ID</th>
                                     <th class="table-header-item">Tên Khách Hàng</th>
-                                    <th class="table-header-item">Sở Hữu</th>
+                                    <th class="table-header-item">Số tiền</th>
                                     <th class="table-header-item">Trạng Thái</th>
+                                    <th class="table-header-item">Ngày Tạo Phiếu</th>
                                     <th class="table-header-item">Ngày tạo</th>
-                                    <th class="table-header-item">Ngày cập nhật</th>
                                     <th class="table-header-item">Người tạo</th>
-                                    <th class="table-header-item">Xóa</th>
-                                    <th class="table-header-item">Ngày xóa</th>
-                                    <th class="table-header-item">Người xóa</th>
+                                    <th class="table-header-item">Hình ảnh</th>
+                                    <th class="table-header-item">Ghi Chú</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -116,16 +116,24 @@
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><%= debt.getID() %></td>
-                                    <td class="table-cell"><%= dao1.getCustomersByID(debt.getCustomerID()).getName()  %></td>
+                                    <td class="table-cell"><%= dao1.getCustomersByID(debt.getCustomerID()).getName() %></td>
                                     <td class="table-cell"><%= currencyFormat.format(debt.getAmountOwed()) +" VND" %></td>
-                                    <td class="table-cell"><%= debt.getPaymentStatus() %></td>
+                                    <td class="table-cell"><% if (debt.getPaymentStatus() == 1) { %>
+                                        Trả Nợ
+                                        <% } if (debt.getPaymentStatus() == -1) { %>
+                                        Vay Nợ
+                                        <% } %>
+                                        <% if (debt.getPaymentStatus() == 2) { %>
+                                        Đi Vay
+                                        <% } %>
+                                        <%if (debt.getPaymentStatus() == -2) { %>
+                                        Đi Trả
+                                    <% } %></td>
+                                    <td class="table-cell"><%= debt.getInvoiceDate() %></td>
                                     <td class="table-cell"><%= debt.getCreateAt() %></td>
-                                    <td class="table-cell"><%= debt.getUpdateAt() %></td>
                                     <td class="table-cell"><%= dao.getUserByID(debt.getCreateBy()).getFullName() %></td>
-                                    <td class="table-cell"><%= (debt.getIsDelete() == 0) ? "Active" : "Ban" %></td>
-                                    <td class="table-cell"><%= debt.getDeletedAt() %></td>
-                                    <td class="table-cell"><%= (debt.getIsDelete() == 0) ? "Null" : dao.getUserByID(debt.getDeleteBy()).getFullName() %></td>
-
+                                    <td class="table-cell"><%= debt.getImagePath() %></td>
+                                    <td class="table-cell"><%= debt.getNote() %></td>
                                 </tr>
                                 <% }} %>
                             </tbody>

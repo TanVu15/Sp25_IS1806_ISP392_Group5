@@ -118,7 +118,7 @@ public class DAODebtRecords {
                 newWallet+= debtrecords.getAmountOwed();
             }
             if(debtrecords.getPaymentStatus()==-1 || debtrecords.getPaymentStatus()==-2){
-                newWallet+= debtrecords.getAmountOwed();
+                newWallet-= debtrecords.getAmountOwed();
             }
 
             // Cập nhật Wallet (chỉ tiếp tục nếu giá trị chưa bị thay đổi bởi máy khác)
@@ -267,7 +267,7 @@ public class DAODebtRecords {
         //dao.AddDebtRecords(debtRecords, 0);
         //dao.getCustomerDebtRecords(3);
         System.out.println(dao.getDebtRecordsSearch("1000"));
-
+        
     }
 
 }

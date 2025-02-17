@@ -118,10 +118,10 @@
                                         <% } %>
                                         <% if (debt.getPaymentStatus() == 2) { %>
                                         Đi Vay
-                                        <% } %></td>
+                                        <% } %>
                                         <%if (debt.getPaymentStatus() == -2) { %>
-                                    Đi Trả
-                                    <% } %></td></td>
+                                        Đi Trả
+                                    <% } %></td>
                                     <td class="table-cell"><%= debt.getInvoiceDate() %></td>
                                     <td class="table-cell"><%= debt.getCreateAt() %></td>
                                     <td class="table-cell"><%= dao.getUserByID(debt.getCreateBy()).getFullName() %></td>

@@ -87,14 +87,14 @@
                             <thead>
                                 <tr class="table-header">
                                     <th class="table-header-item">ID</th>
+                                    <th class="table-header-item">Tài khoản</th>
+                                    <th class="table-header-item">Mật khẩu</th>
+                                    <th class="table-header-item">Vai trò</th>
                                     <th class="table-header-item">Tên</th>
-                                    <th class="table-header-item">pass word</th>
-                                    <th class="table-header-item">vai trò</th>
-                                    <th class="table-header-item">Họ và tên</th>
                                     <th class="table-header-item">Ngày tạo</th>
                                     <th class="table-header-item">Ngày cập nhật</th>
                                     <th class="table-header-item">Người tạo</th>
-                                    <th class="table-header-item">Xóa</th>
+                                    <th class="table-header-item">Trạng thái</th>
                                     <th class="table-header-item">Ngày xóa</th>
                                     <th class="table-header-item">Người xóa</th>
                                     <th class="table-header-item">Hành động</th>
@@ -117,7 +117,7 @@
                                                                 } else if (user.getRoleid() == 2) {
                                                                     out.print("Owner");
                                                                 } else {
-                                                                    out.print("User");
+                                                                    out.print("Staff");
                                                                 }
                                         %></td>
                                     <td class="table-cell"><%= user.getFullName() %></td>
