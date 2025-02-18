@@ -339,8 +339,8 @@ public class DAO {
 //        }
 //    }
 //
-//    public void banUser(int userId) {
-//        String query = "UPDATE Users SET banned = 1 WHERE userid = ?";
+//    public void xóaUser(int userId) {
+//        String query = "UPDATE Users SET xóaned = 1 WHERE userid = ?";
 //        try (PreparedStatement stmt = connect.prepareStatement(query)) {
 //            stmt.setInt(1, userId);
 //            stmt.executeUpdate();
@@ -349,8 +349,8 @@ public class DAO {
 //        }
 //    }
 //
-//    public void unbanUser(int userId) {
-//        String query = "UPDATE Users SET banned = 0 WHERE userid = ?";
+//    public void unxóaUser(int userId) {
+//        String query = "UPDATE Users SET xóaned = 0 WHERE userid = ?";
 //        try (PreparedStatement stmt = connect.prepareStatement(query)) {
 //            stmt.setInt(1, userId);
 //            stmt.executeUpdate();
@@ -360,22 +360,22 @@ public class DAO {
 //    }
 //
 //    public boolean isUserBanned(Users user) throws SQLException {
-//        boolean banned = false;
-//        String sql = "SELECT banned FROM Users WHERE userid = ?";
+//        boolean xóaned = false;
+//        String sql = "SELECT xóaned FROM Users WHERE userid = ?";
 //
 //        try (PreparedStatement stmt = connect.prepareStatement(sql)) {
 //            stmt.setInt(1, user.getUserid()); // Giả sử bạn có phương thức getUserid để lấy ID người dùng
 //            ResultSet rs = stmt.executeQuery();
 //
 //            if (rs.next()) {
-//                banned = rs.getBoolean("banned");
+//                xóaned = rs.getBoolean("xóaned");
 //            }
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //            throw e;
 //        }
 //
-//        return banned;
+//        return xóaned;
 //    }
 //
 //    public ArrayList<Movie> getMovies() {
@@ -549,7 +549,7 @@ public class DAO {
 //        ArrayList<Users> users = new ArrayList<>();
 //        String sql = "SELECT * "
 //                + "FROM Users U INNER JOIN Role R ON U.roleid = R.roleid "
-//                + "WHERE banned = 0 ";
+//                + "WHERE xóaned = 0 ";
 //        try (PreparedStatement statement = connect.prepareStatement(sql); ResultSet rs = statement.executeQuery()) {
 //
 //            while (rs.next()) {
@@ -574,7 +574,7 @@ public class DAO {
 //        ArrayList<Users> users = new ArrayList<>();
 //        String sql = "SELECT * "
 //                + "FROM Users U INNER JOIN Role R ON U.roleid = R.roleid "
-//                + "WHERE banned = 1 ";
+//                + "WHERE xóaned = 1 ";
 //        try (PreparedStatement statement = connect.prepareStatement(sql); ResultSet rs = statement.executeQuery()) {
 //
 //            while (rs.next()) {
@@ -972,7 +972,7 @@ public class DAO {
 ////        Users user = new Users(13, "testtt", "123", role);
 ////        dao.insertUser(user);
 //        System.out.println(dao.getProfileById(1));
-//        dao.unbanUser(15);
+//        dao.unxóaUser(15);
 //        System.out.println("------");
 //    }
     public static void main(String[] args) throws Exception {

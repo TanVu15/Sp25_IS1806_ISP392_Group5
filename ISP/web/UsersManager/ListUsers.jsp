@@ -125,13 +125,13 @@
                                     <td class="table-cell"><%= user.getUpdateAt() %></td>
                                     <td class="table-cell"><%= dao.getUserByID(user.getCreateBy()).getFullName() %></td>
 
-                                    <td class="table-cell"><%= (user.getIsDelete() == 0) ? "Active" : "Ban" %></td>
+                                    <td class="table-cell"><%= (user.getIsDelete() == 0) ? "Hoạt Động" : "Xóa" %></td>
                                     <td class="table-cell"><%= user.getDeletedAt() %></td>
                                     <td class="table-cell"><%= (user.getIsDelete() == 0) ? "Null" : dao.getUserByID(user.getDeleteBy()).getFullName() %></td>
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'updateuser?id=<%= user.getID() %>'">Chỉnh sửa</button>
                                         <% if(u.getRoleid() < user.getRoleid()){ %>
-                                        <button class="action-button" onclick="window.location.href = 'deleteuser?deleteid=<%= user.getID() %>&userid=<%= u.getID() %>'">Ban</button>
+                                        <button class="action-button" onclick="window.location.href = 'deleteuser?deleteid=<%= user.getID() %>&userid=<%= u.getID() %>'">Xóa</button>
                                         <%
                                             }
                                         %>

@@ -162,11 +162,11 @@ public class DAOProducts {
                 // Lấy thông tin người xóa nếu có
                 if (product.getIsDelete() != 0) {
                     Users userDelete = DAO.INSTANCE.getUserByID(product.getDeleteBy());
-                    productData += ("ban" + product.getIsDelete() + " "
+                    productData += ("xóa" + product.getIsDelete() + " "
                             + product.getDeletedAt() + " "
                             + userDelete.getFullName().toLowerCase());
                 } else {
-                    productData += "active";
+                    productData += "Hoạt Động";
                 }
 
                 // Kiểm tra nếu information xuất hiện trong dữ liệu sản phẩm

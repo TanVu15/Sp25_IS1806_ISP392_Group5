@@ -167,11 +167,11 @@ public class DAOCustomers {
                 //Lấy thông tin người xóa nếu có
                 if (cs.getIsDelete() != 0) {
                     Users userDelete = DAO.INSTANCE.getUserByID(cs.getDeleteBy());
-                    customerData += ("ban" + cs.getIsDelete() + " "
+                    customerData += ("xóa" + cs.getIsDelete() + " "
                             + cs.getDeletedAt() + " "
                             + userDelete.getFullName().toLowerCase());
                 }else{
-                    customerData += "active";
+                    customerData += "Hoạt Động";
                 }
 
                 // Kiểm tra nếu information xuất hiện trong dữ liệu khách hàng

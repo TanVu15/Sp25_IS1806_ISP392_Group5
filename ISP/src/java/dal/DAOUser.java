@@ -206,11 +206,11 @@ public class DAOUser {
                 //Lấy thông tin người xóa nếu có
                 if (u.getIsDelete() != 0) {
                     Users userDelete = DAO.INSTANCE.getUserByID(u.getDeleteBy());
-                    userData += ("ban" + u.getIsDelete() + " "
+                    userData += ("xóa" + u.getIsDelete() + " "
                             + u.getDeletedAt() + " "
                             + userDelete.getFullName().toLowerCase());
                 }else{
-                    userData += "active";
+                    userData += "Hoạt Động";
                 }
 
                 // Kiểm tra nếu information xuất hiện trong bất kỳ trường nào của user
