@@ -26,10 +26,10 @@ public class DBContext {
      }
 
     private final String serverName = "localhost";
-    private final String dbName = "ISP1";
+    private final String dbName = "ISP";
     private final String portNumber = "1433";
     private final String userID = "sa";
-    private final String password = "ngoc";
+    private final String password = "123";
 
     
 }
