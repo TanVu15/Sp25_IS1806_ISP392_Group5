@@ -96,7 +96,7 @@ public class AddDebtRecordsServlet extends HttpServlet {
             invoiceDate = new Date(parsedDate.getTime());
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Invalid date format.");
+            request.setAttribute("message", "Invalid date format.");
             request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
             return;
         }
@@ -117,12 +117,12 @@ public class AddDebtRecordsServlet extends HttpServlet {
                 dao.AddDebtRecords(debtRecord, user.getID());
                 response.sendRedirect("listcustomerdebtrecords?customerid=" + customerID);
             } else {
-                request.setAttribute("errorMessage", "User not authenticated.");
+                request.setAttribute("message", "User not authenticated.");
                 request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Database error: " + e.getMessage());
+            request.setAttribute("message", "Database error: " + e.getMessage());
             request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
         }
     }

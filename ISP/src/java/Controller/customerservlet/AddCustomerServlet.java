@@ -83,7 +83,7 @@ public class AddCustomerServlet extends HttpServlet {
                 response.sendRedirect("listcustomers");
 
             } else {
-                request.setAttribute("errorMessage", "Thông tin không phù hợp.");
+                request.setAttribute("message", "Thông tin không phù hợp.");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("CustomersManager/AddCustomer.jsp");
                 dispatcher.forward(request, response);
             }

@@ -16,6 +16,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thêm Khách Hàng</title>
+        <link rel="stylesheet" href="css/home2.css">
         <link rel="stylesheet" href="css/add.css">
         <link rel="stylesheet" href="css/product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -25,16 +26,23 @@
         <div class="container">
         <h2>Thêm khách hàng</h2>
         
-        <%
-            String errorMessage = (String) request.getAttribute("errorMessage");
-            if (errorMessage != null) {
-        %>
-        <div class="error-message">
-            <%= errorMessage %>
-        </div>
-        <%
-            }
-        %>
+        <% String message = (String) request.getAttribute("message"); %>
+            <% if (message != null && !message.isEmpty()) { %>
+            <div id="toast-message" class="toast-message"><%= message %></div>
+            <% } %>
+
+            <script>
+                window.onload = function () {
+                    var toast = document.getElementById("toast-message");
+                    if (toast) {
+                        toast.style.display = "block"; // Hiển thị thông báo
+                        setTimeout(function () {
+                            toast.style.opacity = "0";
+                            setTimeout(() => toast.style.display = "none", 500);
+                        }, 3000);
+                    }
+                };
+            </script>
 
         <form method="post">
                             <%

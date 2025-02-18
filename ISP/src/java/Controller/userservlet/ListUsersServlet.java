@@ -60,52 +60,61 @@ public class ListUsersServlet extends HttpServlet {
         request.setAttribute("user", user);
         ArrayList<Users> users = dao.getUsers();
         request.setAttribute("users", users);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsers.jsp");
-        requestDispatcher.forward(request, response);
+        if (session.getAttribute("user") != null) {
+            if (user.getRoleid() == 1) {
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsers.jsp");
+                requestDispatcher.forward(request, response);
+            } else if (user.getRoleid() == 2) {
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsersForOwner.jsp");
+                requestDispatcher.forward(request, response);
+            }
+
+        }
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        /**
+         * Handles the HTTP <code>POST</code> method.
+         *
+         * @param request servlet request
+         * @param response servlet response
+         * @throws ServletException if a servlet-specific error occurs
+         * @throws IOException if an I/O error occurs
+         */
+        @Override
+        protected void doPost
+        (HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        String information = request.getParameter("information");
+            response.setContentType("text/html;charset=UTF-8");
+            String information = request.getParameter("information");
 
-        DAOUser dao = new DAOUser();
-        HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
-        request.setAttribute("user", user);
-        
-        ArrayList<Users> users;
-        try {
-            users = dao.getUsersBySearch(information);
-            if (users == null || users.isEmpty()) {
-            request.setAttribute("message", "Không tìm thấy kết quả nào.");
-            users = dao.getUsers();
-            request.setAttribute("users", users);
-        } else {
-            request.setAttribute("users", users);
+            DAOUser dao = new DAOUser();
+            HttpSession session = request.getSession();
+            Users user = (Users) session.getAttribute("user");
+            request.setAttribute("user", user);
+
+            ArrayList<Users> users;
+            try {
+                users = dao.getUsersBySearch(information);
+                if (users == null || users.isEmpty()) {
+                    request.setAttribute("message", "Không tìm thấy kết quả nào.");
+                    users = dao.getUsers();
+                    request.setAttribute("users", users);
+                } else {
+                    request.setAttribute("users", users);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(ListUsersServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsers.jsp");
+            requestDispatcher.forward(request, response);
         }
-        } catch (Exception ex) {
-            Logger.getLogger(ListUsersServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
+        @Override
+        public String getServletInfo
         
-
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsers.jsp");
-        requestDispatcher.forward(request, response);
-    }
-
-    @Override
-    public String getServletInfo() {
+            () {
         return "Short description";
-    }// </editor-fold>
+        }// </editor-fold>
 
-}
+    }
