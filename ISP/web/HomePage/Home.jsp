@@ -55,7 +55,7 @@
                         </a>
                     </li>
                     <li class="mainmenu__list-item">
-                        <a href="listzones">
+                        <a href="ListZones.jsp">
                             <i class="fa-solid fa-box list-item-icon"></i>
                             Kho
                         </a>
@@ -67,7 +67,7 @@
                         </a>
                     </li>
                     <li class="mainmenu__list-item">
-                        <a href="listcustomers">
+                        <a href="ListCustomers.jsp">
                             <i class="fa-solid fa-person list-item-icon"></i>
                             Khách Hàng
                         </a>
