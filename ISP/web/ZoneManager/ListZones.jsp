@@ -1,24 +1,25 @@
 <%-- 
-    Document   : ListCustomers
-    Created on : Feb 7, 2025, 5:09:42 PM
-    Author     : ADMIN
+    Document   : ListZones
+    Created on : Feb 18, 2025, 5:12:56 PM
+    Author     : ASUS
 --%>
 
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="model.Customers" %>
+<%@ page import="model.Zones" %>
 <%@ page import="model.Users" %>
-<%@ page import="dal.DAOCustomers" %>
+<%@ page import="dal.DAOZones" %>
 <%@ page import="dal.DAOUser" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-
+    
+    
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quản Lý Khách Hàng</title>
+        <title>Trang chủ Quản lý</title>
         <link rel="stylesheet" href="css/home2.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
@@ -27,8 +28,7 @@
         <% 
             DAOUser dao = new DAOUser();
             Users u = (Users) request.getAttribute("user");
-            ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
-            NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
+            ArrayList<Zones> zones = (ArrayList<Zones>) request.getAttribute("zones");
         %>
         <div class="header">
             <div class="container">
@@ -62,10 +62,10 @@
 
                 <div class="homepage-body">
                     <div class="body-head">
-                        <h3 class="body__head-title">Thông tin khách hàng</h3>
+                        <h3 class="body__head-title">Thông tin kho</h3>
                         <div class="search-container">
-                            <form action="listcustomers" method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm khách hàng..." class="search-input">
+                            <form action="listzones" method="post">
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm kho..." class="search-input">
                                 <button type="submit" class="search-button">Search</button>
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>
@@ -85,7 +85,7 @@
                                     }
                                 };
                             </script>
-                            <a href="addcustomer" class="add-product-button">Thêm khách hàng</a>
+                            <a href="addzone" class="add-product-button">Thêm kho</a>
                         </div>
                     </div>
                     <div class="table-container">
@@ -93,40 +93,43 @@
                             <thead>
                                 <tr class="table-header">
                                     <th class="table-header-item">ID</th>
-                                    <th class="table-header-item">Tên</th>
-                                    <th class="table-header-item">Ví</th>
-                                    <th class="table-header-item">Điện thoại</th>
-                                    <th class="table-header-item">Địa chỉ</th>
+                                    <th class="table-header-item">Khu vực</th>
                                     <th class="table-header-item">Ngày tạo</th>
                                     <th class="table-header-item">Ngày cập nhật</th>
                                     <th class="table-header-item">Người tạo</th>
+                                    <th class="table-header-item">Xóa</th>
+                                    <th class="table-header-item">Ngày xóa</th>
+                                    <th class="table-header-item">Người xóa</th>
                                     <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <% if (customers != null && !customers.isEmpty()) { 
-                                    for (Customers cus : customers) {
+                                <% if (zones != null && !zones.isEmpty()) { 
+                                    for (Zones cus : zones) {
                                     Users create1 = dao.getUserByID(cus.getCreateBy());
                                     Users create2 = dao.getUserByID(create1.getCreateBy());
                                     if(u.getID() == create1.getID() || u.getID() == create2.getID() || u.getID() == cus.getCreateBy()){
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><%= cus.getID() %></td>
-                                    <td class="table-cell"><%= cus.getName() %></td>
-                                    <td class="table-cell"><%= currencyFormat.format(cus.getWallet()) + " VND"%></td>
-                                    <td class="table-cell"><%= cus.getPhone() %></td>
-                                    <td class="table-cell"><%= cus.getAddress() %></td>
+                                    <td class="table-cell"><%= cus.getZoneName() %></td>
                                     <td class="table-cell"><%= cus.getCreateAt() %></td>
                                     <td class="table-cell"><%= cus.getUpdateAt() %></td>
                                     <td class="table-cell"><%= dao.getUserByID(cus.getCreateBy()).getFullName() %></td>
+                                    <td class="table-cell"><%= (cus.getIsDelete() == 0) ? "Active" : "Ban" %></td>
+                                    <td class="table-cell"><%= cus.getDeletedAt() %></td>
+                                    <td class="table-cell"><%= (cus.getIsDelete() == 0) ? "Null" : dao.getUserByID(cus.getDeleteBy()).getFullName() %></td>
+
                                     <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'updatecustomer?id=<%= cus.getID() %>'">Chỉnh sửa</button>
-                                        <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= cus.getID() %>'">Công nợ</button>
+                                        <button class="action-button" onclick="window.location.href = 'updatezone?id=<%= cus.getID() %>'">Sửa</button>
+
+                                        <button class="action-button" onclick="window.location.href = 'deletezone?deleteid=<%= cus.getID() %>&userid=<%= u.getID() %>'">Ban</button>
                                     </td>
-                                </tr>
-                                <% } 
-                                } }
-                                %>
+                            
+                            </tr>
+                            <% } 
+                            } }
+                            %>
                             </tbody>
                         </table>
                     </div>

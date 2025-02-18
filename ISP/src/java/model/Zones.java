@@ -14,7 +14,6 @@ public class Zones {
     
     private int ID;
     private String ZoneName;
-    private int WarehouseID;
     private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
@@ -25,10 +24,10 @@ public class Zones {
     public Zones() {
     }
 
-    public Zones(int ID, String ZoneName, int WarehouseID, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
+    public Zones(int ID, String ZoneName,  Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
         this.ID = ID;
         this.ZoneName = ZoneName;
-        this.WarehouseID = WarehouseID;
+
         this.CreateAt = CreateAt;
         this.UpdateAt = UpdateAt;
         this.CreateBy = CreateBy;
@@ -51,14 +50,6 @@ public class Zones {
 
     public void setZoneName(String ZoneName) {
         this.ZoneName = ZoneName;
-    }
-
-    public int getWarehouseID() {
-        return WarehouseID;
-    }
-
-    public void setWarehouseID(int WarehouseID) {
-        this.WarehouseID = WarehouseID;
     }
 
     public Date getCreateAt() {

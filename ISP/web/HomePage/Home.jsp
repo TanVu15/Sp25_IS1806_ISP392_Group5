@@ -55,7 +55,7 @@
                         </a>
                     </li>
                     <li class="mainmenu__list-item">
-                        <a href="inventory.jsp">
+                        <a href="listzones">
                             <i class="fa-solid fa-box list-item-icon"></i>
                             Kho
                         </a>
