@@ -7,8 +7,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import model.Users;
 
 public class UpdateProductServlet extends HttpServlet {
 
@@ -16,6 +18,7 @@ public class UpdateProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOProducts dao = DAOProducts.INSTANCE;
+        HttpSession session = request.getSession();
         int productId = Integer.parseInt(request.getParameter("id"));
 
         try {
@@ -23,9 +26,9 @@ public class UpdateProductServlet extends HttpServlet {
             request.setAttribute("product", product);
             request.getRequestDispatcher("ProductsManager/UpdateProduct.jsp").forward(request, response);
         } catch (Exception ex) {
-            ex.printStackTrace();
             request.setAttribute("errorMessage", "Không tìm thấy sản phẩm.");
-            request.getRequestDispatcher("ProductsManager/ListProducts.jsp").forward(request, response);
+            request.getRequestDispatcher("ProductsManager/UpdateProduct.jsp").forward(request, response);
+           
         }
     }
 
@@ -36,7 +39,7 @@ public class UpdateProductServlet extends HttpServlet {
         int productId = Integer.parseInt(request.getParameter("id"));
         String productName = request.getParameter("productName");
         String description = request.getParameter("description");
-        String image = request.getParameter("image");
+        String imageLink = request.getParameter("image"); // Sửa tên biến
         int price = Integer.parseInt(request.getParameter("price"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         String location = request.getParameter("location");
@@ -46,7 +49,7 @@ public class UpdateProductServlet extends HttpServlet {
         product.setID(productId);
         product.setProductName(productName);
         product.setDescription(description);
-        product.setImage(image);
+        product.setImageLink(imageLink); // Sửa tên phương thức
         product.setPrice(price);
         product.setQuantity(quantity);
         product.setLocation(location);

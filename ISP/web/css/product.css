@@ -266,6 +266,36 @@ a {
     border-color: var(--primary-color); /* Đổi màu viền khi ô tìm kiếm được chọn */
 }
 
+.search-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+}
+
+.search-button:hover {
+    background-color: #66c32c; /* Màu xanh lá đậm hơn khi hover */
+}
+
+.toast-message {
+    position: fixed;
+    top: 20px; /* Đưa thông báo lên góc trên */
+    right: 20px; /* Căn lề phải */
+    background: #28a745; /* Màu xanh lá */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+    z-index: 1000;
+    display: none;
+}
 /* add btn */
 .add-product-button {
     background-color: var(--primary-color);

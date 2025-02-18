@@ -14,12 +14,11 @@ public class DeleteProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int deleteId = Integer.parseInt(request.getParameter("deleteid"));
-        HttpSession session = request.getSession();
-        int userId = (int) session.getAttribute("userid"); // Lấy ID người dùng từ session
+        int deleteid = Integer.parseInt(request.getParameter("deleteid"));
+        int userid = Integer.parseInt(request.getParameter("userid"));
 
         try {
-            DAOProducts.INSTANCE.deleteProducts(deleteId, userId); // Gọi phương thức xóa sản phẩm
+            DAOProducts.INSTANCE.deleteProducts(deleteid, userid); // Gọi phương thức xóa sản phẩm
             response.sendRedirect("listproducts"); // Chuyển hướng về danh sách sản phẩm
         } catch (Exception e) {
             e.printStackTrace();

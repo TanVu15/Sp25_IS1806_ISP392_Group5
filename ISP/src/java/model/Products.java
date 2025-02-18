@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.sql.Date;
@@ -13,34 +9,25 @@ import java.sql.Date;
 public class Products {
     
     private int ID;
-    private String Image;
+    private String ImageLink; // Đổi tên trường từ Image thành ImageLink
     private String ProductName;
     private String Description;
     private int Price;
     private int Quantity;
     private String Location;
-     private Date CreateAt;
+    private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
     private int isDelete;
     private Date deletedAt;
     private int deleteBy;
 
-
-    public String getLocation() {
-        return Location;
-    }
-
-    public void setLocation(String Location) {
-        this.Location = Location;
-    }
-   
     public Products() {
     }
 
-    public Products(int ID, String image, String ProductName, String Description, int Price, int Quantity, String Location, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
+    public Products(int ID, String imageLink, String ProductName, String Description, int Price, int Quantity, String Location, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
         this.ID = ID;
-        this.Image = Image;
+        this.ImageLink = imageLink; // Sửa tham số
         this.ProductName = ProductName;
         this.Description = Description;
         this.Price = Price;
@@ -54,14 +41,12 @@ public class Products {
         this.deleteBy = deleteBy;
     }
 
-   
-
-    public String getImage() {
-        return Image;
+    public String getLocation() {
+        return Location;
     }
 
-    public void setImage(String image) {
-        this.Image = Image;
+    public void setLocation(String Location) {
+        this.Location = Location;
     }
 
     public int getID() {
@@ -70,6 +55,14 @@ public class Products {
 
     public void setID(int ID) {
         this.ID = ID;
+    }
+
+    public String getImageLink() { // Sửa tên phương thức
+        return ImageLink;
+    }
+
+    public void setImageLink(String imageLink) { // Sửa tên phương thức
+        this.ImageLink = imageLink; // Sửa tham số
     }
 
     public String getProductName() {
@@ -151,8 +144,4 @@ public class Products {
     public void setDeleteBy(int deleteBy) {
         this.deleteBy = deleteBy;
     }
-
-   
-    
-    
 }

@@ -29,7 +29,7 @@ public class AddProductServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String productName = request.getParameter("productName");
         String description = request.getParameter("description");
-        String image = request.getParameter("image");
+        String imageLink = request.getParameter("image"); // Sửa tên biến
         int price = Integer.parseInt(request.getParameter("price"));
         int quantity = Integer.parseInt(request.getParameter("quantity"));
         String location = request.getParameter("location");
@@ -43,7 +43,7 @@ public class AddProductServlet extends HttpServlet {
             if (user != null) {
                 product.setProductName(productName);
                 product.setDescription(description);
-                product.setImage(image);
+                product.setImageLink(imageLink); // Sửa tên phương thức
                 product.setPrice(price);
                 product.setQuantity(quantity);
                 product.setLocation(location);

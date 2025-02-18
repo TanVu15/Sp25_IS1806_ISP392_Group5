@@ -495,7 +495,6 @@ a {
     cursor: pointer;
     transition: background-color 0.3s;
     font-size: 14px;
-    margin-left: 48px;
 }
 
 .search-button:hover {

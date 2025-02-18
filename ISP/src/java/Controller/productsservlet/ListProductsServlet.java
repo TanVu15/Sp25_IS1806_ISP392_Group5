@@ -24,13 +24,27 @@ public class ListProductsServlet extends HttpServlet {
         request.setAttribute("message", "");
 
         Users user = (Users) session.getAttribute("user");
-        request.setAttribute("user", user);
+        
+        // Kiểm tra quyền truy cập dựa trên vai trò
+        if (user != null) {
+            request.setAttribute("user", user);
+            ArrayList<Products> products = dao.getAllProducts();
+            request.setAttribute("products", products);
 
-        ArrayList<Products> products = dao.getAllProducts();
-        request.setAttribute("products", products);
-
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("HomePage/Home.jsp");
-        requestDispatcher.forward(request, response);
+            if (user.getRoleid() == 1) {
+                request.getRequestDispatcher("ProductsManager/ListProductForAdmin.jsp").forward(request, response);
+            } else if (user.getRoleid() == 2) {
+                request.getRequestDispatcher("ProductsManager/ListProductForOwner.jsp").forward(request, response);
+            } else if (user.getRoleid() == 3) {
+                request.getRequestDispatcher("ProductsManager/ListProductForStaff.jsp").forward(request, response);
+            } else {
+                // Nếu vai trò không xác định, có thể chuyển đến trang mặc định hoặc thông báo lỗi
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Không có quyền truy cập.");
+            }
+        } else {
+            // Nếu người dùng chưa đăng nhập, chuyển hướng đến trang đăng nhập hoặc thông báo lỗi
+            response.sendRedirect("login.jsp");
+        }
     }
 
     @Override
@@ -42,23 +56,36 @@ public class ListProductsServlet extends HttpServlet {
         DAOProducts dao = DAOProducts.INSTANCE;
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
-        request.setAttribute("user", user);
+        
+        if (user != null) {
+            request.setAttribute("user", user);
 
-        ArrayList<Products> products;
-        try {
-            products = dao.getProductsBySearch(information);
-            if (products == null || products.isEmpty()) {
-                request.setAttribute("message", "Không tìm thấy sản phẩm nào.");
-                products = dao.getAllProducts(); // Lấy lại tất cả nếu không có kết quả
+            ArrayList<Products> products;
+            try {
+                products = dao.getProductsBySearch(information);
+                if (products == null || products.isEmpty()) {
+                    request.setAttribute("message", "Không tìm thấy sản phẩm nào.");
+                    products = dao.getAllProducts(); // Lấy lại tất cả nếu không có kết quả
+                }
+                request.setAttribute("products", products);
+            } catch (Exception ex) {
+                Logger.getLogger(ListProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
+                request.setAttribute("message", "Đã xảy ra lỗi khi tìm kiếm.");
             }
-            request.setAttribute("products", products);
-        } catch (Exception ex) {
-            Logger.getLogger(ListProductsServlet.class.getName()).log(Level.SEVERE, null, ex);
-            request.setAttribute("message", "Đã xảy ra lỗi khi tìm kiếm.");
-        }
 
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("HomePage/Home.jsp");
-        requestDispatcher.forward(request, response);
+            // Chuyển hướng đến trang dựa trên vai trò người dùng
+            if (user.getRoleid() == 1) {
+                request.getRequestDispatcher("ProductsManager/ListProductForAdmin.jsp").forward(request, response);
+            } else if (user.getRoleid() == 2) {
+                request.getRequestDispatcher("ProductsManager/ListProductForOwner.jsp").forward(request, response);
+            } else if (user.getRoleid() == 3) {
+                request.getRequestDispatcher("ProductsManager/ListProductForStaff.jsp").forward(request, response);
+            } else {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Không có quyền truy cập.");
+            }
+        } else {
+            response.sendRedirect("login.jsp");
+        }
     }
 
     @Override

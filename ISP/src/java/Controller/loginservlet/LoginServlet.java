@@ -29,11 +29,11 @@ public class LoginServlet extends HttpServlet {
         if (session.getAttribute("user") != null) {
             Users user = (Users) session.getAttribute("user");
             if (user.getRoleid() == 1) {
-                response.sendRedirect("listusers");
+                response.sendRedirect("listproducts");
             } else if (user.getRoleid() == 2) {
-                response.sendRedirect("Owner/Owner.jsp");
+                response.sendRedirect("listproducts");
             } else if (user.getRoleid() == 3) {
-                response.sendRedirect("Staff/Staff.jsp");
+                response.sendRedirect("listproducts");
             }
         } else {
             request.setAttribute("message", "");
@@ -63,11 +63,11 @@ public class LoginServlet extends HttpServlet {
                         session.setAttribute("user", user);
 
                         if (user.getRoleid() == 1) {
-                            response.sendRedirect("listusers");
+                            response.sendRedirect("listproducts");
                         } else if (user.getRoleid() == 2) {
-                            response.sendRedirect("Owner/Owner.jsp");
+                            response.sendRedirect("listproducts");
                         } else if (user.getRoleid() == 3) {
-                            response.sendRedirect("Staff/Staff.jsp");
+                            response.sendRedirect("listproducts");
                         }
                     }
                 } else {
