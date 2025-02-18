@@ -112,15 +112,15 @@
                                     <td class="table-cell"><%= debt.getID() %></td>
                                     <td class="table-cell"><%= currencyFormat.format(debt.getAmountOwed()) +" VND" %></td>
                                     <td class="table-cell"><% if (debt.getPaymentStatus() == 1) { %>
-                                        Trả Nợ
+                                        Khách Trả Nợ
                                         <% } if (debt.getPaymentStatus() == -1) { %>
-                                        Vay Nợ
+                                        Khách Vay Nợ
                                         <% } %>
                                         <% if (debt.getPaymentStatus() == 2) { %>
-                                        Đi Vay
+                                        Chủ Đi Vay
                                         <% } %>
                                         <%if (debt.getPaymentStatus() == -2) { %>
-                                        Đi Trả
+                                        Chủ Đi Trả
                                     <% } %></td>
                                     <td class="table-cell"><%= debt.getInvoiceDate() %></td>
                                     <td class="table-cell"><%= debt.getCreateAt() %></td>

@@ -12,104 +12,70 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thêm Công Nợ</title>
-        <link rel="stylesheet" href="css/home2.css">
+        <link rel="stylesheet" href="css/update.css">
+        <link rel="stylesheet" href="css/add.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
 
     <body>
         <%  
-                DAOUser dao = new DAOUser();
-                Users u = (Users) request.getAttribute("user");
-                ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
-                
-                DAOCustomers dao1 = new DAOCustomers();
-                Customers customer = (Customers) request.getAttribute("customer");
-        
-                
+            DAOUser dao = new DAOUser();
+            DAOCustomers dao1 = new DAOCustomers();
+            Users u = (Users) request.getAttribute("user");
+            Customers customer = (Customers) request.getAttribute("customer");
+            ArrayList<DebtRecords> debtrecords = (ArrayList<DebtRecords>) request.getAttribute("debtrecords");
         %>
-        <div class="header">
-            <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
-            </div>
-            <div class="header__navbar-item navbar__user">
-                <span class="navbar__user--name"> <%= u.getFullName() %></span>
-                <div class="navbar__user--info">
-                    <div class="navbar__info--wrapper">
-                        <a href="" class="navbar__info--item">Tài khoản của tôi</a>
-                    </div>
-                    <div class="navbar__info--wrapper">
-                        <a href="logout" class="navbar__info--item">Đăng xuất</a>
-                    </div>
-                </div>
-            </div>
+        <div class="container">
+        <h2>Thêm Công Nợ</h2>
+        
+        <%
+            String errorMessage = (String) request.getAttribute("errorMessage");
+            if (errorMessage != null) {
+        %>
+        <div class="error-message">
+            <%= errorMessage %>
         </div>
+        <%
+            }
+        %>
 
-        <div class="body">
-            <div class="body-container">
-
-                <div class="mainmenu">
-                    <ul class="mainmenu-list row no-gutters">
-                        <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
-                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
-                        <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
-                        <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
-                        <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
-                    </ul>
-                </div>
-
-                <div class="homepage-body">
-                    <div class="body-head">
-                        <h3 class="body__head-title">Thêm Công Nợ </h3>
-                        </div>
-                    <div class="table-container">
-                        <form action="adddebtrecords" method="post">
-                            
-                            <table class="product-table">
-                                <thead>
-                                    <tr class="table-header">
-                                        <th class="table-header-item">Tên</th>
-                                        <th class="table-header-item">Số tiền</th>
-                                        <th class="table-header-item">Trạng thái</th>
-                                        <th class="table-header-item">Ngày lập phiếu</th>
-                                        <th class="table-header-item">Hình ảnh</th>
-                                        <th class="table-header-item">Ghi chú</th>
-                                        <th class="table-header-item">Thao tác</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="table-row">
-                                        <input type="hidden" name="customerid" value="<%= customer.getID() %>">
-                                        <td class="table-cell"><%= customer.getName() %></td>
-                                        <td class="table-cell"><input type="number" name="amountowed" required></td>
-                                        <td class="table-cell">
+        <form action="adddebtrecords" method="post">
+            
+            <div class="form-group">
+                <label for="productName">Tên:</label>
+                <%= customer.getName() %>
+            </div>
+            <input type="hidden" name="customerid" value="<%= customer.getID() %>">
+            <div class="form-group">
+                <label for="description">Số Tiền:</label>
+                <input type="number" name="amountowed" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Trạng Thái:</label>
                                             <select name="paymentstatus" required>
-                                                <option value="1">Trả Nợ</option>
-                                                <option value="-1">Vay Nợ</option>
-                                                <option value="2">Đi Vay</option>
-                                                <option value="-2">Đi Trả</option>
+                                                <option value="1">Khách Trả Nợ</option>
+                                                <option value="-1">Khách Vay Nợ</option>
+                                                <option value="2">Chủ Đi Vay</option>
+                                                <option value="-2">Chủ Đi Trả</option>
                                             </select>
-                                        </td>
-                                        <td class="table-cell"><input type="date" name="invoicedate" required></td>
-                                        <td class="table-cell"><input type="text" name="imagepath" ></td>
-                                        <td class="table-cell"><input type="text" name="note" ></td>
-                                        <td class="table-cell">
-                                            <button onclick="submit" class="add-product-button">Thêm</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
-                    
-                </div>
             </div>
-        </div>
-        <div class="footer">
-            <div class="container">
-                <p>&copy; 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
+            <div class="form-group">
+                <label for="price">Ngày Lập Phiếu:</label>
+                <input type="date" name="invoicedate" required>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="quantity">Hình Ảnh:</label>
+                <input type="text" name="imagepath" >
+            </div>
+            <div class="form-group">
+                <label for="location">Ghi Chú:</label>
+                <input type="text" name="note" required>
+            </div>
+            <div class="button-container">
+                <input type="submit" class="btn add-button" value="Thêm Công Nợ">
+                <a href="listcustomerdebtrecords?customerid=<%= customer.getID() %>" class="btn cancel-button">Hủy</a>
+            </div>
+        </form>
+    </div>
     </body>
-
 </html>
