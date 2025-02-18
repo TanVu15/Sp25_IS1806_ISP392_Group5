@@ -18,7 +18,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Cập Nhật Khách Hàng</title>
         <link rel="stylesheet" href="css/update.css">
-        <link rel="stylesheet" href="css/add.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     
@@ -58,8 +57,8 @@
                 <input type="text" id="address" name="address" value="<%= cus.getAddress() %> ">
             </div>
             <div class="button-container">
-                <input type="submit" class="btn add-button" value="Cập nhật">
-                <a href="listcustomers" class="btn cancel-button">Hủy</a>
+                <input type="submit" class="btn btn-primary" value="Cập nhật">
+                <a href="listcustomers" class="btn btn-secondary">Hủy</a>
             </div>
         </form>
     </div>
