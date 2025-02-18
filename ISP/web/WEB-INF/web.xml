@@ -84,6 +84,10 @@
         <servlet-name>UpdateZoneServlet</servlet-name>
         <servlet-class>Controller.zonesservlet.UpdateZoneServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <servlet-class>Controller.userservlet.ResetPasswordServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -167,6 +171,10 @@
     <servlet-mapping>
         <servlet-name>UpdateZoneServlet</servlet-name>
         <url-pattern>/updatezone</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResetPasswordServlet</servlet-name>
+        <url-pattern>/resetpassword</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Login/login.jsp</welcome-file>

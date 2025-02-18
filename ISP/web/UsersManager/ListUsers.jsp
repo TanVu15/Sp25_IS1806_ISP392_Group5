@@ -131,7 +131,12 @@
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'updateuser?id=<%= user.getID() %>'">Chỉnh sửa</button>
                                         <% if(u.getRoleid() < user.getRoleid()){ %>
-                                        <button class="action-button" onclick="window.location.href = 'deleteuser?deleteid=<%= user.getID() %>&userid=<%= u.getID() %>'">Xóa</button>
+                                        <button class="action-button" onclick="if (confirm('Bạn có chắc chắn muốn xóa?')) {
+                                                    window.location.href = 'deleteuser?deleteid=<%= user.getID() %>&userid=<%= u.getID() %>';
+                                                }">Xóa</button>  
+                                        <button class="action-button" onclick="if (confirm('Bạn có muốn đặt lại mật khẩu thành : 12345678 ?')) {
+                                                    window.location.href = 'resetpassword?resetid=<%= user.getID() %>';
+                                                }">Đặt lại mật khẩu</button>        
                                         <%
                                             }
                                         %>

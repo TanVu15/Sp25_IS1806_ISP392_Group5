@@ -223,6 +223,18 @@ public class DAOUser {
         }
         return users;
     }
+    
+    public void resetPasswordUser(int userid) {
+        String sql = "UPDATE Users SET passwordhash = ?, UpdateAt = ? WHERE id = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, "12345678");
+            ps.setDate(2, today);
+            ps.setInt(3, userid);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         DAOUser dao = new DAOUser();
