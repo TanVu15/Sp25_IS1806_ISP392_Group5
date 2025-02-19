@@ -27,16 +27,23 @@
         <div class="container">
         <h2>Thêm tài khoản</h2>
         
-        <%
-            String errorMessage = (String) request.getAttribute("errorMessage");
-            if (errorMessage != null) {
-        %>
-        <div class="error-message">
-            <%= errorMessage %>
-        </div>
-        <%
-            }
-        %>
+        <% String message = (String) request.getAttribute("message"); %>
+            <% if (message != null && !message.isEmpty()) { %>
+            <div id="toast-message" class="toast-message"><%= message %></div>
+            <% } %>
+
+            <script>
+                window.onload = function () {
+                    var toast = document.getElementById("toast-message");
+                    if (toast) {
+                        toast.style.display = "block"; // Hiển thị thông báo
+                        setTimeout(function () {
+                            toast.style.opacity = "0";
+                            setTimeout(() => toast.style.display = "none", 500);
+                        }, 3000);
+                    }
+                };
+            </script>
 
         <form action="register" method="post">
             <div class="form-group">
