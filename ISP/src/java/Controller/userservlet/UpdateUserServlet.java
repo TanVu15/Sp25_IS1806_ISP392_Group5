@@ -57,7 +57,7 @@ public class UpdateUserServlet extends HttpServlet {
             String fullname = request.getParameter("fullname");
             request.setAttribute("user", user);
             // Cập nhật người dùng trong database
-
+            
             user.setPasswordHash(password2);
             user.setFullName(fullname);
 
@@ -69,6 +69,10 @@ public class UpdateUserServlet extends HttpServlet {
                 return;
             }
             DAOUser.INSTANCE.updateUser(user);
+            Users userSession = DAOUser.INSTANCE.getUserByID(userid);
+            HttpSession session = request.getSession();
+            session.removeAttribute("user");
+            session.setAttribute("user", user);
             // Chuyển hướng tới trang danh sách người dùng sau khi cập nhật thành công
             response.sendRedirect("listusers");
         } catch (Exception ex) {
