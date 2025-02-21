@@ -4,6 +4,8 @@
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOProducts" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,6 +24,7 @@
             DAOUser dao = new DAOUser();
             Users u = (Users) request.getAttribute("user");
             ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
+            NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
         <!-- Homepage Header -->
         <div class="header">
@@ -110,7 +113,7 @@
                                                                 class="product-image"></td>
                                     <td class="table-cell"><%= product.getID()%></td>
                                     <td class="table-cell"><%= product.getProductName()%></td>
-                                    <td class="table-cell"><%= product.getPrice()%>đ</td>
+                                    <td class="table-cell"><%= currencyFormat.format(product.getPrice()) +" VND" %></td>
                                     <td class="table-cell"><%= product.getQuantity()%></td>
                                     <td class="table-cell"><%= product.getLocation()%></td>
                                     <td class="table-cell description"><%= product.getDescription()%></td>

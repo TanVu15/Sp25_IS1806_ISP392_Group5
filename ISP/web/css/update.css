@@ -32,8 +32,8 @@ label {
     color: #6b4423; 
 }
 
-input[type="text"],
-input[type="number"],
+
+input,
 textarea {
     width: 100%;
     padding: 10px;
@@ -42,8 +42,7 @@ textarea {
     font-size: 16px;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
+input:focus,
 textarea:focus {
     border-color: #80bdff;
     outline: none;

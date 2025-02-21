@@ -5,23 +5,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Product</title>
+    <title>Cập Nhật Sản Phẩm</title>
     <link rel="stylesheet" href="css/update.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" 
           integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" 
           crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script>
+        function validateForm() {
+            var price = document.getElementById("price").value;
+            var errorMessage = "";
+
+            if (price < 0) {
+                errorMessage = "Giá không thể âm.";
+            }
+
+            if (errorMessage !== "") {
+                document.getElementById("error-message").innerText = errorMessage;
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
+        }
+    </script>
 </head>
 <body>
 
 <div class="container">
     <h2>Cập Nhập Sản Phẩm</h2>
 
-    <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger">${errorMessage}</div>
-    </c:if>
+    <div id="error-message" class="alert alert-danger">
+        <%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : "" %>
+    </div>
 
-    <form action="updateproduct" method="post">
+    <form action="updateproduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
         <input type="hidden" name="id" value="${product.ID}"/>
+        <input type="hidden" name="currentImageLink" value="${product.imageLink}"/> <!-- Giữ ảnh cũ -->
 
         <div class="form-group">
             <label for="productName">Tên sản phẩm:</label>
@@ -36,8 +53,8 @@
 
         <div class="form-group">
             <label for="image">Hình ảnh:</label>
-            <input type="text" id="image" name="image" class="form-control" 
-                   value="${product.imageLink}" >
+            <input type="file" id="image" name="image" class="form-control" accept="image/*">
+            <p>Ảnh hiện tại: <img src="${product.imageLink}" alt="Product Image" style="max-width:100px;"/></p>
         </div>
 
         <div class="form-group">
