@@ -17,12 +17,21 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.File;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import jakarta.servlet.annotation.MultipartConfig; // Thêm import này
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+    maxFileSize = 1024 * 1024 * 10,      // 10MB
+    maxRequestSize = 1024 * 1024 * 50    // 50MB
+)
 /**
  *
  * @author ADMIN
@@ -48,7 +57,7 @@ public class AddDebtRecordsServlet extends HttpServlet {
         request.setAttribute("user", user);
         ArrayList<Customers> customers = dao.getAllCustomers();
         request.setAttribute("customers", customers);
-        
+
         int customerID = Integer.parseInt(request.getParameter("customerid"));
         try {
             Customers customer = dao.getCustomersByID(customerID);
@@ -69,70 +78,94 @@ public class AddDebtRecordsServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        DAOCustomers daoCus = new DAOCustomers();
-        response.setContentType("text/html;charset=UTF-8");
-        int customerID = Integer.parseInt(request.getParameter("customerid"));
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
 
-        try {
-            Customers customer = daoCus.getCustomersByID(customerID);
-            request.setAttribute("customer", customer);
-        } catch (Exception ex) {
-            Logger.getLogger(AddDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    DAOCustomers daoCus = new DAOCustomers();
+    response.setContentType("text/html;charset=UTF-8");
 
-        int amountOwed = Integer.parseInt(request.getParameter("amountowed"));
-        int paymentStatus = Integer.parseInt(request.getParameter("paymentstatus"));
-        String note = request.getParameter("note");
-        String image = request.getParameter("imagepath");
-        String invoiceDateStr = request.getParameter("invoicedate");
+    // 🔹 Lấy customerID từ Part thay vì request.getParameter()
+    Part customerIDPart = request.getPart("customerid");
+    BufferedReader reader = new BufferedReader(new InputStreamReader(customerIDPart.getInputStream()));
+    String customerIDStr = reader.readLine();
+    int customerID = Integer.parseInt(customerIDStr.trim());
 
-        // Chuyển đổi ngày lập phiếu sang java.sql.Date
-        Date invoiceDate = null;
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            java.util.Date parsedDate = dateFormat.parse(invoiceDateStr);
-            invoiceDate = new Date(parsedDate.getTime());
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("message", "Invalid date format.");
-            request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
-            return;
-        }
-
-        Users user = (Users) request.getSession().getAttribute("user");
-
-        DAODebtRecords dao = new DAODebtRecords();
-        try {
-            if (user != null) {
-                DebtRecords debtRecord = new DebtRecords();
-                debtRecord.setCustomerID(customerID);
-                debtRecord.setAmountOwed(amountOwed);
-                debtRecord.setPaymentStatus(paymentStatus);
-                debtRecord.setNote(note);
-                debtRecord.setImagePath(image);
-                debtRecord.setInvoiceDate(invoiceDate); // Gán ngày lập phiếu
-
-                dao.AddDebtRecords(debtRecord, user.getID());
-                response.sendRedirect("listcustomerdebtrecords?customerid=" + customerID);
-            } else {
-                request.setAttribute("message", "User not authenticated.");
-                request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("message", "Database error: " + e.getMessage());
-            request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
-        }
+    try {
+        Customers customer = daoCus.getCustomersByID(customerID);
+        request.setAttribute("customer", customer);
+    } catch (Exception ex) {
+        Logger.getLogger(AddDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);
     }
-/**
- * Returns a short description of the servlet.
- *
- * @return a String containing servlet description
- */
-@Override
-public String getServletInfo() {
+
+    // 🔹 Các tham số khác vẫn lấy bằng request.getParameter() bình thường
+    int amountOwed = Integer.parseInt(request.getParameter("amountowed"));
+    int paymentStatus = Integer.parseInt(request.getParameter("paymentstatus"));
+    String note = request.getParameter("note");
+    String invoiceDateStr = request.getParameter("invoicedate");
+
+    // Chuyển đổi ngày lập phiếu sang java.sql.Date
+    Date invoiceDate = null;
+    try {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date parsedDate = dateFormat.parse(invoiceDateStr);
+        invoiceDate = new Date(parsedDate.getTime());
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("message", "Invalid date format.");
+        request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
+        return;
+    }
+
+    // 🔹 Xử lý upload file ảnh
+    Part imagePart = request.getPart("image");
+    String imageLink = "";
+
+    if (imagePart != null && imagePart.getSize() > 0) {
+        String fileName = imagePart.getSubmittedFileName();
+        String imageDirectory = getServletContext().getRealPath("/Image/");
+        File dir = new File(imageDirectory);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+        File file = new File(dir, fileName);
+        imagePart.write(file.getAbsolutePath());
+        imageLink = "Image/" + fileName; // Đường dẫn lưu trữ ảnh
+    }
+
+    // 🔹 Lưu vào database
+    Users user = (Users) request.getSession().getAttribute("user");
+    DAODebtRecords dao = new DAODebtRecords();
+
+    try {
+        if (user != null) {
+            DebtRecords debtRecord = new DebtRecords();
+            debtRecord.setCustomerID(customerID);
+            debtRecord.setAmountOwed(amountOwed);
+            debtRecord.setPaymentStatus(paymentStatus);
+            debtRecord.setNote(note);
+            debtRecord.setImagePath(imageLink);
+            debtRecord.setInvoiceDate(invoiceDate);
+
+            dao.AddDebtRecords(debtRecord, user.getID());
+            response.sendRedirect("listcustomerdebtrecords?customerid=" + customerID);
+        } else {
+            request.setAttribute("message", "User not authenticated.");
+            request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("message", "Database error: " + e.getMessage());
+        request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
+    }
+}
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 

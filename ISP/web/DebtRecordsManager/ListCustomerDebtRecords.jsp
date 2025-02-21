@@ -125,7 +125,8 @@
                                     <td class="table-cell"><%= debt.getInvoiceDate() %></td>
                                     <td class="table-cell"><%= debt.getCreateAt() %></td>
                                     <td class="table-cell"><%= dao.getUserByID(debt.getCreateBy()).getFullName() %></td>
-                                    <td class="table-cell"><%= debt.getImagePath() %></td>
+                                    <td class="table-cell"><img src="<%= debt.getImagePath() %>" alt="<%= debt.getID() %>"
+                                                                class="product-image"></td>
                                     <td class="table-cell"><%= debt.getNote() %></td>
                                 </tr>
                                 <% } %>
