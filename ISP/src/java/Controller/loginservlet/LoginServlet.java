@@ -25,18 +25,13 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        
+
         if (session.getAttribute("user") != null) {
-            Users user = (Users) session.getAttribute("user");
-            if (user.getRoleid() == 1) {
-                response.sendRedirect("listproducts");
-            } else if (user.getRoleid() == 2) {
-                response.sendRedirect("listproducts");
-            } else if (user.getRoleid() == 3) {
-                response.sendRedirect("listproducts");
-            }
+            response.sendRedirect("listproducts");
         } else {
             request.setAttribute("message", "");
+            request.setAttribute("name", "");
+            request.setAttribute("password", "");
             RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
             dispatcher.forward(request, response);
         }
@@ -47,6 +42,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
+        
 
         try {
             if (name != null && password != null) {
@@ -56,22 +52,19 @@ public class LoginServlet extends HttpServlet {
                 if (user != null && (user.getPasswordHash().equals(password) || user.getIsDelete() == 1)) {
                     if (user.getIsDelete() != 0) {
                         request.setAttribute("message", "Hãy xem lại tài khoản và mật khẩu!");
+                        request.setAttribute("name", name);
+                        request.setAttribute("password", password);
                         RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
                         dispatcher.forward(request, response);
                     } else {
                         HttpSession session = request.getSession();
                         session.setAttribute("user", user);
-
-                        if (user.getRoleid() == 1) {
-                            response.sendRedirect("listproducts");
-                        } else if (user.getRoleid() == 2) {
-                            response.sendRedirect("listproducts");
-                        } else if (user.getRoleid() == 3) {
-                            response.sendRedirect("listproducts");
-                        }
+                        response.sendRedirect("listproducts");
                     }
                 } else {
                     request.setAttribute("message", "Hãy xem lại tài khoản và mật khẩu!");
+                    request.setAttribute("name", name);
+                    request.setAttribute("password", password);
                     RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
                     dispatcher.forward(request, response);
                 }
@@ -80,6 +73,8 @@ public class LoginServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            request.setAttribute("name", name);
+            request.setAttribute("password", password);
             request.setAttribute("message", "Something went wrong. Please try again.");
             RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
             dispatcher.forward(request, response);

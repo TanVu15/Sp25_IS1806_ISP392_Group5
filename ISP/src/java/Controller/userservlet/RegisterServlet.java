@@ -39,13 +39,12 @@ public class RegisterServlet extends HttpServlet {
         DAOCustomers dao = new DAOCustomers();
         HttpSession session = request.getSession();
         request.setAttribute("message", "");
+        request.setAttribute("name", "");
+        request.setAttribute("password", "");
+        request.setAttribute("password2", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
 
-//        DAOUser dao = new DAOUser();
-//        Users user = new Users();
-//        HttpSession session = request.getSession();
-//        user = (Users) session.getAttribute("user");
         RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
         dispatcher.forward(request, response);
     }
@@ -57,7 +56,7 @@ public class RegisterServlet extends HttpServlet {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String password2 = request.getParameter("password2");
-        if (!password.endsWith(password2)) {
+        if (!password.endsWith(password2) || password == null) {
             request.setAttribute("message", "Hãy xem lại mật khẩu của bạn!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
             dispatcher.forward(request, response);
@@ -73,6 +72,9 @@ public class RegisterServlet extends HttpServlet {
             if (dao.checkUsernameExists(name)) {
                 request.setAttribute("user", user);
                 request.setAttribute("message", "Tên đã được dùng, hãy sử dụng tên khác!");
+                request.setAttribute("name", name);
+                request.setAttribute("password", password);
+                request.setAttribute("password2", password2);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
                 dispatcher.forward(request, response);
                 return;
@@ -89,11 +91,17 @@ public class RegisterServlet extends HttpServlet {
                 response.sendRedirect("listusers");
             } else {
                 request.setAttribute("message", "Invalid role selected.");
+                request.setAttribute("name", name);
+                request.setAttribute("password", password);
+                request.setAttribute("password2", password2);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
                 dispatcher.forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            request.setAttribute("name", name);
+            request.setAttribute("password", password);
+            request.setAttribute("password2", password2);
             RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
             dispatcher.forward(request, response);
         }

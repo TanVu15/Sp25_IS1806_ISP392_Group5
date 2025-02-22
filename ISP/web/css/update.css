@@ -32,9 +32,7 @@ label {
     color: #6b4423; 
 }
 
-input[type="text"],
-input[type="number"],
-textarea {
+input, textarea{
     width: 100%;
     padding: 10px;
     border: 1px solid #ced4da;
@@ -42,8 +40,7 @@ textarea {
     font-size: 16px;
 }
 
-input[type="text"]:focus,
-input[type="number"]:focus,
+input:focus,
 textarea:focus {
     border-color: #80bdff;
     outline: none;
@@ -84,4 +81,43 @@ background-color: #7ab452;
     color: red;
     background-color: #ffffff;
     border-color: #ffffff;
+}
+
+.toast-message {
+    position: fixed;
+    top: 20px; /* Đưa thông báo lên góc trên */
+    right: 20px; /* Căn lề phải */
+    background: #28a745; /* Màu xanh lá */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+    z-index: 1000;
+    display: none;
+}
+
+.form-group {
+    margin-right: 18px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align labels to the left */
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #6b4423; /* Brown color for rice theme */
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%; /* Make all input fields the same length and centered */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
 }

@@ -80,7 +80,7 @@
                 font-size: 14px;
                 color: #666;
             }
-            
+
             .toast-message {
                 position: fixed;
                 top: 20px; /* Đưa thông báo lên góc trên */
@@ -96,7 +96,7 @@
                 z-index: 1000;
                 display: none;
             }
-            
+
             .search-button {
                 background-color: var(--primary-color);
                 background: #66c32c; /* Màu xanh lá */
@@ -117,7 +117,14 @@
     </head>
     <body>
         <div class="container">
-
+            <%  String name = (String) request.getAttribute("name"); 
+                String password = (String) request.getAttribute("password"); 
+                if (name == null || password == null) {
+                    name = "";
+                    password = "";
+                }
+                
+            %>
             <div class="login-box">
                 <h2>Đăng Nhập</h2>
                 <form action="login" method="post">
@@ -125,11 +132,11 @@
                         <tbody>
                             <tr>
                                 <td>Tài Khoản:</td>
-                                <td><input type="text" name="name" required></td>
+                                <td><input type="text" name="name" value= "<%= name %>" required></td>
                             </tr>
                             <tr>
                                 <td>Mật Khẩu:</td>
-                                <td><input type="password" name="password" required></td>
+                                <td><input type="password" name="password" value= "<%= password %>" required></td>
                             </tr>
                         </tbody>
                     </table>

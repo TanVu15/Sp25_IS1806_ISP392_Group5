@@ -28,8 +28,12 @@ public class UpdateUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOUser dao = new DAOUser();
-        HttpSession session = request.getSession();
+
         request.setAttribute("message", "");
+        request.setAttribute("username", "");
+        request.setAttribute("password", "");
+        request.setAttribute("password2", "");
+        request.setAttribute("fullname", "");
         int userid = Integer.parseInt(request.getParameter("id"));
 
         try {
@@ -44,7 +48,7 @@ public class UpdateUserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        HttpSession session = request.getSession();
         // Lấy thông tin người dùng từ form
         int userid = Integer.parseInt(request.getParameter("id"));
         Users user;
@@ -53,26 +57,32 @@ public class UpdateUserServlet extends HttpServlet {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             String password2 = request.getParameter("password2");
+            
 
             String fullname = request.getParameter("fullname");
             request.setAttribute("user", user);
             // Cập nhật người dùng trong database
-            
+
             user.setPasswordHash(password2);
             user.setFullName(fullname);
 
-            if (!password.endsWith(password2)) {
-                request.setAttribute("errorMessage", "Please check again your password. Please enter a different name.");
+            if (!password.endsWith(password2) || password == null) {
+                request.setAttribute("message", "Hãy kiểm tra lại mật khẩu!");
+                request.setAttribute("username", username);
+                request.setAttribute("password", password);
+                request.setAttribute("password2", password2);
+                request.setAttribute("fullname", fullname);
                 request.setAttribute("user", user);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/UpdateUser.jsp");
                 dispatcher.forward(request, response);
                 return;
             }
             DAOUser.INSTANCE.updateUser(user);
-            Users userSession = DAOUser.INSTANCE.getUserByID(userid);
-            HttpSession session = request.getSession();
+            //nếu cập nhập user đang đăng nhập
+            Users userSession = (Users) session.getAttribute("user");
+            Users userSessionNew = DAOUser.INSTANCE.getUserByID(userSession.getID());
             session.removeAttribute("user");
-            session.setAttribute("user", user);
+            session.setAttribute("user", userSessionNew);
             // Chuyển hướng tới trang danh sách người dùng sau khi cập nhật thành công
             response.sendRedirect("listusers");
         } catch (Exception ex) {

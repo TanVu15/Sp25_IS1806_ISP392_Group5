@@ -26,7 +26,16 @@
         
         <div class="container">
         <h2>Thêm tài khoản</h2>
-        
+        <%      String name = (String) request.getAttribute("name"); 
+                String password = (String) request.getAttribute("password"); 
+                String password2 = (String) request.getAttribute("password2"); 
+                if (name == null || password == null) {
+                    name = "";
+                    password = "";
+                    password2 = "";
+                }
+                
+            %>
         <% String message = (String) request.getAttribute("message"); %>
             <% if (message != null && !message.isEmpty()) { %>
             <div id="toast-message" class="toast-message"><%= message %></div>
@@ -48,15 +57,15 @@
         <form action="register" method="post">
             <div class="form-group">
                 <label for="name">Tên tài khoản:</label>
-                <input type="text" name="name" required>
+                <input type="text" name="name" value= "<%= name %>" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" name="password" required>
+                <input type="password" name="password" value= "<%= password %>" required>
             </div>
             <div class="form-group">
                 <label for="password2">Nhập lại password:</label>
-                <input type="password" name="password2" required>
+                <input type="password" name="password2" value= "<%= password2 %>" required>
             </div>
             <div class="button-container">
                 <input type="submit" class="btn add-button" value="Đăng Kí">

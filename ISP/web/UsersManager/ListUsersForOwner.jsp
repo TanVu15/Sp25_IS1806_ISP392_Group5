@@ -59,7 +59,7 @@
                         <h3 class="body__head-title">Thông tin tài khoản</h3>
                         <div class="search-container">
                             <form action="listusers" method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm khách hàng..." class="search-input">
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm người dùng..." class="search-input">
                                 <button type="submit" class="search-button">Search</button>
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>
