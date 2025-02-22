@@ -8,23 +8,32 @@
     <link rel="stylesheet" href="css/add.css">
     <title>Thêm Sản Phẩm Mới</title>
     <link rel="stylesheet" href="css/product.css">
+    <script>
+        function validateForm() {
+            var price = document.getElementById("price").value;
+            var errorMessage = "";
+
+            if (price < 0) {
+                errorMessage = "Giá không thể âm.";
+            }
+
+            if (errorMessage !== "") {
+                document.getElementById("error-message").innerText = errorMessage;
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <h2>Thêm Sản Phẩm Mới</h2>
         
-        <%
-            String errorMessage = (String) request.getAttribute("errorMessage");
-            if (errorMessage != null) {
-        %>
-        <div class="error-message">
-            <%= errorMessage %>
+        <div id="error-message" class="error-message">
+            <%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : "" %>
         </div>
-        <%
-            }
-        %>
 
-        <form action="addproduct" method="post">
+        <form action="addproduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
             <div class="form-group">
                 <label for="productName">Tên sản phẩm:</label>
                 <input type="text" id="productName" name="productName" required>
@@ -35,7 +44,7 @@
             </div>
             <div class="form-group">
                 <label for="image">Hình ảnh:</label>
-                <input type="text" id="image" name="image" placeholder="URL hình ảnh">
+                <input type="file" id="image" name="image" accept="image/*" required>
             </div>
             <div class="form-group">
                 <label for="price">Giá tiền:</label>
@@ -43,7 +52,7 @@
             </div>
             <div class="form-group">
                 <label for="quantity">Số lượng:</label>
-                <input type="number" id="quantity" name="quantity" value="0" required>
+                <input type="number" id="quantity" name="quantity" value="0" required readonly>
             </div>
             <div class="form-group">
                 <label for="location">Vị trí:</label>
@@ -55,6 +64,5 @@
             </div>
         </form>
     </div>
-
 </body>
 </html>

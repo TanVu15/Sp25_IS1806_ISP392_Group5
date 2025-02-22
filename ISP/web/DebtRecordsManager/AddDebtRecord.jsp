@@ -46,7 +46,7 @@
                 };
             </script>
 
-            <form action="adddebtrecords" method="post">
+            <form action="adddebtrecords" method="post" enctype="multipart/form-data">
 
                 <div class="form-group">
                     <label for="productName">Tên:</label>
@@ -71,8 +71,9 @@
                     <input type="date" name="invoicedate" required>
                 </div>
                 <div class="form-group">
-                    <label for="quantity">Hình Ảnh:</label>
-                    <input type="text" name="imagepath" >
+                    <label for="image">Hình Ảnh:</label>
+<!--                    <input type="text" name="image">-->
+                     <input type="file" id="image" name="image" accept="image/*" required> 
                 </div>
                 <div class="form-group">
                     <label for="location">Ghi Chú:</label>
