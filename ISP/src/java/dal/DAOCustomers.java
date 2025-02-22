@@ -46,6 +46,7 @@ public class DAOCustomers {
                 cs.setName(rs.getString("Name"));
                 cs.setPhone(rs.getString("Phone"));
                 cs.setAddress(rs.getString("Address"));
+                cs.setShopID(rs.getInt("ShopID"));
                 cs.setCreateAt(rs.getDate("CreateAt"));
                 cs.setUpdateAt(rs.getDate("UpdateAt"));
                 cs.setCreateBy(rs.getInt("CreateBy"));
@@ -102,6 +103,7 @@ public class DAOCustomers {
             cus.setName(rs.getString("Name"));
             cus.setPhone(rs.getString("Phone"));
             cus.setAddress(rs.getString("Address"));
+            cus.setShopID(rs.getInt("ShopID"));
             cus.setCreateAt(rs.getDate("CreateAt"));
             cus.setUpdateAt(rs.getDate("UpdateAt"));
             cus.setCreateBy(rs.getInt("CreateBy"));
@@ -145,6 +147,7 @@ public class DAOCustomers {
                 cs.setName(rs.getString("Name"));
                 cs.setPhone(rs.getString("Phone"));
                 cs.setAddress(rs.getString("Address"));
+                cs.setShopID(rs.getInt("ShopID"));
                 cs.setCreateAt(rs.getDate("CreateAt"));
                 cs.setUpdateAt(rs.getDate("UpdateAt"));
                 cs.setCreateBy(rs.getInt("CreateBy"));

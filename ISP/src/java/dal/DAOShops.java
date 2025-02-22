@@ -44,6 +44,17 @@ public class DAOShops {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
+        
+        
+        String sql2 = "UPDATE Users SET ShopID = ? WHERE id = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql2)) {
+            ps.setInt(1, shop.getID());
+            ps.setInt(2, userid);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
     }
     
     public Shops getShopByID(int ID) throws Exception {

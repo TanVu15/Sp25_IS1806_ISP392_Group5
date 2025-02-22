@@ -17,6 +17,7 @@ public class Users {
     private String PasswordHash;
     private int Roleid;
     private String FullName;
+    private int ShopID;
     private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
@@ -27,12 +28,13 @@ public class Users {
     public Users() {
     }
 
-    public Users(int ID, String Username, String PasswordHash, int Roleid, String FullName, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
+    public Users(int ID, String Username, String PasswordHash, int Roleid, String FullName, int ShopID, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
         this.ID = ID;
         this.Username = Username;
         this.PasswordHash = PasswordHash;
         this.Roleid = Roleid;
         this.FullName = FullName;
+        this.ShopID = ShopID;
         this.CreateAt = CreateAt;
         this.UpdateAt = UpdateAt;
         this.CreateBy = CreateBy;
@@ -79,6 +81,14 @@ public class Users {
 
     public void setFullName(String FullName) {
         this.FullName = FullName;
+    }
+
+    public int getShopID() {
+        return ShopID;
+    }
+
+    public void setShopID(int ShopID) {
+        this.ShopID = ShopID;
     }
 
     public Date getCreateAt() {
@@ -129,5 +139,5 @@ public class Users {
         this.deleteBy = deleteBy;
     }
 
-
+   
 }

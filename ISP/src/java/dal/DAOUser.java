@@ -54,6 +54,7 @@ public class DAOUser {
                 u.setPasswordHash(rs.getString("passwordhash"));
                 u.setRoleid(rs.getInt("roleid"));
                 u.setFullName(rs.getString("FullName"));
+                u.setShopID(rs.getInt("ShopID"));
                 u.setCreateAt(rs.getDate("CreateAt"));
                 u.setUpdateAt(rs.getDate("UpdateAt"));
                 u.setCreateBy(rs.getInt("CreateBy"));
@@ -107,6 +108,7 @@ public class DAOUser {
             user.setPasswordHash(rs.getString("PasswordHash"));
             user.setRoleid(rs.getInt("Roleid"));
             user.setFullName(rs.getString("FullName"));
+            user.setShopID(rs.getInt("ShopID"));
             user.setCreateAt(rs.getDate("CreateAt"));
             user.setCreateBy(rs.getInt("CreateBy"));
             user.setIsDelete(rs.getInt("isDelete"));
@@ -149,6 +151,7 @@ public class DAOUser {
             user.setPasswordHash(rs.getString("PasswordHash"));
             user.setRoleid(rs.getInt("Roleid"));
             user.setFullName(rs.getString("FullName"));
+            user.setShopID(rs.getInt("ShopID"));
             user.setCreateAt(rs.getDate("CreateAt"));
             user.setUpdateAt(rs.getDate("UpdateAt"));
             user.setCreateBy(rs.getInt("CreateBy"));
@@ -174,6 +177,7 @@ public class DAOUser {
                 u.setPasswordHash(rs.getString("passwordhash"));
                 u.setRoleid(rs.getInt("roleid"));
                 u.setFullName(rs.getString("FullName"));
+                u.setShopID(rs.getInt("ShopID"));
                 u.setCreateAt(rs.getDate("CreateAt"));
                 u.setUpdateAt(rs.getDate("UpdateAt"));
                 u.setCreateBy(rs.getInt("CreateBy"));
