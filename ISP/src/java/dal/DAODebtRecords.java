@@ -43,6 +43,7 @@ public class DAODebtRecords {
                 debt.setPaymentStatus(rs.getInt("PaymentStatus"));
                 debt.setInvoiceDate(rs.getDate("InvoiceDate"));
                 debt.setImagePath(rs.getString("ImagePath"));
+                debt.setShopID(rs.getInt("ShopID"));
                 debt.setCreateAt(rs.getDate("CreateAt"));
                 debt.setUpdateAt(rs.getDate("UpdateAt"));
                 debt.setCreateBy(rs.getInt("CreateBy"));
@@ -73,6 +74,8 @@ public class DAODebtRecords {
                     debt.setPaymentStatus(rs.getInt("PaymentStatus"));
                     debt.setInvoiceDate(rs.getDate("InvoiceDate"));
                     debt.setImagePath(rs.getString("ImagePath"));
+                    debt.setShopID(rs.getInt("ShopID"));
+                    debt.setActive(rs.getInt("Active"));
                     debt.setCreateAt(rs.getDate("CreateAt"));
                     debt.setUpdateAt(rs.getDate("UpdateAt"));
                     debt.setCreateBy(rs.getInt("CreateBy"));
@@ -90,7 +93,7 @@ public class DAODebtRecords {
     }
 
     public void AddDebtRecords(DebtRecords debtrecords, int userid) throws Exception {
-        String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, InvoiceDate, CreateAt, CreateBy, isDelete, ImagePath, Note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, InvoiceDate, CreateAt, CreateBy, isDelete, ImagePath, Note, shopid, Active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, debtrecords.getCustomerID());
             ps.setInt(2, debtrecords.getAmountOwed());
@@ -101,6 +104,8 @@ public class DAODebtRecords {
             ps.setInt(7, 0);
             ps.setString(8, debtrecords.getImagePath());
             ps.setString(9, debtrecords.getNote());
+            ps.setInt(10, debtrecords.getShopID());
+            ps.setInt(11, 0);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -178,6 +183,8 @@ public class DAODebtRecords {
                     debt.setAmountOwed(rs.getInt("AmountOwed"));
                     debt.setPaymentStatus(rs.getInt("PaymentStatus"));
                     debt.setCreateAt(rs.getDate("CreateAt"));
+                    debt.setShopID(rs.getInt("ShopID"));
+                    debt.setActive(rs.getInt("Active"));
                     debt.setUpdateAt(rs.getDate("UpdateAt"));
                     debt.setCreateBy(rs.getInt("CreateBy"));
                     debt.setIsDelete(rs.getInt("isDelete"));
@@ -224,6 +231,8 @@ public class DAODebtRecords {
                     debt.setCustomerID(rs.getInt("customerID"));
                     debt.setAmountOwed(rs.getInt("AmountOwed"));
                     debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                    debt.setShopID(rs.getInt("ShopID"));
+                    debt.setActive(rs.getInt("Active"));
                     debt.setCreateAt(rs.getDate("CreateAt"));
                     debt.setUpdateAt(rs.getDate("UpdateAt"));
                     debt.setCreateBy(rs.getInt("CreateBy"));
@@ -267,6 +276,7 @@ public class DAODebtRecords {
         //dao.AddDebtRecords(debtRecords, 0);
         //dao.getCustomerDebtRecords(3);
         System.out.println(dao.getDebtRecordsSearch("1000"));
+        DAOShops daoShop = new DAOShops();
         
     }
 
