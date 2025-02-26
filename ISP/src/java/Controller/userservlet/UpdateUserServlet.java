@@ -28,6 +28,7 @@ public class UpdateUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOUser dao = new DAOUser();
+        
 
         request.setAttribute("message", "");
         request.setAttribute("username", "");
@@ -35,7 +36,21 @@ public class UpdateUserServlet extends HttpServlet {
         request.setAttribute("password2", "");
         request.setAttribute("fullname", "");
         int userid = Integer.parseInt(request.getParameter("id"));
-
+        //authen
+        HttpSession session = request.getSession();
+        Users userSession = (Users) session.getAttribute("user");
+        try {
+            int shopid = dao.getUserByID(userid).getShopID();
+            int shopid2 = userSession.getShopID();
+            if(shopid != shopid2 && userSession.getRoleid() != 1){
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
+            
+        } catch (Exception ex) {
+            request.getRequestDispatcher("logout").forward(request, response);
+            return;
+        }
         try {
             Users user = dao.getUserByID(userid);
             request.setAttribute("user", user);

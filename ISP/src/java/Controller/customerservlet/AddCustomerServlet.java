@@ -78,6 +78,7 @@ public class AddCustomerServlet extends HttpServlet {
                 addcustomer.setName(name);
                 addcustomer.setPhone(phone);
                 addcustomer.setAddress(address);
+                addcustomer.setShopID(user.getShopID());
 
                 dao.AddCustomer(addcustomer, user.getID());
                 response.sendRedirect("listcustomers");

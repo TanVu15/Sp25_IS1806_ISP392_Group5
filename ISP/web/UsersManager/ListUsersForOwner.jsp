@@ -101,7 +101,6 @@
                             <tbody>
                                 <%
                                     for (Users user : users) {
-                                    
                                     if(u.getShopID() == user.getShopID()){
                                 %>
                                 <tr class="table-row">

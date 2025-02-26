@@ -86,7 +86,11 @@ public class RegisterServlet extends HttpServlet {
                 userRegister.setUsername(name);
                 userRegister.setPasswordHash(password);
                 userRegister.setRoleid(user.getRoleid() + 1);
-
+                if (user.getRoleid() + 1 == 3) {
+                    userRegister.setShopID(user.getShopID());
+                } else {
+                    userRegister.setShopID(0);
+                }
                 dao.Register(userRegister, user.getID());
                 response.sendRedirect("listusers");
             } else {
