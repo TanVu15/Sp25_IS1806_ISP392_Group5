@@ -43,6 +43,14 @@ public class Shops {
         this.DeleteBy = DeleteBy;
     }
 
+    public Shops(String shopname, String imageLink, String email, String location, int OwnerID) {
+        this.OwnerID = OwnerID;
+        this.ShopName = shopname;
+        this.LogoShop = imageLink;
+        this.Location = location;
+        this.Email = email;
+    }
+
     public int getID() {
         return ID;
     }
@@ -138,6 +146,5 @@ public class Shops {
     public void setDeleteBy(int DeleteBy) {
         this.DeleteBy = DeleteBy;
     }
-    
-    
+
 }
