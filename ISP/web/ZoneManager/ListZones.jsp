@@ -92,15 +92,16 @@
                         <table class="product-table">
                             <thead>
                                 <tr class="table-header">
-                                    <th class="table-header-item">ID</th>
+                                    
+                                    <th class="table-header-item">Shop</th>
                                     <th class="table-header-item">Khu vực</th>
                                     <th class="table-header-item">Ngày tạo</th>
                                     <th class="table-header-item">Ngày cập nhật</th>
                                     <th class="table-header-item">Người tạo</th>
-                                    <th class="table-header-item">Xóa</th>
                                     <th class="table-header-item">Ngày xóa</th>
                                     <th class="table-header-item">Người xóa</th>
                                     <th class="table-header-item">Hành động</th>
+                                    <th class="table-header-item">Trạng thái</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -111,12 +112,13 @@
                                     if(u.getID() == create1.getID() || u.getID() == create2.getID() || u.getID() == cus.getCreateBy()){
                                 %>
                                 <tr class="table-row">
-                                    <td class="table-cell"><%= cus.getID() %></td>
+                                    
+                                    <td class="table-cell"><%= cus.getShopID() %></td>
                                     <td class="table-cell"><%= cus.getZoneName() %></td>
                                     <td class="table-cell"><%= cus.getCreateAt() %></td>
                                     <td class="table-cell"><%= cus.getUpdateAt() %></td>
                                     <td class="table-cell"><%= dao.getUserByID(cus.getCreateBy()).getFullName() %></td>
-                                    <td class="table-cell"><%= (cus.getIsDelete() == 0) ? "Active" : "Ban" %></td>
+                                    
                                     <td class="table-cell"><%= cus.getDeletedAt() %></td>
                                     <td class="table-cell"><%= (cus.getIsDelete() == 0) ? "Null" : dao.getUserByID(cus.getDeleteBy()).getFullName() %></td>
 
@@ -125,6 +127,7 @@
 
                                         <button class="action-button" onclick="window.location.href = 'deletezone?deleteid=<%= cus.getID() %>&userid=<%= u.getID() %>'">Ban</button>
                                     </td>
+                                    <td class="table-cell"><%= cus.getIsDelete() == 0 ? "Hoạt động" : "Khóa"%></td>
                             
                             </tr>
                             <% } 
