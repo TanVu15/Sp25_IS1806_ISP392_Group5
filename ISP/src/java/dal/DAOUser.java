@@ -34,7 +34,7 @@ public class DAOUser {
             ps.setDate(4, today);
             ps.setInt(5, userid);
             ps.setInt(6, 0);
-            ps.setInt(7, 0);
+            ps.setInt(7, user.getShopID());
             ps.executeUpdate();
 
         } catch (SQLException e) {

@@ -15,7 +15,9 @@ public class Orders {
     private int ID;
     private int CustomerID;
     private int UserID;
+    private int OrderItemID;
     private int TotalAmount;
+    private int ShopID;
     private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
@@ -27,11 +29,13 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(int ID, int CustomerID, int UserID, int TotalAmount, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy, int Status) {
+    public Orders(int ID, int CustomerID, int UserID, int OrderItemID, int TotalAmount, int ShopID, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy, int Status) {
         this.ID = ID;
         this.CustomerID = CustomerID;
         this.UserID = UserID;
+        this.OrderItemID = OrderItemID;
         this.TotalAmount = TotalAmount;
+        this.ShopID = ShopID;
         this.CreateAt = CreateAt;
         this.UpdateAt = UpdateAt;
         this.CreateBy = CreateBy;
@@ -65,12 +69,28 @@ public class Orders {
         this.UserID = UserID;
     }
 
+    public int getOrderItemID() {
+        return OrderItemID;
+    }
+
+    public void setOrderItemID(int OrderItemID) {
+        this.OrderItemID = OrderItemID;
+    }
+
     public int getTotalAmount() {
         return TotalAmount;
     }
 
     public void setTotalAmount(int TotalAmount) {
         this.TotalAmount = TotalAmount;
+    }
+
+    public int getShopID() {
+        return ShopID;
+    }
+
+    public void setShopID(int ShopID) {
+        this.ShopID = ShopID;
     }
 
     public Date getCreateAt() {
@@ -117,7 +137,7 @@ public class Orders {
         return deleteBy;
     }
 
-    public void setDeleteBy(int  deleteBy) {
+    public void setDeleteBy(int deleteBy) {
         this.deleteBy = deleteBy;
     }
 
@@ -128,6 +148,6 @@ public class Orders {
     public void setStatus(int Status) {
         this.Status = Status;
     }
-    
+
     
 }

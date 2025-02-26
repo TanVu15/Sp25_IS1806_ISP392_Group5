@@ -51,6 +51,13 @@ public class Shops {
         this.Email = email;
     }
 
+    public Shops(String shopname, String email, String location, int OwnerID) {
+        this.OwnerID = OwnerID;
+        this.ShopName = shopname;
+        this.Location = location;
+        this.Email = email;
+    }
+
     public int getID() {
         return ID;
     }
