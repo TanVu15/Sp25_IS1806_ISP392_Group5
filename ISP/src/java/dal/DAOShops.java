@@ -72,7 +72,7 @@ public class DAOShops {
             shop.setLogoShop(rs.getString("LogoShop"));
             shop.setLocation(rs.getString("Location"));
             shop.setEmail(rs.getString("Email"));
-            shop.setCreatedAt(rs.getDate("CreatedAt"));
+            shop.setCreatedAt(rs.getDate("CreateAt"));
             shop.setCreatedBy(rs.getInt("CreateBy"));
             shop.setIsDelete(rs.getInt("isDelete"));
             shop.setDeleteBy(rs.getInt("DeleteBy"));
@@ -97,7 +97,7 @@ public class DAOShops {
             shop.setLogoShop(rs.getString("LogoShop"));
             shop.setLocation(rs.getString("Location"));
             shop.setEmail(rs.getString("Email"));
-            shop.setCreatedAt(rs.getDate("CreatedAt"));
+            shop.setCreatedAt(rs.getDate("CreateAt"));
             shop.setCreatedBy(rs.getInt("CreateBy"));
             shop.setIsDelete(rs.getInt("isDelete"));
             shop.setDeleteBy(rs.getInt("DeleteBy"));
@@ -108,15 +108,15 @@ public class DAOShops {
         return null;
     }
     
-    public void updateShop(Shops shop) {
-        String sql = "UPDATE Shops SET ShopName = ?,LogoShop = ? ,Location = ?, Email = ? , UpdateAt = ? WHERE id = ?";
+    public void updateShopbyOwnerid(Shops shop) {
+        String sql = "UPDATE Shops SET ShopName = ?,LogoShop = ? ,Location = ?, Email = ? , UpdateAt = ? WHERE ownerid = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, shop.getShopName());
             ps.setString(2, shop.getLogoShop());
             ps.setString(3, shop.getLocation());
             ps.setString(4, shop.getEmail());
             ps.setDate(5, today);
-            ps.setInt(6, shop.getID());
+            ps.setInt(6, shop.getOwnerID());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -126,11 +126,7 @@ public class DAOShops {
     public static void main(String[] args) throws Exception {
         DAOUser dao = new DAOUser();
         Shops shop = new Shops();
-        shop.setOwnerID(1);
-        shop.setShopName("DongShop");
-        shop.setLogoShop("/Image/logo.png");
-        shop.setEmail("D@gmail");
-        shop.setLocation("Hola");
-        DAOShops.INSTANCE.createShop(shop,1);
+        int id = DAOShops.INSTANCE.getShopByID(10).getOwnerID();
+        System.out.println(id);
     }
 }

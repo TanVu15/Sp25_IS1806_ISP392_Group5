@@ -95,66 +95,44 @@ public class CreateShopServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("user");
+        
         String shopname = request.getParameter("shopname");
-        Part filePart = request.getPart("logo"); // Nhận tệp hình ảnh
+        Part filePart = request.getPart("logo");
         String email = request.getParameter("email");
         String location = request.getParameter("location");
 
         String imageLink = "";
-
-        // Lấy đường dẫn thư mục ảnh
         String imageDirectory = getServletContext().getRealPath("/Image/");
 
-        // Lưu ảnh vào thư mục
         if (filePart != null && filePart.getSize() > 0) {
             String fileName = filePart.getSubmittedFileName();
             File dir = new File(imageDirectory);
-            // Tạo thư mục nếu nó không tồn tại
             if (!dir.exists()) {
                 dir.mkdir();
             }
             File file = new File(dir, fileName);
             filePart.write(file.getAbsolutePath());
-            imageLink = "Image/" + fileName; // Đường dẫn lưu trữ ảnh
+            imageLink = "Image/" + fileName;
         }
 
-        DAOShops dao = new DAOShops();
-        HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
-        Shops shop = new Shops();
-        shop.setShopName(shopname);
-        shop.setLogoShop(imageLink);
-        shop.setEmail(email);
-        shop.setLocation(location);
-        shop.setCreatedBy(user.getID());
-        dao.createShop(shop, user.getID());
-        
-        //
-        
-        //
-        Users userSession = (Users) session.getAttribute("user");
-        Users userSessionNew;
-        int shopid;
+        DAOShops daoShops = new DAOShops();
+        Shops shop = new Shops(shopname, imageLink, email, location, user.getID());
+        daoShops.createShop(shop, user.getID());
+
         try {
-            shopid = dao.getShopByOwnerID(userSession.getID()).getID();
-            userSession.setShopID(shopid);
-            DAOUser.INSTANCE.updateUser(userSession);
-        } catch (Exception ex) {
-            Logger.getLogger(CreateShopServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            userSessionNew = DAOUser.INSTANCE.getUserByID(userSession.getID());
+            int shopid = daoShops.getShopByOwnerID(user.getID()).getID();
+            user.setShopID(shopid);
+            DAOUser.INSTANCE.updateUserShopId(user);
             session.removeAttribute("user");
-            session.setAttribute("user", userSessionNew);
-            
+            session.setAttribute("user", DAOUser.INSTANCE.getUserByID(user.getID()));
         } catch (Exception ex) {
-            Logger.getLogger(CreateShopServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // Chuyển hướng tới trang danh sách người dùng sau khi cập nhật thành công
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("shopdetail");
-        requestDispatcher.forward(request, response);
+        response.sendRedirect("shopdetail");
     }
+    
 
     /**
      * Returns a short description of the servlet.

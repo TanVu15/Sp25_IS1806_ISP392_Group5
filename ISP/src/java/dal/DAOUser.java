@@ -263,6 +263,9 @@ public class DAOUser {
 //        System.out.println(dao.getUserByName("Admin2"));
         //dao.updateUser(user);
         dao.deleteUser(4, 2);
-
+        Users newU = new Users();
+        newU.setID(4);
+        newU.setShopID(4);
+        dao.updateUserShopId(newU);
     }
 }

@@ -44,8 +44,8 @@ public class ListDebtRecordsServlet extends HttpServlet {
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
-        if (user.getShopID() == 0) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("ShopsManager/CreateShop.jsp");
+        if(user.getShopID()==0&&user.getRoleid()==2){
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
             requestDispatcher.forward(request, response);
             return;
         }
