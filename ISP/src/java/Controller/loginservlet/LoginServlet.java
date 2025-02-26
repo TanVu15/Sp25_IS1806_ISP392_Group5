@@ -5,6 +5,7 @@
 package Controller.loginservlet;
 
 import dal.DAO;
+import dal.DAOUser;
 import model.Users;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class LoginServlet extends HttpServlet {
 
         try {
             if (name != null && password != null) {
-                DAO userDAO = new DAO();
+                DAOUser userDAO = new DAOUser();
                 Users user = userDAO.getUserByName(name);
 
                 if (user != null && (user.getPasswordHash().equals(password) || user.getIsDelete() == 1)) {

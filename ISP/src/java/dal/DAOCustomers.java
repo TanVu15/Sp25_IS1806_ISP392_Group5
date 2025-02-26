@@ -117,7 +117,7 @@ public class DAOCustomers {
     }
     
     public void AddCustomer(Customers customer, int userid) {
-        String sql = "INSERT INTO Customers (Name, Phone, Address, CreateAt, CreateBy, isDelete, Wallet) VALUES ( ?, ?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO Customers (Name, Phone, Address, CreateAt, CreateBy, isDelete, Wallet, shopid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, customer.getName());
             ps.setString(2, customer.getPhone());
@@ -126,6 +126,7 @@ public class DAOCustomers {
             ps.setInt(5, userid);
             ps.setInt(6, 0);
             ps.setInt(7, 0);
+            ps.setInt(8, customer.getShopID());
             ps.executeUpdate();
 
         } catch (SQLException e) {

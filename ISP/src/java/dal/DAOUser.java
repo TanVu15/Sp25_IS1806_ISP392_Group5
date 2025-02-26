@@ -25,7 +25,7 @@ public class DAOUser {
     public static Date today = new Date(millis);
 
     public void Register(Users user, int userid) {
-        String sql = "INSERT INTO Users (Username, passwordhash, roleid, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (Username, passwordhash, roleid, CreateAt, CreateBy, isDelete, shopid) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
 
             ps.setString(1, user.getUsername());
@@ -34,6 +34,7 @@ public class DAOUser {
             ps.setDate(4, today);
             ps.setInt(5, userid);
             ps.setInt(6, 0);
+            ps.setInt(7, 0);
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -89,6 +90,18 @@ public class DAOUser {
             ps.setString(2, user.getFullName());
             ps.setDate(3, today);
             ps.setInt(4, user.getID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateUserShopId(Users user) {
+        String sql = "UPDATE Users SET ShopId = ? WHERE id = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, user.getShopID());
+            ps.setInt(2, user.getID());
+            
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -250,6 +263,9 @@ public class DAOUser {
 //        System.out.println(dao.getUserByName("Admin2"));
         //dao.updateUser(user);
         dao.deleteUser(4, 2);
-
+        Users newU = new Users();
+        newU.setID(4);
+        newU.setShopID(4);
+        dao.updateUserShopId(newU);
     }
 }
