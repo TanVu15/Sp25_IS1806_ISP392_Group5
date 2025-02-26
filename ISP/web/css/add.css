@@ -113,3 +113,23 @@ textarea:focus {
     z-index: 1000;
     display: none;
 }
+.form-group select {
+    width: 100%; /* Đảm bảo select có chiều rộng bằng input */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: white;
+    outline: none;
+}
+
+/* Hiệu ứng khi hover */
+.form-group select:hover {
+    border-color: #888;
+}
+
+/* Hiệu ứng khi focus */
+.form-group select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+}

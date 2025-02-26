@@ -68,7 +68,7 @@
                         </h3>
                         <div class="search-container">
                             <form action='listcustomerdebtrecords?customerid=<%= customer.getID() %>' method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm khách hàng..." class="search-input">
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm công nợ..." class="search-input">
                                 <button type="submit" class="search-button">Search</button>
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>
@@ -126,7 +126,7 @@
                                     <td class="table-cell"><%= debt.getInvoiceDate() %></td>
                                     <td class="table-cell"><%= debt.getCreateAt() %></td>
                                     <td class="table-cell"><%= dao.getUserByID(debt.getCreateBy()).getFullName() %></td>
-                                    <td class="table-cell"><img src="<%= debt.getImagePath() %>" alt="<%= debt.getID() %>"
+                                    <td class="table-cell"><img src="<%= debt.getImagePath() %>"
                                                                 class="product-image"></td>
                                     <td class="table-cell"><%= debt.getNote() %></td>
                                 </tr>

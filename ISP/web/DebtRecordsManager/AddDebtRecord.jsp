@@ -58,12 +58,12 @@
                     <input type="number" name="amountowed" required>
                 </div>
                 <div class="form-group">
-                    <label for="image">Trạng Thái:</label>
+                    <label for="paymentstatus">Trạng Thái:</label>
                     <select name="paymentstatus" required>
-                        <option value="1">Khách Trả Nợ</option>
-                        <option value="-1">Khách Vay Nợ</option>
-                        <option value="2">Chủ Đi Vay</option>
-                        <option value="-2">Chủ Đi Trả</option>
+                        <option value="1">Khách trả</option>
+                        <option value="-1">Khách Vay </option>
+                        <option value="2">Cửa hàng vay</option>
+                        <option value="-2">Cửa hàng trả</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -73,7 +73,7 @@
                 <div class="form-group">
                     <label for="image">Hình Ảnh:</label>
 <!--                    <input type="text" name="image">-->
-                     <input type="file" id="image" name="image" accept="image/*" required> 
+                     <input type="file" id="image" name="image" accept="image/*"> 
                 </div>
                 <div class="form-group">
                     <label for="location">Ghi Chú:</label>

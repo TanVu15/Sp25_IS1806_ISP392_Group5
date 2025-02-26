@@ -53,9 +53,39 @@ public class DAOOrderItem {
                 orderItemses.add(oi);
             }
         } catch (SQLException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
         return orderItemses;
+    }
+
+    public ArrayList<OrderItems> getAllOrderItemsByOrderID(int ID) throws Exception {
+        ArrayList<OrderItems> orderItemsList = new ArrayList<>();
+        String query = "SELECT * FROM OrderItems WHERE OrderID=?";
+        PreparedStatement ps = connect.prepareStatement(query);
+        ps.setInt(1, ID);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            OrderItems oi = new OrderItems();
+            oi.setID(rs.getInt("ID"));
+            oi.setOrderID(rs.getInt("OrderID"));
+            oi.setProductID(rs.getInt("ProductID"));
+            oi.setProductName(rs.getString("ProductName"));
+            oi.setDescription(rs.getString("Description"));
+            oi.setPrice(rs.getInt("Price"));
+            oi.setQuantity(rs.getInt("Quantity"));
+            oi.setUnitPrice(rs.getInt("UnitPrice"));
+            oi.setShopID(rs.getInt("ShopID"));
+            oi.setCreateAt(rs.getDate("CreateAt"));
+            oi.setUpdateAt(rs.getDate("UpdateAt"));
+            oi.setCreateBy(rs.getInt("CreateBy"));
+            oi.setIsDelete(rs.getInt("isDelete"));
+            oi.setDeletedAt(rs.getDate("DeletedAt"));
+            oi.setDeleteBy(rs.getInt("DeleteBy"));
+
+            orderItemsList.add(oi);
+        }
+        return orderItemsList;
     }
 
 //    public void deleteProducts(int deleteid, int userid) {
@@ -70,7 +100,6 @@ public class DAOOrderItem {
 //            e.printStackTrace();
 //        }
 //    }
-
 //    public void updateOrderItems(OrderItems orderitems) {
 //        String sql = "UPDATE OrderItems SET ProductName = ?, Description = ?, Price = ?, Quantity = ?, UpdateAt = ?, ImageLink = ?, Location = ? WHERE ID = ?";
 //        try (PreparedStatement ps = connect.prepareStatement(sql)) {
@@ -87,14 +116,13 @@ public class DAOOrderItem {
 //            e.printStackTrace();
 //        }
 //    }
-
     public void AddOrderItems(OrderItems orderitems, int userid) {
         String sql = "INSERT INTO OrderItems (OrderID, ProductID, ProductName, Description, Price, Quantity, UnitPrice, shopID, CreateAt, CreateBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, orderitems.getOrderID()); 
+            ps.setInt(1, orderitems.getOrderID());
             ps.setInt(2, orderitems.getProductID());
             ps.setString(3, orderitems.getProductName());
-            ps.setString(4, orderitems.getDescription()); 
+            ps.setString(4, orderitems.getDescription());
             ps.setInt(5, orderitems.getPrice());
             ps.setInt(6, orderitems.getQuantity());
             ps.setInt(7, orderitems.getUnitPrice());
@@ -114,21 +142,21 @@ public class DAOOrderItem {
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
             OrderItems oi = new OrderItems();
-                oi.setID(rs.getInt("ID"));
-                oi.setOrderID(rs.getInt("OrderID"));
-                oi.setProductID(rs.getInt("ProductID"));
-                oi.setProductName(rs.getString("ProductName"));
-                oi.setDescription(rs.getString("Description"));
-                oi.setPrice(rs.getInt("Price"));
-                oi.setQuantity(rs.getInt("Quantity"));
-                oi.setUnitPrice(rs.getInt("UnitPrice"));
-                oi.setShopID(rs.getInt("ShopID"));
-                oi.setCreateAt(rs.getDate("CreateAt"));
-                oi.setUpdateAt(rs.getDate("UpdateAt"));
-                oi.setCreateBy(rs.getInt("CreateBy"));
-                oi.setIsDelete(rs.getInt("isDelete"));
-                oi.setDeletedAt(rs.getDate("DeletedAt"));
-                oi.setDeleteBy(rs.getInt("DeleteBy"));
+            oi.setID(rs.getInt("ID"));
+            oi.setOrderID(rs.getInt("OrderID"));
+            oi.setProductID(rs.getInt("ProductID"));
+            oi.setProductName(rs.getString("ProductName"));
+            oi.setDescription(rs.getString("Description"));
+            oi.setPrice(rs.getInt("Price"));
+            oi.setQuantity(rs.getInt("Quantity"));
+            oi.setUnitPrice(rs.getInt("UnitPrice"));
+            oi.setShopID(rs.getInt("ShopID"));
+            oi.setCreateAt(rs.getDate("CreateAt"));
+            oi.setUpdateAt(rs.getDate("UpdateAt"));
+            oi.setCreateBy(rs.getInt("CreateBy"));
+            oi.setIsDelete(rs.getInt("isDelete"));
+            oi.setDeletedAt(rs.getDate("DeletedAt"));
+            oi.setDeleteBy(rs.getInt("DeleteBy"));
             return oi;
         }
         return null;
@@ -137,7 +165,7 @@ public class DAOOrderItem {
     public ArrayList<OrderItems> getOrderItemBySearch(String information) throws Exception {
         information = information.toLowerCase();
         ArrayList<OrderItems> orderItemses = new ArrayList<>();
-        String sql = "SELECT * FROM OrderItems"; 
+        String sql = "SELECT * FROM OrderItems";
 
         try (PreparedStatement statement = connect.prepareStatement(sql); ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
@@ -193,14 +221,14 @@ public class DAOOrderItem {
         }
         return orderItemses;
     }
-    
+
     public static void main(String[] args) throws Exception {
         DAOOrderItem dao = new DAOOrderItem();
         System.out.println(dao.getAllOrderItem());
-        OrderItems information = new OrderItems(0, 3, 2, "gao ST", "thom", 30000, 1, 29500, 1, today, today, 2, 0, today, 0);
+        OrderItems information = new OrderItems(0, 2, 2, "gao ST", "thom1", 30000, 12, 29500, 1, today, today, 2, 0, today, 0);
         System.out.println(dao.getOrderItemBySearch("gao BC"));
         dao.getOrderItemByID(1);
-        dao.AddOrderItems(information, 2);
+        //dao.AddOrderItems(information, 2);
+        System.out.println(dao.getAllOrderItemsByOrderID(2));
     }
 }
-
