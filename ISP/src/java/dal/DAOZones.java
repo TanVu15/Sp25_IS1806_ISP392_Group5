@@ -37,6 +37,7 @@ public class DAOZones {
                 Zones z = new Zones();
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
+                z.setShopID(rs.getInt("ShopID"));
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
                 z.setCreateBy(rs.getInt("CreateBy"));
@@ -66,11 +67,12 @@ public class DAOZones {
     }
 
     public void updateZones(Zones zones) {
-        String sql = "UPDATE Zones SET ZoneName = ?,UpdateAt = ? WHERE id = ?";
+        String sql = "UPDATE Zones SET ZoneName = ?, ShopID=?, UpdateAt = ? WHERE id = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, zones.getZoneName());
-            ps.setDate(2, today);
-            ps.setInt(3, zones.getID());
+            ps.setInt(2, zones.getShopID());
+            ps.setDate(3, today);
+            ps.setInt(4, zones.getID());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,6 +90,7 @@ public class DAOZones {
             Zones z = new Zones();
             z.setID(rs.getInt("ID"));
             z.setZoneName(rs.getString("ZoneName"));
+            z.setShopID(rs.getInt("ShopID"));
             z.setCreateAt(rs.getDate("CreateAt"));
             z.setUpdateAt(rs.getDate("UpdateAt"));
             z.setCreateBy(rs.getInt("CreateBy"));
@@ -101,12 +104,13 @@ public class DAOZones {
     }
 
     public void AddZone(Zones zone, int userid) {
-        String sql = "INSERT INTO Zones (ZoneName,CreateAt, CreateBy, isDelete) VALUES ( ?, ?, ?, ?) ";
+        String sql = "INSERT INTO Zones (ZoneName,ShopID, CreateAt, CreateBy, isDelete) VALUES ( ?, ?, ?, ?,?) ";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, zone.getZoneName());
-            ps.setDate(2, today);
-            ps.setInt(3, userid);
-            ps.setInt(4, 0);
+            ps.setInt(2, zone.getShopID());
+            ps.setDate(3, today);
+            ps.setInt(4, userid);
+            ps.setInt(5, 0);
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -125,6 +129,7 @@ public class DAOZones {
                 Zones z = new Zones();
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
+                z.setShopID(rs.getInt("ShopID"));
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
                 z.setCreateBy(rs.getInt("CreateBy"));
@@ -137,6 +142,7 @@ public class DAOZones {
 
                 // Tạo một chuỗi chứa toàn bộ thông tin của zone
                 String zoneData = (z.getZoneName() + " "
+                        + z.getShopID() + " "           
                         + z.getCreateAt() + " "
                         + z.getUpdateAt() + " "
                         + userCreate.getFullName().toLowerCase() + " "

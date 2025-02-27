@@ -110,20 +110,26 @@ public class DAODebtRecords {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
+        
+        updateCustomerWallet();
+        
+    }
 
-        boolean success = false;
-        while (!success) { // Lặp đến khi cập nhật thành công
-            // Lấy dữ liệu mới nhất từ DB
+    public void updateCustomerWallet() throws Exception {
+
+        ArrayList<DebtRecords> debtRecordses = getDebtRecordsActive();
+
+        for (DebtRecords debtrecords : debtRecordses) {
             Customers customer = DAOCustomers.INSTANCE.getCustomersByID(debtrecords.getCustomerID());
             int currentWallet = customer.getWallet();
 
             // Tính toán số dư mới
             int newWallet = currentWallet;
-            if(debtrecords.getPaymentStatus()==1 || debtrecords.getPaymentStatus()==2){
-                newWallet+= debtrecords.getAmountOwed();
+            if (debtrecords.getPaymentStatus() == 1 || debtrecords.getPaymentStatus() == 2) {
+                newWallet += debtrecords.getAmountOwed();
             }
-            if(debtrecords.getPaymentStatus()==-1 || debtrecords.getPaymentStatus()==-2){
-                newWallet-= debtrecords.getAmountOwed();
+            if (debtrecords.getPaymentStatus() == -1 || debtrecords.getPaymentStatus() == -2) {
+                newWallet -= debtrecords.getAmountOwed();
             }
 
             // Cập nhật Wallet (chỉ tiếp tục nếu giá trị chưa bị thay đổi bởi máy khác)
@@ -135,11 +141,56 @@ public class DAODebtRecords {
                 ps.setInt(3, currentWallet); // Điều kiện kiểm tra xung đột
                 int updatedRows = ps.executeUpdate();
                 if (updatedRows > 0) {
-                    success = true; // Cập nhật thành công, thoát vòng lặp
+                    updateDebtRecordActive(debtrecords);
                 }
             } catch (SQLException e) {
                 System.out.println("Error: " + e.getMessage());
             }
+        }
+
+    }
+
+    public ArrayList<DebtRecords> getDebtRecordsActive() {
+        ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
+        String sql = "SELECT * FROM DebtRecords WHERE Active = ?";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, 0);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    DebtRecords debt = new DebtRecords();
+                    debt.setID(rs.getInt("ID"));
+                    debt.setCustomerID(rs.getInt("customerID"));
+                    debt.setAmountOwed(rs.getInt("AmountOwed"));
+                    debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                    debt.setInvoiceDate(rs.getDate("InvoiceDate"));
+                    debt.setImagePath(rs.getString("ImagePath"));
+                    debt.setShopID(rs.getInt("ShopID"));
+                    debt.setActive(rs.getInt("Active"));
+                    debt.setCreateAt(rs.getDate("CreateAt"));
+                    debt.setUpdateAt(rs.getDate("UpdateAt"));
+                    debt.setCreateBy(rs.getInt("CreateBy"));
+                    debt.setIsDelete(rs.getInt("isDelete"));
+                    debt.setDeletedAt(rs.getDate("DeletedAt"));
+                    debt.setDeleteBy(rs.getInt("DeleteBy"));
+                    debt.setNote(rs.getString("Note"));
+                    debtRecordses.add(debt);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý lỗi SQL
+        }
+        return debtRecordses;
+    }
+
+    public void updateDebtRecordActive(DebtRecords debtRecords) {
+        String sql = "UPDATE DebtRecords SET Active = ? WHERE id = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, 1);
+            ps.setInt(2, debtRecords.getID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -192,13 +243,13 @@ public class DAODebtRecords {
                     debt.setDeleteBy(rs.getInt("DeleteBy"));
                     debt.setNote(rs.getString("Note"));
                     debt.setInvoiceDate(rs.getDate("InvoiceDate"));
-                        
+
                     String name = DAOCustomers.INSTANCE.getCustomersByID(debt.getCustomerID()).getName();
                     String status = "";
-                    if(debt.getPaymentStatus()==1){
-                        status+="Trả Nợ";
-                    }else{
-                        status+="Vay Nợ";
+                    if (debt.getPaymentStatus() == 1) {
+                        status += "Trả Nợ";
+                    } else {
+                        status += "Vay Nợ";
                     }
                     String debtSeach = debt.getID() + " "
                             + name + " "
@@ -218,7 +269,7 @@ public class DAODebtRecords {
         }
         return debtRecordses;
     }
-    
+
     public ArrayList<DebtRecords> getDebtRecordsSearch(String information) throws Exception {
         ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
         String sql = "SELECT * FROM DebtRecords ";
@@ -241,13 +292,13 @@ public class DAODebtRecords {
                     debt.setDeleteBy(rs.getInt("DeleteBy"));
                     debt.setNote(rs.getString("Note"));
                     debt.setInvoiceDate(rs.getDate("InvoiceDate"));
-                        
+
                     String name = DAOCustomers.INSTANCE.getCustomersByID(debt.getCustomerID()).getName();
                     String status = "";
-                    if(debt.getPaymentStatus()==1){
-                        status+="Trả Nợ";
-                    }else{
-                        status+="Vay Nợ";
+                    if (debt.getPaymentStatus() == 1) {
+                        status += "Trả Nợ";
+                    } else {
+                        status += "Vay Nợ";
                     }
                     String debtSeach = debt.getID() + " "
                             + name + " "
@@ -277,7 +328,7 @@ public class DAODebtRecords {
         //dao.getCustomerDebtRecords(3);
         System.out.println(dao.getDebtRecordsSearch("1000"));
         DAOShops daoShop = new DAOShops();
-        
+
     }
 
 }
