@@ -5,7 +5,9 @@
 
 package Controller.customerservlet;
 
+import Controller.userservlet.UpdateUserServlet;
 import dal.DAOCustomers;
+import dal.DAOUser;
 import model.Customers;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -16,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Users;
 
 /**
@@ -43,10 +47,26 @@ public class UpdateCustomerServlet extends HttpServlet {
         request.setAttribute("user", user);
         ArrayList<Customers> customers = dao.getAllCustomers();
         request.setAttribute("customers", customers);
-        int userid = Integer.parseInt(request.getParameter("id"));
-
+        int customerid = Integer.parseInt(request.getParameter("id"));
+        
+        
+        //authen
         try {
-            Customers cus = dao.getCustomersByID(userid);
+            int shopid = DAOCustomers.INSTANCE.getCustomersByID(customerid).getShopID();
+            int shopid2 = user.getShopID();
+            if( (shopid != shopid2 && user.getRoleid() != 1)){
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
+            
+        } catch (Exception ex) {
+            request.getRequestDispatcher("logout").forward(request, response);
+            return;
+        }
+        
+        
+        try {
+            Customers cus = dao.getCustomersByID(customerid);
             request.setAttribute("cus", cus);
             request.getRequestDispatcher("CustomersManager/UpdateCustomer.jsp").forward(request, response);
         } catch (Exception ex) {

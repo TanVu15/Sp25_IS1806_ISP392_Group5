@@ -111,9 +111,7 @@
                             <tbody>
                                 <% 
                                 for (DebtRecords debt : debtrecords) {
-                                    Users create1 = dao.getUserByID(debt.getCreateBy());
-                                    Users create2 = dao.getUserByID(create1.getCreateBy());
-                                    if(u.getID() == create1.getID() || u.getID() == create2.getID() || u.getID() == debt.getCreateBy()){
+                                    if(debt.getShopID() == u.getShopID()){
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><%= debt.getID() %></td>

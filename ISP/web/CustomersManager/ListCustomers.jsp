@@ -107,9 +107,7 @@
                             <tbody>
                                 <% if (customers != null && !customers.isEmpty()) { 
                                     for (Customers cus : customers) {
-                                    Users create1 = dao.getUserByID(cus.getCreateBy());
-                                    Users create2 = dao.getUserByID(create1.getCreateBy());
-                                    if(u.getID() == create1.getID() || u.getID() == create2.getID() || u.getID() == cus.getCreateBy()){
+                                    if(cus.getShopID() == u.getShopID()){
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><%= cus.getID() %></td>
