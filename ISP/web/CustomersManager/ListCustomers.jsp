@@ -97,10 +97,6 @@
                                     <th class="table-header-item">Tên</th>
                                     <th class="table-header-item">Ví</th>
                                     <th class="table-header-item">Điện thoại</th>
-                                    <th class="table-header-item">Địa chỉ</th>
-                                    <th class="table-header-item">Ngày tạo</th>
-                                    <th class="table-header-item">Ngày cập nhật</th>
-                                    <th class="table-header-item">Người tạo</th>
                                     <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
@@ -114,13 +110,10 @@
                                     <td class="table-cell"><%= cus.getName() %></td>
                                     <td class="table-cell"><%= currencyFormat.format(cus.getWallet()) + " VND"%></td>
                                     <td class="table-cell"><%= cus.getPhone() %></td>
-                                    <td class="table-cell"><%= cus.getAddress() %></td>
-                                    <td class="table-cell"><%= cus.getCreateAt() %></td>
-                                    <td class="table-cell"><%= cus.getUpdateAt() %></td>
-                                    <td class="table-cell"><%= dao.getUserByID(cus.getCreateBy()).getFullName() %></td>
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'updatecustomer?id=<%= cus.getID() %>'">Chỉnh sửa</button>
                                         <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= cus.getID() %>'">Công nợ</button>
+                                        <button class="action-button" onclick="window.location.href = 'customerdetail?customerid=<%= cus.getID() %>'">Chi tiết khách hàng</button>
                                     </td>
                                 </tr>
                                 <% } 

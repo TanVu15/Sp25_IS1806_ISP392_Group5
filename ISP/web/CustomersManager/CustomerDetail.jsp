@@ -1,37 +1,34 @@
 <%-- 
-    Document   : ListDebtRecords
-    Created on : Feb 9, 2025, 10:43:08 PM
+    Document   : CustomerDetail
+    Created on : Feb 27, 2025, 8:01:01 PM
     Author     : ADMIN
 --%>
-
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.Customers" %>
-<%@ page import="model.DebtRecords" %>
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOUser" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quản lý Công Nợ</title>
+        <title>Quản Lý Khách Hàng</title>
         <link rel="stylesheet" href="css/product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
+
     <body>
-        <%  
+        <% 
             DAOUser dao = new DAOUser();
-            DAOCustomers dao1 = new DAOCustomers();
             Users u = (Users) request.getAttribute("user");
             Customers customer = (Customers) request.getAttribute("customer");
-            ArrayList<DebtRecords> debtrecords = (ArrayList<DebtRecords>) request.getAttribute("debtrecords");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
-
         <div class="header">
             <div class="container">
                 <img src="Image/logo.png" alt="logo" class="home-logo">
@@ -54,8 +51,8 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
-                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="ListZones.jsp"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="sales.jsp"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
@@ -65,9 +62,9 @@
 
                 <div class="homepage-body">
                     <div class="body-head">
-                        <h3 class="body__head-title">Công Nợ</h3>
+                        <h3 class="body__head-title">Thông tin khách hàng</h3>
                         <div class="search-container">
-                            <form action='listdebtrecords' method="post">
+                            <form action="listcustomers" method="post">
                                 <input type="text" id="information" name="information" placeholder="Tìm kiếm khách hàng..." class="search-input">
                                 <button type="submit" class="search-button">Search</button>
                             </form>
@@ -88,67 +85,60 @@
                                     }
                                 };
                             </script>
+                            <a href="addcustomer" class="add-product-button">Thêm khách hàng</a>
                         </div>
-
                     </div>
                     <div class="table-container">
                         <table class="product-table">
                             <thead>
                                 <tr class="table-header">
-                                    
                                     <th class="table-header-item">ID</th>
-                                    <th class="table-header-item">Tên Khách Hàng</th>
-                                    <th class="table-header-item">Số tiền</th>
-                                    <th class="table-header-item">Trạng Thái</th>
-                                    <th class="table-header-item">Ngày Tạo Phiếu</th>
+                                    <th class="table-header-item">Tên</th>
+                                    <th class="table-header-item">Ví</th>
+                                    <th class="table-header-item">Điện thoại</th>
+                                    <th class="table-header-item">Địa chỉ</th>
                                     <th class="table-header-item">Ngày tạo</th>
+                                    <th class="table-header-item">Ngày cập nhật</th>
                                     <th class="table-header-item">Người tạo</th>
-                                    <th class="table-header-item">Hình ảnh</th>
-                                    <th class="table-header-item">Ghi Chú</th>
                                     <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <% 
-                                    for (DebtRecords debt : debtrecords) {
-                                    if(debt.getShopID() == u.getShopID()){
+                                    if(customer.getShopID() == u.getShopID()){
                                 %>
                                 <tr class="table-row">
-                                    <td class="table-cell"><%= debt.getID() %></td>
-                                    <td class="table-cell"><%= dao1.getCustomersByID(debt.getCustomerID()).getName() %></td>
-                                    <td class="table-cell"><%= currencyFormat.format(debt.getAmountOwed()) +" VND" %></td>
-                                    <td class="table-cell"><% if (debt.getPaymentStatus() == 1) { %>
-                                        Trả Nợ
-                                        <% } if (debt.getPaymentStatus() == -1) { %>
-                                        Vay Nợ
-                                        <% } %>
-                                        <% if (debt.getPaymentStatus() == 2) { %>
-                                        Đi Vay
-                                        <% } %>
-                                        <%if (debt.getPaymentStatus() == -2) { %>
-                                        Đi Trả
-                                    <% } %></td>
-                                    <td class="table-cell"><%= debt.getInvoiceDate() %></td>
-                                    <td class="table-cell"><%= debt.getCreateAt() %></td>
-                                    <td class="table-cell"><%= dao.getUserByID(debt.getCreateBy()).getFullName() %></td>
-                                    <td class="table-cell"><img src="<%= debt.getImagePath() %>"
-                                                                class="product-image"></td>
-                                    <td class="table-cell"><%= debt.getNote() %></td>
+                                    <td class="table-cell"><%= customer.getID() %></td>
+                                    <td class="table-cell"><%= customer.getName() %></td>
+                                    <td class="table-cell"><%= currencyFormat.format(customer.getWallet()) + " VND"%></td>
+                                    <td class="table-cell"><%= customer.getPhone() %></td>
+                                    <td class="table-cell"><%= customer.getAddress() %></td>
+                                    <td class="table-cell"><%= customer.getCreateAt() %></td>
+                                    <td class="table-cell"><%= customer.getUpdateAt() %></td>
+                                    <td class="table-cell"><%= dao.getUserByID(customer.getCreateBy()).getFullName() %></td>
                                     <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= debt.getCustomerID() %>'">Xem chi tiết công nợ</button>
+                                        <button class="action-button" onclick="window.location.href = 'updatecustomer?id=<%= customer.getID() %>'">Chỉnh sửa</button>
+                                        <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= customer.getID() %>'">Công nợ</button>
                                     </td>
                                 </tr>
-                                <% }} %>
+                                <%  
+                                } 
+                                %>
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
+
+
+
         <div class="footer">
             <div class="container">
                 <p>&copy; 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
             </div>
         </div>
     </body>
+
 </html>

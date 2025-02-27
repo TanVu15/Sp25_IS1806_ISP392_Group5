@@ -318,6 +318,33 @@ public class DAODebtRecords {
         }
         return debtRecordses;
     }
+    
+    public DebtRecords getDebtRecordByID(int ID) throws Exception {
+        String query = "SELECT * FROM DebtRecords WHERE ID=? ";
+        PreparedStatement ps = connect.prepareStatement(query);
+        ps.setInt(1, ID);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+                DebtRecords debt = new DebtRecords();
+                debt.setID(rs.getInt("ID"));
+                debt.setCustomerID(rs.getInt("customerid"));
+                debt.setAmountOwed(rs.getInt("AmountOwed"));
+                debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                debt.setInvoiceDate(rs.getDate("InvoiceDate"));
+                debt.setImagePath(rs.getString("ImagePath"));
+                debt.setShopID(rs.getInt("ShopID"));
+                debt.setCreateAt(rs.getDate("CreateAt"));
+                debt.setUpdateAt(rs.getDate("UpdateAt"));
+                debt.setCreateBy(rs.getInt("CreateBy"));
+                debt.setIsDelete(rs.getInt("isDelete"));
+                debt.setDeletedAt(rs.getDate("DeletedAt"));
+                debt.setDeleteBy(rs.getInt("DeleteBy"));
+                debt.setNote(rs.getString("Note"));
+            return debt;
+        }
+        return null;
+    }
 
     public static void main(String[] args) throws Exception {
         DAODebtRecords dao = new DAODebtRecords();
