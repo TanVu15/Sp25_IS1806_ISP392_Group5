@@ -14,7 +14,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thông tin tài khoản</title>
-        <link rel="stylesheet" href="css/home2.css">
+        <link rel="stylesheet" href="css/product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
 
@@ -23,7 +23,7 @@
         <% 
                 DAOUser dao = new DAOUser();
                 Users u = (Users) request.getAttribute("user");
-                ArrayList<Users> users = (ArrayList<Users>) request.getAttribute("users");
+                Users users = (Users) request.getAttribute("users");
                                 
         %>
         
@@ -35,7 +35,7 @@
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u.getID() %>"class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
@@ -68,49 +68,45 @@
                                     <th class="table-header-item">Mật khẩu</th>
                                     <th class="table-header-item">Vai trò</th>
                                     <th class="table-header-item">Tên</th>
-                                    <th class="table-header-item">Shop</th>
                                     <th class="table-header-item">Ngày tạo</th>
                                     <th class="table-header-item">Ngày cập nhật</th>
                                     <th class="table-header-item">Người tạo</th>
                                     <th class="table-header-item">Trạng thái</th>
+                                    <th class="table-header-item">Ngày xóa</th>
+                                    <th class="table-header-item">Người xóa</th>
                                     <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <%
-                                    for (Users user : users) {
-                                    Users create1 = dao.getUserByID(user.getCreateBy());
-                                    Users create2 = dao.getUserByID(create1.getCreateBy());
-                                    if(u.getRoleid() <= user.getRoleid() && (u.getID() == create1.getID() || u.getID() == create2.getID() || u.getID() == user.getID())){
+                                    
                                 %>
                                 <tr class="table-row">
-                                    <td class="table-cell"><%= user.getUsername() %></td>
-                                    <td class="table-cell"><%= user.getPasswordHash() %></td>
+                                    <td class="table-cell"><%= users.getUsername() %></td>
+                                    <td class="table-cell"><%= users.getPasswordHash() %></td>
                                     <td class="table-cell"><% 
-                                                                if (user.getRoleid() == 1) {
+                                                                if (users.getRoleid() == 1) {
                                                                     out.print("Admin");
-                                                                } else if (user.getRoleid() == 2) {
+                                                                } else if (users.getRoleid() == 2) {
                                                                     out.print("Owner");
                                                                 } else {
                                                                     out.print("Staff");
                                                                 }
                                         %></td>
-                                    <td class="table-cell"></td>
-                                    <td class="table-cell"><%= user.getFullName() %></td>
-                                    <td class="table-cell"><%= user.getCreateAt() %></td>
-                                    <td class="table-cell"><%= user.getUpdateAt() %></td>
-                                    <td class="table-cell"><%= dao.getUserByID(user.getCreateBy()).getFullName() %></td>
+                                    <td class="table-cell"><%= users.getFullName() %></td>
+                                    <td class="table-cell"><%= users.getCreateAt() %></td>
+                                    <td class="table-cell"><%= users.getUpdateAt() %></td>
+                                    <td class="table-cell"><%= dao.getUserByID(users.getCreateBy()).getFullName() %></td>
 
-                                    <td class="table-cell"><%= (user.getIsDelete() == 0) ? "Hoạt Động" : "Xóa" %></td>
-                                    <td class="table-cell"><%= user.getDeletedAt() %></td>
-                                    <td class="table-cell"><%= (user.getIsDelete() == 0) ? "Null" : dao.getUserByID(user.getDeleteBy()).getFullName() %></td>
+                                    <td class="table-cell"><%= (users.getIsDelete() == 0) ? "Hoạt Động" : "Xóa" %></td>
+                                    <td class="table-cell"><%= users.getDeletedAt() %></td>
+                                    <td class="table-cell"><%= (users.getIsDelete() == 0) ? "Null" : dao.getUserByID(users.getDeleteBy()).getFullName() %></td>
                                     <td class="table-cell">
-                                       
+                                        <button class="action-button" onclick="window.location.href = 'updateuser?id=<%= users.getID() %>'">Chỉnh sửa</button>
+                                        
                                     </td>
-                                </tr>
-                                <% 
-                                        } 
-                                    }
+                                    <% 
+                                    
                                 %>
                             </tbody>
                         </table>

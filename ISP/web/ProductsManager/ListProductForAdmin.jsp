@@ -34,7 +34,7 @@
                 </span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="userProfile.jsp" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>

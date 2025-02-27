@@ -73,8 +73,7 @@ public class ListUsersServlet extends HttpServlet {
                     RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsersForOwner.jsp");
                     requestDispatcher.forward(request, response);
                 }
-            }
-
+            } 
         }
     }
 

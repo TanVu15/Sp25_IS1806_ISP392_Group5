@@ -13,7 +13,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý Tài Khoản</title>
-        <link rel="stylesheet" href="css/home2.css">
+        <link rel="stylesheet" href="css/product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
@@ -32,7 +32,7 @@
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u.getID() %>"class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
@@ -92,16 +92,15 @@
                                     <th class="table-header-item">Mật khẩu</th>
                                     <th class="table-header-item">Vai trò</th>
                                     <th class="table-header-item">Tên</th>
-                                    <th class="table-header-item">Ngày tạo</th>
-                                    <th class="table-header-item">Ngày cập nhật</th>
-                                    <th class="table-header-item">Người tạo</th>
                                     <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <%
                                     for (Users user : users) {
-                                    if(u.getShopID() == user.getShopID()){
+                                    Users create1 = dao.getUserByID(user.getCreateBy());
+                                    Users create2 = dao.getUserByID(create1.getCreateBy());
+                                    if(u.getRoleid() <= user.getRoleid() && (u.getID() == create1.getID() || u.getID() == create2.getID() || u.getID() == user.getID())){
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><%= user.getID() %></td>
@@ -117,11 +116,8 @@
                                                                 }
                                         %></td>
                                     <td class="table-cell"><%= user.getFullName() %></td>
-                                    <td class="table-cell"><%= user.getCreateAt() %></td>
-                                    <td class="table-cell"><%= user.getUpdateAt() %></td>
-                                    <td class="table-cell"><%= dao.getUserByID(user.getCreateBy()).getFullName() %></td>
-
                                     <td class="table-cell">
+                                        <button class="action-button" onclick="window.location.href = 'userdetail?id=<%= user.getID() %>'">Thông tin chi tiết</button>
                                         <button class="action-button" onclick="window.location.href = 'updateuser?id=<%= user.getID() %>'">Chỉnh sửa</button>
                                         <% if(u.getRoleid() < user.getRoleid()){ %>
                                         <button class="action-button" onclick="if (confirm('Bạn có chắc chắn muốn xóa?')) {
@@ -129,20 +125,21 @@
                                                 }">Xóa</button>  
                                         <button class="action-button" onclick="if (confirm('Bạn có muốn đặt lại mật khẩu thành : 12345678 ?')) {
                                                     window.location.href = 'resetpassword?resetid=<%= user.getID() %>';
-                                                }">Đặt lại mật khẩu</button>        
+                                                }">Đặt lại mật khẩu</button> 
+                                        
                                         <%
                                             }
                                         %>
+
                                     </td>
                                 </tr>
                                 <% 
-                                    } 
+                                        } 
                                     }
                                 %>
                             </tbody>
                         </table>
                     </div>
-                    
                 </div>
             </div>
         </div>
