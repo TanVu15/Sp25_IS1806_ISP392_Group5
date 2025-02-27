@@ -116,7 +116,7 @@ public class DAOCustomers {
         return null;
     }
     
-    public void AddCustomer(Customers customer, int userid) {
+    public void AddCustomer(Customers customer, int userid) throws Exception {
         String sql = "INSERT INTO Customers (Name, Phone, Address, CreateAt, CreateBy, isDelete, Wallet, shopid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, customer.getName());
@@ -132,6 +132,7 @@ public class DAOCustomers {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
+        DAODebtRecords.INSTANCE.updateCustomerWallet();
     }
 
     public ArrayList<Customers> getCustomersBySearch(String information) throws Exception {
@@ -189,16 +190,7 @@ public class DAOCustomers {
         return customers;
     }
 
-    public void setCustomerWallet(Customers customers){
-        String sql = "UPDATE Customers SET Wallet = ? WHERE id = ?";
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, customers.getWallet());
-            ps.setInt(2, customers.getID());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    
     public static void main(String[] args) throws Exception {
         DAOCustomers dao = new DAOCustomers();
         dao.getAllCustomers();
