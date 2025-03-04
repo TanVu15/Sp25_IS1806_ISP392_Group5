@@ -101,9 +101,7 @@
                             <tbody>
                                 <%
                                     for (Users user : users) {
-                                    Users create1 = dao.getUserByID(user.getCreateBy());
-                                    Users create2 = dao.getUserByID(create1.getCreateBy());
-                                    if(u.getRoleid() <= user.getRoleid() && (u.getID() == create1.getID() || u.getID() == create2.getID() || u.getID() == user.getID())){
+                                    if(user.getShopID() == shop.getID())){
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><%= user.getID() %></td>
