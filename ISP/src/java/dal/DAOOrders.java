@@ -27,7 +27,7 @@ public class DAOOrders {
     public static long millis = System.currentTimeMillis();
     public static Date today = new Date(millis);
 
-    public ArrayList<Orders> getAllZones() {
+    public ArrayList<Orders> getAllOrders() {
         ArrayList<Orders> orders = new ArrayList<>();
         String sql = "SELECT * "
                 + "FROM Orders ";
@@ -37,7 +37,6 @@ public class DAOOrders {
                 Orders o = new Orders();
                 o.setID(rs.getInt("ID"));
                 o.setCustomerID(rs.getInt("CustomerID"));
-                o.setUserID(rs.getInt("UserID"));
                 o.setOrderItemID(rs.getInt("OrderID"));
                 o.setTotalAmount(rs.getInt("TotalAmount"));
                 o.setShopID(rs.getInt("ShopID"));
@@ -58,18 +57,17 @@ public class DAOOrders {
     }
 
     public void addOrders(Orders orders, int userid) {
-        String sql = "INSERT INTO Orders (ID, CustomerID, UserID, OrderItemID, TotalAmount, ShopID, Status, CreateAt, CreateBy, isDelete) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO Orders (ID, CustomerID, OrderItemID, TotalAmount, ShopID, Status, CreateAt, CreateBy, isDelete) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, orders.getID());
             ps.setInt(2, orders.getCustomerID());
-            ps.setInt(3, orders.getUserID());
-            ps.setInt(4, orders.getOrderItemID());
-            ps.setInt(5, orders.getTotalAmount());
-            ps.setInt(6, orders.getShopID());
-            ps.setInt(7, orders.getStatus());
-            ps.setDate(8, today);
-            ps.setInt(9, userid);
-            ps.setInt(10, 0); // Set isDelete to 0 (not deleted)
+            ps.setInt(3, orders.getOrderItemID());
+            ps.setInt(4, orders.getTotalAmount());
+            ps.setInt(5, orders.getShopID());
+            ps.setInt(6, orders.getStatus());
+            ps.setDate(7, today);
+            ps.setInt(8, userid);
+            ps.setInt(9, 0); // Set isDelete to 0 (not deleted)
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -77,10 +75,9 @@ public class DAOOrders {
     }
 
     public void updateOrders(Orders orders) {
-        String sql = "UPDATE Orders SET CustomerID = ?, UserID = ?, OrderItemID = ?, TotalAmount = ?, ShopID = ?, Status = ?, UpdateAt = ?, ImageLink = ?, Location = ? WHERE ID = ?";
+        String sql = "UPDATE Orders SET CustomerID = ?, OrderItemID = ?, TotalAmount = ?, ShopID = ?, Status = ?, UpdateAt = ? WHERE ID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, orders.getCustomerID());
-            ps.setInt(2, orders.getUserID());
             ps.setInt(3, orders.getOrderItemID());
             ps.setInt(4, orders.getTotalAmount());
             ps.setInt(5, orders.getShopID());
@@ -116,7 +113,6 @@ public class DAOOrders {
             Orders o = new Orders();
             o.setID(rs.getInt("ID"));
             o.setCustomerID(rs.getInt("CustomerID"));
-            o.setUserID(rs.getInt("UserID"));
             o.setOrderItemID(rs.getInt("OrderID"));
             o.setTotalAmount(rs.getInt("TotalAmount"));
             o.setShopID(rs.getInt("ShopID"));
@@ -143,7 +139,6 @@ public class DAOOrders {
                 Orders o = new Orders();
                 o.setID(rs.getInt("ID"));
                 o.setCustomerID(rs.getInt("CustomerID"));
-                o.setUserID(rs.getInt("UserID"));
                 o.setOrderItemID(rs.getInt("OrderID"));
                 o.setTotalAmount(rs.getInt("TotalAmount"));
                 o.setShopID(rs.getInt("ShopID"));
@@ -160,7 +155,6 @@ public class DAOOrders {
                 
                 // Tạo một chuỗi chứa toàn bộ thông tin của order
                 String orderData = (o.getCustomerID()+" "
-                        +o.getUserID()+" "
                         +o.getOrderItemID()+" "
                         +o.getShopID()+" "
                         +o.getCreateAt()+" "

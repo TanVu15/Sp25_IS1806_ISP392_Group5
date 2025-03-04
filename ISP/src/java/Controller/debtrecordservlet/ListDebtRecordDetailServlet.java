@@ -2,14 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package Controller.debtrecordservlet;
 
-import Controller.userservlet.UserDetailServlet;
-import dal.DAOCustomers;
 import dal.DAODebtRecords;
-import model.Customers;
-import model.DebtRecords;
-import model.Users;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,17 +17,20 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.DebtRecords;
+import model.Users;
 
 /**
  *
  * @author ADMIN
  */
-public class ListDebtRecordsServlet extends HttpServlet {
+public class ListDebtRecordDetailServlet extends HttpServlet {
+   
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -39,7 +38,7 @@ public class ListDebtRecordsServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         DAODebtRecords dao = new DAODebtRecords();
         HttpSession session = request.getSession();
         request.setAttribute("message", "");
@@ -50,15 +49,20 @@ public class ListDebtRecordsServlet extends HttpServlet {
             requestDispatcher.forward(request, response);
             return;
         }
-        ArrayList<DebtRecords> debtrecords = dao.getDebtRecords();
-        request.setAttribute("debtrecords", debtrecords);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListDebtRecords.jsp");
+        int debtid = Integer.parseInt(request.getParameter("debtid"));
+        DebtRecords debtrecords;
+        try {
+            debtrecords = dao.getDebtRecordByID(debtid);
+            request.setAttribute("debtrecords", debtrecords);
+        } catch (Exception ex) {
+            Logger.getLogger(ListCustomerDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListDebtRecordDetail.jsp");
         requestDispatcher.forward(request, response);
-    }
+    } 
 
-    /**
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -66,36 +70,11 @@ public class ListDebtRecordsServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String information = request.getParameter("information");
-        DAODebtRecords dao = new DAODebtRecords();
-        DAOCustomers dao1 = new DAOCustomers();
-        HttpSession session = request.getSession();
-        ArrayList<DebtRecords> debtrecords;
-        Customers customer;
-
-        Users user = (Users) session.getAttribute("user");
-        request.setAttribute("user", user);
-
-        try {
-            debtrecords = dao.getDebtRecordsSearch(information);
-            if (debtrecords == null || debtrecords.isEmpty()) {
-                debtrecords = dao.getDebtRecords();
-                request.setAttribute("message", "Không tìm thấy kết quả nào.");
-                request.setAttribute("debtrecords", debtrecords);
-            } else {
-                request.setAttribute("debtrecords", debtrecords);
-            }
-
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListDebtRecords.jsp");
-            requestDispatcher.forward(request, response);
-        } catch (Exception ex) {
-        }
+    throws ServletException, IOException {
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override

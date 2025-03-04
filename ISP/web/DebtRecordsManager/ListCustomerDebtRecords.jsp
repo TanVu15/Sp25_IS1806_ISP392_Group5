@@ -103,9 +103,7 @@
                                     <th class="table-header-item">Trạng Thái</th>
                                     <th class="table-header-item">Ngày Tạo Phiếu</th>
                                     <th class="table-header-item">Ngày tạo</th>
-                                    <th class="table-header-item">Người tạo</th>
-                                    <th class="table-header-item">Hình ảnh</th>
-                                    <th class="table-header-item">Ghi Chú</th>
+                                    <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -128,10 +126,9 @@
                                         <% } %></td>
                                     <td class="table-cell"><%= debt.getInvoiceDate() %></td>
                                     <td class="table-cell"><%= debt.getCreateAt() %></td>
-                                    <td class="table-cell"><%= dao.getUserByID(debt.getCreateBy()).getFullName() %></td>
-                                    <td class="table-cell"><img src="<%= debt.getImagePath() %>"
-                                                                class="product-image"></td>
-                                    <td class="table-cell"><%= debt.getNote() %></td>
+                                    <td class="table-cell">
+                                        <button class="action-button" onclick="window.location.href = 'debtrecorddetail?debtid=<%= debt.getID() %>'">Chi tiết công nợ</button>
+                                    </td>
                                 </tr>
                                 <% } %>
                             </tbody>
