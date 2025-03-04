@@ -142,9 +142,14 @@ public class UpdateShopServlet extends HttpServlet {
 
             shop.setOwnerID(user.getID());
             daoShops.updateShopbyOwnerid(shop);
+            
+            //cap nhat shop trong session
+            Shops updatedShop = daoShops.getShopByOwnerID(user.getID());
+            session.removeAttribute("shop");
+            session.setAttribute("shop", updatedShop);
 
             // Cập nhật shopID trong session
-            Shops updatedShop = daoShops.getShopByOwnerID(user.getID());
+            
             try {
                 if (updatedShop != null) {
                     user.setShopID(updatedShop.getID());

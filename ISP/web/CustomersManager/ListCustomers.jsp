@@ -11,6 +11,8 @@
 <%@ page import="dal.DAOUser" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,6 +27,8 @@
 
     <body>
         <% 
+            DAOShops daoShop = new DAOShops();
+            Shops shop = (Shops) session.getAttribute("shop");
             DAOUser dao = new DAOUser();
             Users u = (Users) request.getAttribute("user");
             ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
@@ -32,7 +36,7 @@
         %>
         <div class="header">
             <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
+                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo" width="10">
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>

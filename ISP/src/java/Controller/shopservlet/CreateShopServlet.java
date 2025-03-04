@@ -115,6 +115,8 @@ public class CreateShopServlet extends HttpServlet {
             File file = new File(dir, fileName);
             filePart.write(file.getAbsolutePath());
             imageLink = "Image/" + fileName;
+        }else{
+            imageLink = "Image/logo.png";
         }
 
         DAOShops daoShops = new DAOShops();

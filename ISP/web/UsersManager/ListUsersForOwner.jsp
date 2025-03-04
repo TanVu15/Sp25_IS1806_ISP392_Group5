@@ -6,6 +6,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +19,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-        <% 
+        <%      DAOShops daoShop = new DAOShops();
+                Shops shop = (Shops) session.getAttribute("shop");
                 DAOUser dao = new DAOUser();
                 Users u = (Users) request.getAttribute("user");
                 ArrayList<Users> users = (ArrayList<Users>) request.getAttribute("users");
@@ -26,7 +29,7 @@
 
         <div class="header">
             <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
+                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo" width="10">
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>

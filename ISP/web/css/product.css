@@ -285,7 +285,7 @@ a {
     position: fixed;
     top: 20px; /* Đưa thông báo lên góc trên */
     right: 20px; /* Căn lề phải */
-    background: #28a745; /* Màu xanh lá */
+    background: #dc3545; /* Màu xanh lá */
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
