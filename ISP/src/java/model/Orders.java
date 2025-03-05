@@ -14,7 +14,7 @@ public class Orders {
 
     private int ID;
     private int CustomerID;
-    private int OrderItemID;
+    private int UserID;
     private int TotalAmount;
     private int ShopID;
     private Date CreateAt;
@@ -28,10 +28,10 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(int ID, int CustomerID, int OrderItemID, int TotalAmount, int ShopID, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy, int Status) {
+    public Orders(int ID, int CustomerID, int UserID, int TotalAmount, int ShopID, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy, int Status) {
         this.ID = ID;
         this.CustomerID = CustomerID;
-        this.OrderItemID = OrderItemID;
+        this.UserID = UserID;
         this.TotalAmount = TotalAmount;
         this.ShopID = ShopID;
         this.CreateAt = CreateAt;
@@ -59,12 +59,12 @@ public class Orders {
         this.CustomerID = CustomerID;
     }
 
-    public int getOrderItemID() {
-        return OrderItemID;
+    public int getUserID() {
+        return UserID;
     }
 
-    public void setOrderItemID(int OrderItemID) {
-        this.OrderItemID = OrderItemID;
+    public void setUserID(int UserID) {
+        this.UserID = UserID;
     }
 
     public int getTotalAmount() {

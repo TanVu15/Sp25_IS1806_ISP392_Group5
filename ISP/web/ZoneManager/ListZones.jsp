@@ -20,7 +20,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Trang chủ Quản lý</title>
-        <link rel="stylesheet" href="css/home2.css">
+        <link rel="stylesheet" href="css/product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
 
@@ -52,10 +52,10 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href="ListZones.jsp"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
-                        <li class="mainmenu__list-item"><a href="sales.jsp"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
-                        <li class="mainmenu__list-item"><a href="ListCustomers.jsp"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
-                        <li class="mainmenu__list-item"><a href="debts.jsp"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="listorders"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
                     </ul>
                 </div>
@@ -107,9 +107,7 @@
                             <tbody>
                                 <% if (zones != null && !zones.isEmpty()) { 
                                     for (Zones cus : zones) {
-                                    Users create1 = dao.getUserByID(cus.getCreateBy());
-                                    Users create2 = dao.getUserByID(create1.getCreateBy());
-                                    if(u.getID() == create1.getID() || u.getID() == create2.getID() || u.getID() == cus.getCreateBy()){
+                                    if(cus.getShopID() == u.getShopID()){
                                 %>
                                 <tr class="table-row">
                                     

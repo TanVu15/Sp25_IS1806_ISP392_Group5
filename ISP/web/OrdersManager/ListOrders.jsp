@@ -1,6 +1,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.Orders" %>
 <%@ page import="model.Users" %>
+<%@ page import="model.Customers" %>
+<%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOOrders" %>
 <%@ page import="dal.DAOUser" %>
 <%@ page import="java.text.NumberFormat" %>
@@ -12,12 +14,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý đơn hàng</title>
-        <link rel="stylesheet" href="css/home2.css">
+        <link rel="stylesheet" href="css/product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
         <% 
             DAOUser dao = new DAOUser();
+             DAOCustomers dao1 = new DAOCustomers();
             Users u = (Users) request.getAttribute("user");
             ArrayList<Orders> orders = (ArrayList<Orders>) request.getAttribute("orders");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
@@ -30,7 +33,7 @@
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u.getID() %>" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
@@ -44,10 +47,10 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href="ListZones.jsp"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
-                        <li class="mainmenu__list-item"><a href="sales.jsp"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
-                        <li class="mainmenu__list-item"><a href="ListCustomers.jsp"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
-                        <li class="mainmenu__list-item"><a href="debts.jsp"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="listorders"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
                     </ul>
                 </div>
@@ -57,7 +60,7 @@
                         <h3 class="body__head-title">Thông tin đơn hàng</h3>
                         <div class="search-container">
                             <form action="listorders" method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm đơn..." class="search-input">
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm đơn hàng..." class="search-input">
                                 <button type="submit" class="search-button">Search</button>
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>
@@ -84,48 +87,39 @@
                         <table class="product-table">
                             <thead>
                                 <tr class="table-header">
-
-                                    <th class="table-header-item">ID</th>
-                                    <th class="table-header-item">Khách hàng</th>
-                                    <th class="table-header-item">Sản phẩm</th>
-                                    <th class="table-header-item">Cửa hàng</th>
-                                    <th class="table-header-item">Giá trị</th>
+                                    <th class="table-header-item">Mã đơn hàng</th>
+                                    <th class="table-header-item">Id khách hàng</th>
+                                    <th class="table-header-item">Tên khách hàng</th>
+                                    <th class="table-header-item">Số tiền</th>
+                                    <th class="table-header-item">Trạng thái</th>
                                     <th class="table-header-item">Ngày tạo</th>
                                     <th class="table-header-item">Người tạo</th>
-                                    <th class="table-header-item">Ngày cập nhật</th>
-                                    <th class="table-header-item">Ngày xóa</th>
-                                    <th class="table-header-item">Người xóa</th>
                                     <th class="table-header-item">Hành động</th>
-                                    <th class="table-header-item">Trạng thái</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <% if (orders != null && !orders.isEmpty()) { 
-                                    for (Orders o : orders) {
-                                    Users create1 = dao.getUserByID(o.getCreateBy());
-                                    Users create2 = dao.getUserByID(create1.getCreateBy());
-                                    if(u.getID() == create1.getID() || u.getID() == create2.getID() || u.getID() == o.getCreateBy()){
+                                    for (Orders order : orders) {
+                                    if(order.getShopID() == u.getShopID()){
                                 %>
+
                                 <tr class="table-row">
 
-                                    <td class="table-cell"><%= o.getID() %></td>
-                                    <td class="table-cell"><%= o.getCustomerID() %></td>
-                                    <td class="table-cell"><%= o.getOrderItemID() %></td>
-                                    <td class="table-cell"><%= o.getShopID() %></td>
-                                    <td class="table-cell"><%= currencyFormat.format(o.getTotalAmount()) + " VND"%></td>
-                                    <td class="table-cell"><%= o.getCreateAt() %></td>
-                                    <td class="table-cell"><%= dao.getUserByID(o.getCreateBy()).getFullName() %></td>
-                                    <td class="table-cell"><%= o.getUpdateAt() %></td>
-                                    <td class="table-cell"><%= o.getDeletedAt() %></td>
-                                    <td class="table-cell"><%= (o.getIsDelete() == 0) ? "Null" : dao.getUserByID(o.getDeleteBy()).getFullName() %></td>
-
-                                    <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'updateorder?id=<%= o.getID() %>'">Sửa</button>
-
-                                        <button class="action-button" onclick="window.location.href = 'deleteorder?deleteid=<%= o.getID() %>&userid=<%= u.getID() %>'">Ban</button>
+                                     <td class="table-cell"><%= order.getID() %></td>
+                                    <td class="table-cell"><%= order.getCustomerID() %></td>
+                                    <td class="table-cell"><%= dao1.getCustomersByID(order.getCustomerID()).getName() %></td>
+                                    <td class="table-cell"><%= order.getTotalAmount() %></td>
+                                    <td class="table-cell"><% if (order.getStatus() == -1) { %>
+                                        Nhập hàng
+                                        <% } if (order.getStatus() == 1) { %>
+                                        Bán hàng
+                                        <% } %>
                                     </td>
-                                    <td class="table-cell"><%= o.getIsDelete() == 0 ? "Hoạt động" : "Khóa"%></td>
-
+                                    <td class="table-cell"><%= order.getCreateAt() %></td>
+                                    <td class="table-cell"><%= dao.getUserByID(order.getCreateBy()).getFullName() %></td>
+                                    <td class="table-cell">
+                                        <button class="action-button" onclick="window.location.href = ''">Chi tiết</button>
+                                    </td>
                                 </tr>
                                 <%      } 
                                     } 
