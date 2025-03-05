@@ -1,3 +1,4 @@
+<%@page import="model.Zones"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.Products" %>
@@ -6,6 +7,9 @@
 <%@ page import="dal.DAOUser" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.PreparedStatement" %>
+<%@ page import="java.sql.ResultSet" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,12 +24,22 @@
     </head>
 
     <body>
+        
         <%
             DAOUser dao = new DAOUser();
             Users u = (Users) request.getAttribute("user");
             ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
+                <%
+                        Integer currentPage = (Integer) request.getAttribute("currentPage");
+                        Integer totalPages = (Integer) request.getAttribute("totalPages");
+
+                        // Kiểm tra xem các biến có được nhận hay không
+                        if (currentPage == null || totalPages == null) {
+                            out.println("<script>alert('Không thể nhận được currentPage hoặc totalPages.');</script>");
+                        }
+                    %>
         <!-- Homepage Header -->
         <div class="header">
             <div class="container">
@@ -51,7 +65,7 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
                         <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
@@ -65,12 +79,12 @@
                         <h3 class="body__head-title">Thông tin sản phẩm</h3>
                         <div class="search-container">
                             <form action="listproducts" method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm sản phẩm..." class="search-input">                
-                                <input type="submit" class="search-button" value="Search">      
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm sản phẩm..." class="search-input">
+                                <input type="submit" class="search-button" value="Search">
                             </form>
-                           <% String message = (String) request.getAttribute("message"); %>
-                            <% if (message != null && !message.isEmpty()) { %>
-                            <div id="toast-message" class="toast-message"><%= message %></div>
+                            <% String message = (String) request.getAttribute("message"); %>
+                            <% if (message != null && !message.isEmpty()) {%>
+                            <div id="toast-message" class="toast-message"><%= message%></div>
                             <% } %>
 
                             <script>
@@ -98,43 +112,73 @@
                                     <th class="table-header-item">Tên sản phẩm</th>
                                     <th class="table-header-item">Giá tiền / KG</th>
                                     <th class="table-header-item">Số lượng</th>
-                                    <th class="table-header-item">Vị trí</th>
+                                    <th class="table-header-item">Khu vực</th>
                                     <th class="table-header-item">Mô tả</th>
                                     <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <%
+                                    DAOProducts dao1 = new DAOProducts();
                                     for (Products product : products) {
                                         if (product.getIsDelete() == 0) {
+                                            // Lấy danh sách khu vực cho sản phẩm
+                                            String zoneDisplay = "Chưa xác định"; // Giá trị mặc định
+                                            ArrayList<Zones> zonesList = dao1.getZonesByProductId(product.getID());
+                                            if (zonesList != null && !zonesList.isEmpty()) {
+                                                StringBuilder zonesNames = new StringBuilder();
+                                                for (Zones zone : zonesList) {
+                                                    zonesNames.append(zone.getZoneName()).append(", ");
+                                                }
+                                                // Xóa dấu phẩy cuối
+                                                zoneDisplay = zonesNames.length() > 0 ? zonesNames.substring(0, zonesNames.length() - 2) : zoneDisplay;
+                                            }
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><img src="<%= product.getImageLink()%>" alt="<%= product.getProductName()%>"
                                                                 class="product-image"></td>
                                     <td class="table-cell"><%= product.getID()%></td>
                                     <td class="table-cell"><%= product.getProductName()%></td>
-                                    <td class="table-cell"><%= currencyFormat.format(product.getPrice()) +" VND" %></td>
+                                    <td class="table-cell"><%= currencyFormat.format(product.getPrice()) + " VND"%></td>
                                     <td class="table-cell"><%= product.getQuantity()%></td>
-                                    <td class="table-cell"><%= product.getLocation()%></td>
+                                    <td class="table-cell"><%= zoneDisplay%></td>
                                     <td class="table-cell description"><%= product.getDescription()%></td>
                                     <td class="table-cell">
                                         <a href="updateproduct?id=<%= product.getID()%>" class="action-button">Sửa</a>
                                         <button class="action-button" onclick="if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-                                                   window.location.href = 'deleteproduct?deleteid=<%= product.getID()%>&userid=<%= u.getID()%>';
-                                               }">Xóa</button>
+                                                    window.location.href = 'deleteproduct?deleteid=<%= product.getID()%>&userid=<%= u.getID()%>';
+                                                }">Xóa</button>
                                     </td>
                                 </tr>
-                                <% }
-                                    }%>
+                                <%
+                                        }
+                                    }
+                                %>
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Pagination -->
+            
+                    <div class="pagination">
+                        <div class="pagination-controls">
+                            <button 
+                                class="pagination-button" 
+                                <% if (currentPage == 1) { %> disabled <% }%> 
+                                onclick="window.location.href = 'listproducts?page=<%= currentPage - 1%>'">Trước</button>
+
+                            <span class="pagination-info">Trang <%= currentPage%> / <%= totalPages%></span>
+
+                            <button 
+                                class="pagination-button" 
+                                <% if (currentPage == totalPages) { %> disabled <% }%> 
+                                onclick="window.location.href = 'listproducts?page=<%= currentPage + 1%>'">Sau</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-
-        <!-- Modal -->
-
 
         <!-- Footer -->
         <div class="footer">
@@ -143,7 +187,5 @@
             </div>
         </div>
 
-
     </body>
-
 </html>
