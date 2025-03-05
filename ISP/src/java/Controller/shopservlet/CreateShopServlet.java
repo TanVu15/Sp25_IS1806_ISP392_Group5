@@ -122,7 +122,13 @@ public class CreateShopServlet extends HttpServlet {
         DAOShops daoShops = new DAOShops();
         Shops shop = new Shops(shopname, imageLink, email, location, user.getID());
         daoShops.createShop(shop, user.getID());
-
+        
+        try {
+            shop = daoShops.getShopByOwnerID(user.getID());
+            session.setAttribute("shop", shop);
+        } catch (Exception ex) {
+            Logger.getLogger(CreateShopServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             int shopid = daoShops.getShopByOwnerID(user.getID()).getID();
             user.setShopID(shopid);
