@@ -1,93 +1,293 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f1ea; 
+:root {
+    --white-color: #fff;
+    --black-color: #000;
+    --text-color: #333;
+    --border-color: #dbdbdb;
+    --primary-color: #78ae39;
+    --star-gold-color: #FFCE3E;
+    --header-search-height: 70px;
+    --header-sortbar-height: 50px;
+}
+
+* {
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+    line-height: 16px;
+}
+
+.header {
+    background: linear-gradient(to top, #FFCE3E, #fdd202);
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
 }
 
 .container {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
 }
 
-h2 {
-    text-align: center;
-    color: #7ab452;
-    margin-bottom: 20px;
+.home-logo {
+    height: auto;
+    width: 128px;
+    margin-top: 8px;
 }
 
-.form-group {
-    margin-bottom: 15px;
-    margin-right: 22px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #6b4423; 
-}
-
-input, textarea{
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-input:focus,
-textarea:focus {
-    border-color: #80bdff;
-    outline: none;
-}
-
-.btn {
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
+.header__navbar-item {
+    margin: 10px;
+    list-style-type: none;
+    color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
+    z-index: 3;
+    font-size: 1.4rem;
+    position: relative;
+}
+
+/* For navbar user after login */
+.navbar__user {
+    display: flex;
+    align-items: center;
+}
+
+.navbar__user--img {
+    height: 21px;
+    width: 21px;
+    border-radius: 16px;
+    margin-top: -3px;
+    margin-left: 6px;
+}
+
+.navbar__user--name {
+    margin-left: 8px;
     font-size: 16px;
-    text-align: center;
-    display: inline-block;
-    margin-right: 10px;
-}
-.btn-primary{
-background-color: #7ab452;    
-}
-
-.btn-secondary {
-    background-color: black;
+    padding: 0px 12px;
+    margin: 3px 0px;
+    color: #713d3d;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 5px;
     text-decoration: none;
+    display: block;
+    width: 100%;
+    position: relative;
+    top: -1px;
 }
 
-.btn:hover {
-    opacity: 0.8;
+/* Drop user table */
+.navbar__user--info {
+    position: absolute;
+    background-color: var(--white-color);
+    z-index: 2;
+    top: 66px;
+    right: 0px;
+    width: 134px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 1px var(--text-color);
+    border-radius: 2px;
+    position: absolute;
+    display: none;
 }
 
-.alert {
-    padding: 15px;
-    margin-bottom: 15px;
-    border: 1px solid transparent;
+.navbar__user--info::before {
+    content: "";
+    position: absolute;
+    border: 15px solid var(--white-color);
+    border-color: transparent transparent var(--white-color) transparent;
+    z-index: -1;
+    top: -24px;
+    right: 8px;
+}
+
+.navbar__info--wrapper {
+}
+
+.navbar__info--wrapper a:hover {
+    color: #00c414;
+    cursor: pointer;
+}
+
+.navbar__info--wrapper a {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1.4rem;
+}
+
+.navbar__info--wrapper a:last-child {
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+.navbar__info--item {
+    text-decoration: none;
+    color: var(--black-color);
+    font-weight: 400;
+}
+
+/* Hover to display user info */
+.header__navbar-item.navbar__user:hover .navbar__user--info {
+    display: block;
+}
+
+.mainmenu {
+    min-width: 150px;
+    background-color: #551f1f;
+    height: auto;
+}
+
+.mainmenu-list {
+    list-style: none;
+    display: flex;
+    width: auto;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 0;
+
+}
+
+.mainmenu__list-item {
+    width: 100%;
+    position: relative;
+    unicode-bidi: isolate;
+    display: flex;
+    border-radius: 5px;
+    text-align: center;
+    height: 40px;
+    text-align: start;
+    align-items: center;
+}
+
+.list-item-icon {
+    font-size: 15px;
+    color: wheat;
+    margin-right: 8px;
+    width: 20px;
+}
+
+.mainmenu__list-item>a {
+    padding: 0px 12px;
+    margin: 3px 0px;
+    color: #fff;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 5px;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    font-size: 10px;
+}
+
+.mainmenu__list-item:hover {
+    background-color: var(--primary-color);
+}
+
+.mainmenu__list-item:hover a{
+    color: #fdd202;
+}
+
+.mainmenu__list-item:hover .list-item-icon {
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    outline: 0;
+    border: none;
+    cursor: pointer;
+}
+
+
+/* homepage-body */
+.homepage-body {
+    background-color: rgba(0, 0, 0, 0.05);
+    margin: 0 20px;
+    width: 100%;
+    margin-top: 20px;
+    border-bottom: 1px solid #DCE0E3;
+    margin-bottom: 20px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding-bottom: 60px;
+    flex: 1;
+    min-height: calc(90vh - 150px);
+}
+
+.body-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.body-head {
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #f0f3f5;
+    border: 1px solid #c8ced3;
     border-radius: 4px;
+    display: flex;
+    justify-content: space-around;
 }
 
-.alert-danger {
-    color: red;
-    background-color: #ffffff;
-    border-color: #ffffff;
+.body__head-title {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.body__head-text {
+    margin-left: 3px;
+    opacity: 0.5;
+}
+/* search */
+.search-container {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+}
+
+.search-input {
+    width: 500px; /* Độ dài thanh tìm kiếm */
+    padding: 8px 12px; /* Padding cho nội dung bên trong */
+    border: 1px solid var(--border-color); /* Viền cho thanh tìm kiếm */
+    border-radius: 4px; /* Bo góc */
+    font-size: 14px; /* Kích thước chữ */
+}
+
+.search-icon {
+    margin-left: 10px; /* Khoảng cách giữa ô tìm kiếm và biểu tượng */
+    cursor: pointer; /* Thay đổi con trỏ khi di chuột qua */
+    color: var(--primary-color); /* Màu sắc biểu tượng */
+    font-size: 16px; /* Kích thước biểu tượng */
+}
+
+.search-input:focus {
+    outline: none; /* Bỏ viền khi ô tìm kiếm được chọn */
+    border-color: var(--primary-color); /* Đổi màu viền khi ô tìm kiếm được chọn */
+}
+
+.search-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+}
+
+.search-button:hover {
+    background-color: #66c32c; /* Màu xanh lá đậm hơn khi hover */
 }
 
 .toast-message {
     position: fixed;
     top: 20px; /* Đưa thông báo lên góc trên */
     right: 20px; /* Căn lề phải */
-    background: #dc3545; /* Màu xanh lá */
+    background: #28a745; /* Màu xanh lá */
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
@@ -98,26 +298,260 @@ background-color: #7ab452;
     z-index: 1000;
     display: none;
 }
+/* add btn */
+.add-product-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+    margin-left: 48px;
+}
 
-.form-group {
-    margin-right: 18px;
-    margin-bottom: 15px;
+.add-product-button:hover {
+    background-color: #66c32c;
+}
+
+/* Table */
+.table-container {
+    margin: 20px 0;
+    overflow-x: auto; /* Giúp bảng có thể cuộn trên màn hình nhỏ */
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse; /* Gộp các đường viền của ô */
+    background-color: var(--white-color);
+    max-height: calc(100vh - 200px); /* Điều chỉnh chiều cao phù hợp */
+    overflow-y: auto; /* Cho phép cuộn */
+}
+
+.table-header {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+.table-header-item {
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    border: 1px solid var(--border-color);
+}
+
+.table-row {
+    transition: background-color 0.3s; /* Hiệu ứng chuyển đổi màu nền */
+}
+
+.table-row:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Màu nền khi di chuột qua hàng */
+}
+
+.table-cell {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+}
+
+
+.product-image {
+    width: 50px; /* Chiều rộng ảnh sản phẩm */
+    height: auto; /* Tự động điều chỉnh chiều cao */
+}
+
+.action-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.action-button:hover {
+    background-color: #66c32c;
+}
+
+/* Page */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 0 20px;
+}
+
+.pagination-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    border-radius: 4px;
+    width: 100px;
+    padding: 8px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination-button:hover {
+    background-color: #66c32c;
+}
+
+.pagination-info {
+    font-size: 15px;
+    margin: 0 10px;
+    padding: 5px 10px;
+    background-color: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.current-page{
+    font-size: 15px;
+    background-color: #f0f0f0;
+    border: block;
+    border: 1px solid #ccc;
+    padding: 4px 35px;
+}
+
+.total-pages{
+    font-size: 15px;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    text-align: center;
+    padding: 10px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height:46px;
+    background: linear-gradient(to top, #FFCE3E, #fdd202);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+}
+
+.table-container {
+    margin: 20px 0;
+    overflow-y: auto; /* Enable vertical scrolling */
+    max-height: 600px; /* Set a maximum height for the table, responsive point */
+}
+
+/* Ensure the product images are responsive */
+.product-image {
+    max-width: 100%; /* Make images responsive */
+    height: auto; /* Maintain aspect ratio */
+}
+
+
+
+
+/* Modal */
+.modal {
+    display: none; /* Ẩn modal theo mặc định */
+    position: fixed; /* Đặt modal ở vị trí cố định */
+    z-index: 1000; /* Đảm bảo modal nằm trên các phần tử khác */
+    left: 0;
+    top: 0;
+    width: 100%; /* Toàn bộ chiều rộng */
+    height: 100%; /* Toàn bộ chiều cao */
+    overflow: auto; /* Cuộn nếu cần */
+    background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+}
+
+.modal-content {
+    background-color: #fff; /* Nền trắng cho nội dung modal */
+    margin: 15% auto; /* Đặt giữa màn hình */
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    width: 80%; /* Chiều rộng modal */
+    max-width: 600px; /* Đặt chiều rộng tối đa */
+    border-radius: 8px; /* Bo góc cho modal */
+}
+
+.modal-body {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Align labels to the left */
+    align-items: start;
 }
 
-.form-group label {
-    margin-bottom: 5px;
+.modal-product-image {
+    width: 100px; /* Chiều rộng hình ảnh sản phẩm trong modal */
+    height: auto; /* Tự động điều chỉnh chiều cao */
+    margin-bottom: 15px; /* Khoảng cách dưới hình ảnh */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
     font-weight: bold;
-    color: #6b4423; /* Brown color for rice theme */
 }
 
-.form-group input,
-.form-group textarea {
-    width: 100%; /* Make all input fields the same length and centered */
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* User Info Container */
+.user-info-container {
+    padding: 20px;
+    background-color: var(--white-color);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Giới hạn chiều rộng tối đa */
+    margin: 0 auto; /* Căn giữa container */
+}
+
+/* User Info Item */
+.user-info-item {
+    display: flex;
+    flex-direction: row; /* Sắp xếp nhãn và giá trị theo hàng ngang */
+    align-items: center;
+    margin-bottom: 15px; /* Khoảng cách giữa các mục */
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color); /* Đường viền nhẹ giữa các mục */
+}
+
+/* User Info Label */
+.user-info-label {
+    font-weight: bold;
+    color: var(--text-color);
+    min-width: 150px; /* Đảm bảo nhãn có chiều rộng cố định để căn chỉnh đều */
+    font-size: 15px;
+}
+
+/* User Info Value */
+.user-info-value {
+    color: var(--black-color);
+    font-size: 15px;
+    flex: 1; /* Giá trị chiếm phần còn lại của không gian */
+    word-break: break-word; /* Đảm bảo giá trị dài sẽ xuống dòng nếu cần */
+}
+
+/* Remove border for the last item */
+.user-info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+/* Style for the Edit button */
+.user-info-container .action-button {
+    margin-top: 20px;
+    width: 100%; /* Nút chiếm toàn bộ chiều rộng */
+    padding: 10px;
+    font-size: 15px;
+}
+

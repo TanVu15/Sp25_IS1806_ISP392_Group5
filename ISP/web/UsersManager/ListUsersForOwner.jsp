@@ -29,7 +29,7 @@
 
         <div class="header">
             <div class="container">
-                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo" width="10">
+                <img src="<%= shop.getLogoShop() %>" alt="logo" class="home-logo" width="10">
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
