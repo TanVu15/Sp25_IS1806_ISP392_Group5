@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import jakarta.servlet.annotation.MultipartConfig; // Thêm import này
+import model.Shops;
 
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 2, // 2MB
@@ -58,13 +59,22 @@ public class AddDebtRecordsServlet extends HttpServlet {
         request.setAttribute("user", user);
         ArrayList<Customers> customers = dao.getAllCustomers();
         request.setAttribute("customers", customers);
+        
+        
 
         int customerID = Integer.parseInt(request.getParameter("customerid"));
         try {
+            
             Customers customer = dao.getCustomersByID(customerID);
+            Shops shop = (Shops) session.getAttribute("shop");
+            if(shop.getID() != customer.getShopID() || customer == null){
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("customer", customer);
         } catch (Exception ex) {
-            Logger.getLogger(AddDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);
+             request.getRequestDispatcher("logout").forward(request, response);
+             return;
         }
         RequestDispatcher dispatcher = request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp");
         dispatcher.forward(request, response);
@@ -84,6 +94,9 @@ public class AddDebtRecordsServlet extends HttpServlet {
 
         DAOCustomers daoCus = new DAOCustomers();
         response.setContentType("text/html;charset=UTF-8");
+        
+        HttpSession session = request.getSession();
+        Shops shop = (Shops) session.getAttribute("shop");
 
         // 🔹 Lấy customerID từ Part thay vì request.getParameter()
         Part customerIDPart = request.getPart("customerid");
@@ -93,6 +106,10 @@ public class AddDebtRecordsServlet extends HttpServlet {
 
         try {
             Customers customer = daoCus.getCustomersByID(customerID);
+            if(shop.getID() != customer.getShopID()){
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("customer", customer);
         } catch (Exception ex) {
             Logger.getLogger(AddDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);

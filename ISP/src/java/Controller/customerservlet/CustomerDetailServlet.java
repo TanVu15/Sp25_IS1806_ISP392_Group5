@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Customers;
+import model.Shops;
 import model.Users;
 
 /**
@@ -55,9 +56,15 @@ public class CustomerDetailServlet extends HttpServlet {
         Customers customer = new Customers();
         try {
             customer = dao1.getCustomersByID(customerID);
+            Shops shop = (Shops) session.getAttribute("shop");
+            if (shop.getID() != customer.getShopID() || customer == null) {
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("customer", customer);
         } catch (Exception ex) {
-            Logger.getLogger(ListCustomerDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.getRequestDispatcher("logout").forward(request, response);
+                return;
         }
         
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("CustomersManager/CustomerDetail.jsp");
