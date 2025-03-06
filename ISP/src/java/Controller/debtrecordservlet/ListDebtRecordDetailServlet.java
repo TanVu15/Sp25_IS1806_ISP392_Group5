@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.DebtRecords;
+import model.Shops;
 import model.Users;
 
 /**
@@ -44,7 +45,7 @@ public class ListDebtRecordDetailServlet extends HttpServlet {
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
-        if(user.getShopID()==0&&user.getRoleid()==2){
+        if(user.getShopID()==0 && user.getRoleid()==2){
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
             requestDispatcher.forward(request, response);
             return;
@@ -53,9 +54,15 @@ public class ListDebtRecordDetailServlet extends HttpServlet {
         DebtRecords debtrecords;
         try {
             debtrecords = dao.getDebtRecordByID(debtid);
+            Shops shop = (Shops) session.getAttribute("shop");
+            if (shop.getID() != debtrecords.getShopID() || debtrecords == null) {
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("debtrecords", debtrecords);
         } catch (Exception ex) {
-            Logger.getLogger(ListCustomerDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.getRequestDispatcher("logout").forward(request, response);
+                return;
         }
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListDebtRecordDetail.jsp");
         requestDispatcher.forward(request, response);

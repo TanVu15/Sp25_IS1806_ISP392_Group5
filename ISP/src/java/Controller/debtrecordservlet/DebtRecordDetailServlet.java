@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package Controller.debtrecordservlet;
 
 import dal.DAOCustomers;
@@ -20,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Customers;
 import model.DebtRecords;
+import model.Shops;
 import model.Users;
 
 /**
@@ -27,12 +27,11 @@ import model.Users;
  * @author ADMIN
  */
 public class DebtRecordDetailServlet extends HttpServlet {
-   
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -44,17 +43,23 @@ public class DebtRecordDetailServlet extends HttpServlet {
         DAODebtRecords dao = new DAODebtRecords();
         DAOCustomers dao1 = new DAOCustomers();
         HttpSession session = request.getSession();
-        
+
         request.setAttribute("message", "");
-        
+
         int debtid = Integer.parseInt(request.getParameter("debtid"));
         DebtRecords debtrecords;
         try {
             // lay customer đang cần
             debtrecords = dao.getDebtRecordByID(debtid);
+            Shops shop = (Shops) session.getAttribute("shop");
+            if (shop.getID() != debtrecords.getShopID() || debtrecords == null) {
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("debtrecords", debtrecords);
         } catch (Exception ex) {
-            Logger.getLogger(ListCustomerDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.getRequestDispatcher("logout").forward(request, response);
+            return;
         }
         //lay user người đang đăng nhập
         Users user = (Users) session.getAttribute("user");
@@ -110,8 +115,9 @@ public class DebtRecordDetailServlet extends HttpServlet {
         }
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

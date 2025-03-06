@@ -52,10 +52,6 @@ public class LoginServlet extends HttpServlet {
                 DAOUser userDAO = new DAOUser();
                 Users user = userDAO.getUserByName(name);
                 DAOShops daoShop = new DAOShops();
-                if(user.getShopID()!=0){
-                    Shops shop = daoShop.getShopByID(user.getShopID());
-                    session.setAttribute("shop", shop);
-                }
 
                 if (user != null && (user.getPasswordHash().equals(password) || user.getIsDelete() == 1)) {
                     if (user.getIsDelete() != 0) {
@@ -66,8 +62,16 @@ public class LoginServlet extends HttpServlet {
                         dispatcher.forward(request, response);
                     } else {
                         session.setAttribute("user", user);
-                        
-                        response.sendRedirect("listproducts");
+                        if (user.getShopID() != 0) {
+                            Shops shop = daoShop.getShopByID(user.getShopID());
+                            session.setAttribute("shop", shop);
+                             response.sendRedirect("listproducts");
+                            return;
+                        } else {
+                            response.sendRedirect("createshop");
+                            return;
+                        }
+                       
                     }
                 } else {
                     request.setAttribute("message", "Hãy xem lại tài khoản và mật khẩu!");
