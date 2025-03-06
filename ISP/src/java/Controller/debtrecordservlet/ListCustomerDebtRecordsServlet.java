@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Shops;
 
 /**
  *
@@ -51,9 +52,15 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
         try {
             // lay customer đang cần
             customer = dao1.getCustomersByID(customerID);
+            Shops shop = (Shops) session.getAttribute("shop");
+            if(shop.getID() != customer.getShopID() || customer == null){
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("customer", customer);
         } catch (Exception ex) {
-            Logger.getLogger(ListCustomerDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.getRequestDispatcher("logout").forward(request, response);
+                return;
         }
         //lay user người đang đăng nhập
         Users user = (Users) session.getAttribute("user");

@@ -65,23 +65,27 @@ public class ShopDetailServlet extends HttpServlet {
         DAOShops daoShop = new DAOShops();
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
-        
-        if(user.getShopID()==0&&user.getRoleid()==2){
+
+        if (user.getShopID() == 0 && user.getRoleid() == 2) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
             requestDispatcher.forward(request, response);
             return;
         }
         request.setAttribute("user", user);
         Shops shop = new Shops();
-        
+
         try {
             shop = daoShop.getShopByID(user.getShopID());
+            if (shop.getID() != user.getShopID()) {
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("shop", shop);
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("ShopsManager/ShopDetail.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception ex) {
-            ex.printStackTrace(); // Log lỗi ra console
-            response.getWriter().println("Error: " + ex.getMessage()); // Hiển thị lỗi trên trang
+            request.getRequestDispatcher("logout").forward(request, response);
+            return;
         }
 
     }
