@@ -2,13 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package Controller.debtrecordservlet;
 
 import dal.DAOCustomers;
 import dal.DAODebtRecords;
-import model.Customers;
-import model.DebtRecords;
-import model.Users;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,19 +18,21 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Customers;
+import model.DebtRecords;
+import model.Users;
 
 /**
  *
- * @author Admin
+ * @author ADMIN
  */
-public class ListCustomerDebtRecordsServlet extends HttpServlet {
-
+public class DebtRecordDetailServlet extends HttpServlet {
+   
     
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -46,12 +46,13 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
         HttpSession session = request.getSession();
         
         request.setAttribute("message", "");
-        int customerID = Integer.parseInt(request.getParameter("customerid"));
-        Customers customer;
+        
+        int debtid = Integer.parseInt(request.getParameter("debtid"));
+        DebtRecords debtrecords;
         try {
             // lay customer đang cần
-            customer = dao1.getCustomersByID(customerID);
-            request.setAttribute("customer", customer);
+            debtrecords = dao.getDebtRecordByID(debtid);
+            request.setAttribute("debtrecords", debtrecords);
         } catch (Exception ex) {
             Logger.getLogger(ListCustomerDebtRecordsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -59,9 +60,7 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
         // lay líst debt của customer
-        ArrayList<DebtRecords> debtrecords = dao.getCustomerDebtRecords(customerID);
-        request.setAttribute("debtrecords", debtrecords);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListCustomerDebtRecords.jsp");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/DebtRecordDetail.jsp");
         requestDispatcher.forward(request, response);
     }
 
@@ -111,9 +110,8 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
         }
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override

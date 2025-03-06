@@ -119,6 +119,7 @@ public class DAOZones {
                 Zones z = new Zones();
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
+                z.setShopID(rs.getInt("ShopID"));
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
                 z.setCreateBy(rs.getInt("CreateBy"));

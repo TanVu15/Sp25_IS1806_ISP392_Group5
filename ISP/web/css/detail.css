@@ -121,31 +121,3 @@ background-color: #7ab452;
     border-radius: 4px;
     font-size: 16px;
 }
-
-
-#zoneIDs {
-    width: 100%; /* Ensure select box takes full width */
-}
-
-.select2-container--default .select2-selection--multiple {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    border: 1px solid #ccc; /* Same border as input fields */
-    border-radius: 4px;
-    padding: 8px; /* Add padding for spacing */
-}
-
-.select2-selection__choice {
-    margin: 2px 5px; /* Space between selected items */
-    background-color: #7ab452; /* Same as add button */
-    color: white;
-    border-radius: 4px;
-    padding: 5px 10px;
-}
-
-.select2-selection__choice__remove {
-    cursor: pointer;
-    margin-left: 5px;
-    color: #721c24; /* Red color for remove icon */
-}

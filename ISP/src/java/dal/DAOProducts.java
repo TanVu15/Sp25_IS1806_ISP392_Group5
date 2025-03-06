@@ -100,34 +100,35 @@ public class DAOProducts {
     }
 
     public int addProducts(Products product, int userid) {
-        String sql = "INSERT INTO Products (ImageLink, ProductName, Description, Price, Quantity, CreateAt, CreateBy, UpdateAt, isDelete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = connect.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, product.getImageLink());
-            ps.setString(2, product.getProductName());
-            ps.setString(3, product.getDescription());
-            ps.setInt(4, product.getPrice());
-            ps.setInt(5, product.getQuantity());
-            ps.setDate(6, today);
-            ps.setInt(7, userid);
-            ps.setDate(8, today); // Cập nhật thời gian
-            ps.setInt(9, 0); // Đánh dấu là chưa bị xóa
-            ps.executeUpdate();
+    String sql = "INSERT INTO Products (ImageLink, ProductName, Description, Price, Quantity, CreateAt, CreateBy, UpdateAt, isDelete, ShopID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    try (PreparedStatement ps = connect.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        ps.setString(1, product.getImageLink());
+        ps.setString(2, product.getProductName());
+        ps.setString(3, product.getDescription());
+        ps.setInt(4, product.getPrice());
+        ps.setInt(5, product.getQuantity());
+        ps.setDate(6, today);
+        ps.setInt(7, userid);
+        ps.setDate(8, today); // Cập nhật thời gian
+        ps.setInt(9, 0); // Đánh dấu là chưa bị xóa
+        ps.setInt(10, product.getShopID()); // Thêm ShopID vào
+        ps.executeUpdate();
 
-            // Lấy ID của sản phẩm vừa thêm
-            ResultSet generatedKeys = ps.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                int newProductId = generatedKeys.getInt(1); // Lưu ID sản phẩm mới thêm
-                
-                // Thêm thông tin vào bảng ProductZones
-                addProductZones(newProductId, product.getProductZone());
+        // Lấy ID của sản phẩm vừa thêm
+        ResultSet generatedKeys = ps.getGeneratedKeys();
+        if (generatedKeys.next()) {
+            int newProductId = generatedKeys.getInt(1); // Lưu ID sản phẩm mới thêm
+            
+            // Thêm thông tin vào bảng ProductZones
+            addProductZones(newProductId, product.getProductZone());
 
-                return newProductId; // Trả về ID sản phẩm mới thêm
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return newProductId; // Trả về ID sản phẩm mới thêm
         }
-        return -1; // Trả về -1 nếu có lỗi
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return -1; // Trả về -1 nếu có lỗi
+}
 
     public void addProductZones(int productId, Zones zone) {
         if (zone != null) {
@@ -263,11 +264,35 @@ public void clearProductZones(int productId) {
 
     public static void main(String[] args) throws Exception {
         DAOProducts dao = DAOProducts.INSTANCE;
-        ArrayList<Products> productList = dao.getAllProducts();
-            
-        int userId = 1; // Giả sử đây là ID của người dùng đang thêm sản phẩm
+    
+    // Test getAllProducts
+    ArrayList<Products> productList = dao.getAllProducts();
+    
+    // Test addProducts
+    int userId = 1; // Giả sử đây là ID của người dùng đang thêm sản phẩm
+    int shopId = 1; // Giả sử đây là ID của shop
 
-        int currentPage = 1; // Bạn có thể thay đổi giá trị này để kiểm tra các trang khác
+    // Tạo sản phẩm mới
+    Products newProduct = new Products();
+    newProduct.setProductName("Sản phẩm mới");
+    newProduct.setDescription("Mô tả sản phẩm mới");
+    newProduct.setPrice(100000); // Giá sản phẩm
+    newProduct.setQuantity(10); // Số lượng sản phẩm
+    newProduct.setImageLink("link-to-image.jpg"); // Đường dẫn hình ảnh
+    // Nếu có thuộc tính Zone, bạn có thể thêm ở đây, ví dụ:
+    // newProduct.setProductZone(new Zones(1, "Khu vực 1"));
+
+    // Thêm sản phẩm mới vào cơ sở dữ liệu
+    int newProductId = dao.addProducts(newProduct, userId);
+    
+    if (newProductId != -1) {
+        System.out.println("Thêm sản phẩm thành công! ID sản phẩm mới: " + newProductId);
+    } else {
+        System.out.println("Thêm sản phẩm không thành công.");
+    }
+
+    // Kiểm tra danh sách sản phẩm
+    int currentPage = 1; // Bạn có thể thay đổi giá trị này để kiểm tra các trang khác
     int productsPerPage = 5; // Số sản phẩm trên mỗi trang
 
     ArrayList<Products> products = dao.getProductsByPage(currentPage, productsPerPage);
@@ -282,6 +307,5 @@ public void clearProductZones(int productId) {
     } else {
         System.out.println("Không có sản phẩm nào để hiển thị trên trang " + currentPage);
     }
-        
     }
 }

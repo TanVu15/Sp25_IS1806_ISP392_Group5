@@ -34,7 +34,7 @@
                 </span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="userProfile.jsp" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
@@ -48,7 +48,7 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
                         <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
@@ -111,7 +111,7 @@
                                     <td class="table-cell"><%= product.getProductName()%></td>
                                     <td class="table-cell"><%= product.getPrice()%>đ</td>
                                     <td class="table-cell"><%= product.getQuantity()%></td>
-                                    <td class="table-cell"><%= product.getLocation()%></td>
+                                   
                                     <td class="table-cell description"><%= product.getDescription()%></td>
                                     <td class="table-cell">
                                         <a href="updateproduct?id=<%= product.getID()%>" class="action-button">Sửa</a>

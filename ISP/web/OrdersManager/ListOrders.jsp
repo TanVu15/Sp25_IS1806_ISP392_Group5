@@ -1,37 +1,36 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="model.Products" %>
+<%@ page import="model.Orders" %>
 <%@ page import="model.Users" %>
-<%@ page import="dal.DAOProducts" %>
+<%@ page import="model.Customers" %>
+<%@ page import="dal.DAOCustomers" %>
+<%@ page import="dal.DAOOrders" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Trang chủ Quản lý</title>
+        <title>Quản lý đơn hàng</title>
         <link rel="stylesheet" href="css/product.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-              crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
-
     <body>
-        <%
+        <% 
             DAOUser dao = new DAOUser();
+             DAOCustomers dao1 = new DAOCustomers();
             Users u = (Users) request.getAttribute("user");
-            ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
+            ArrayList<Orders> orders = (ArrayList<Orders>) request.getAttribute("orders");
+            NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
-        <!-- Homepage Header -->
         <div class="header">
             <div class="container">
                 <img src="Image/logo.png" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
-                <span class="navbar__user--name">
-                    <%= u.getFullName()%>
-                </span>
+                <span class="navbar__user--name"> <%= u.getFullName() %></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
                         <a href="userdetail?id=<%= u.getID() %>" class="navbar__info--item">Tài khoản của tôi</a>
@@ -57,14 +56,13 @@
                     </ul>
                 </div>
 
-                <!-- HomePage Body -->
                 <div class="homepage-body">
                     <div class="body-head">
-                        <h3 class="body__head-title">Thông tin sản phẩm</h3>
+                        <h3 class="body__head-title">Thông tin đơn hàng</h3>
                         <div class="search-container">
-                            <form action="listproducts" method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm sản phẩm..." class="search-input">
-                                <input type="submit" class="search-button" value="Search">
+                            <form action="listorders" method="post">
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm đơn hàng..." class="search-input">
+                                <button type="submit" class="search-button">Search</button>
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>
                             <% if (message != null && !message.isEmpty()) { %>
@@ -83,54 +81,65 @@
                                     }
                                 };
                             </script>
+                            <a href="addorder" class="add-product-button">Thêm đơn</a>
                         </div>
                     </div>
-                    <!-- Product List -->
                     <div class="table-container">
                         <table class="product-table">
                             <thead>
                                 <tr class="table-header">
-                                    <th class="table-header-item">Hình ảnh</th>
-                                    <th class="table-header-item">Mã sản phẩm</th>
-                                    <th class="table-header-item">Tên sản phẩm</th>
-                                    <th class="table-header-item">Giá tiền / KG</th>
-                                    <th class="table-header-item">Số lượng</th>
-                                    <th class="table-header-item">Vị trí</th>
-                                    <th class="table-header-item">Mô tả</th>
+                                    <th class="table-header-item">Mã đơn hàng</th>
+                                    <th class="table-header-item">Id khách hàng</th>
+                                    <th class="table-header-item">Tên khách hàng</th>
+                                    <th class="table-header-item">Số tiền</th>
+                                    <th class="table-header-item">Trạng thái</th>
+                                    <th class="table-header-item">Ngày tạo</th>
+                                    <th class="table-header-item">Người tạo</th>
+                                    <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <%
-                                    for (Products product : products) {
+                                <% if (orders != null && !orders.isEmpty()) { 
+                                    for (Orders order : orders) {
+                                    if(order.getShopID() == u.getShopID()){
                                 %>
+
                                 <tr class="table-row">
-                                    <td class="table-cell"><img src="<%= product.getImageLink()%>" alt="<%= product.getProductName()%>"
-                                                                class="product-image"></td>
-                                    <td class="table-cell"><%= product.getID()%></td>
-                                    <td class="table-cell"><%= product.getProductName()%></td>
-                                    <td class="table-cell"><%= product.getPrice()%>đ</td>
-                                    <td class="table-cell"><%= product.getQuantity()%></td>
-                                    <td class="table-cell"><%= product.getLocation()%></td>
-                                    <td class="table-cell description"><%= product.getDescription()%></td>
+
+                                     <td class="table-cell"><%= order.getID() %></td>
+                                    <td class="table-cell"><%= order.getCustomerID() %></td>
+                                    <td class="table-cell"><%= dao1.getCustomersByID(order.getCustomerID()).getName() %></td>
+                                    <td class="table-cell"><%= order.getTotalAmount() %></td>
+                                    <td class="table-cell"><% if (order.getStatus() == -1) { %>
+                                        Nhập hàng
+                                        <% } if (order.getStatus() == 1) { %>
+                                        Bán hàng
+                                        <% } %>
+                                    </td>
+                                    <td class="table-cell"><%= order.getCreateAt() %></td>
+                                    <td class="table-cell"><%= dao.getUserByID(order.getCreateBy()).getFullName() %></td>
+                                    <td class="table-cell">
+                                        <button class="action-button" onclick="window.location.href = ''">Chi tiết</button>
+                                    </td>
                                 </tr>
-                                <% }%>
+                                <%      } 
+                                    } 
+                                }
+                                %>
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
 
-        <!-- Modal -->
 
 
-        <!-- Footer -->
         <div class="footer">
             <div class="container">
                 <p>&copy; 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
             </div>
-        </div>
-
+        </div>   
     </body>
-
 </html>

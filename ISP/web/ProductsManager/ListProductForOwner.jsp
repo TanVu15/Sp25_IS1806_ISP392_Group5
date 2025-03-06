@@ -1,3 +1,5 @@
+<%@page import="dal.DAOShops"%>
+<%@page import="model.Shops"%>
 <%@page import="model.Zones"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.ArrayList" %>
@@ -26,6 +28,8 @@
     <body>
         
         <%
+            DAOShops daoShop = new DAOShops();
+            Shops shop = (Shops) session.getAttribute("shop");
             DAOUser dao = new DAOUser();
             Users u = (Users) request.getAttribute("user");
             ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
@@ -43,7 +47,7 @@
         <!-- Homepage Header -->
         <div class="header">
             <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
+                <img src="<%= shop.getLogoShop()%>" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name">
@@ -51,7 +55,7 @@
                 </span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="userProfile.jsp" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u.getID() %>"class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
@@ -66,10 +70,11 @@
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
                         <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
-                        <li class="mainmenu__list-item"><a href=""><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="listorders"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
+                        <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
                     </ul>
                 </div>
 
@@ -112,7 +117,7 @@
                                     <th class="table-header-item">Tên sản phẩm</th>
                                     <th class="table-header-item">Giá tiền / KG</th>
                                     <th class="table-header-item">Số lượng</th>
-                                    <th class="table-header-item">Khu vực</th>
+                                    <th class="table-header-item">Vị trí</th>
                                     <th class="table-header-item">Mô tả</th>
                                     <th class="table-header-item">Hành động</th>
                                 </tr>
@@ -120,7 +125,8 @@
                             <tbody>
                                 <%
                                     DAOProducts dao1 = new DAOProducts();
-                                    for (Products product : products) {
+                                  if(shop.getID() == u.getShopID()){
+                                    for (Products product : products) {                                  
                                         if (product.getIsDelete() == 0) {
                                             // Lấy danh sách khu vực cho sản phẩm
                                             String zoneDisplay = "Chưa xác định"; // Giá trị mặc định
@@ -151,7 +157,9 @@
                                     </td>
                                 </tr>
                                 <%
+                                    }
                                         }
+
                                     }
                                 %>
                             </tbody>

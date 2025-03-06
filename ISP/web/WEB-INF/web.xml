@@ -88,6 +88,38 @@
         <servlet-name>ResetPasswordServlet</servlet-name>
         <servlet-class>Controller.userservlet.ResetPasswordServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ShopDetailServlet</servlet-name>
+        <servlet-class>Controller.shopservlet.ShopDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateShopServlet</servlet-name>
+        <servlet-class>Controller.shopservlet.CreateShopServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateShopServlet</servlet-name>
+        <servlet-class>Controller.shopservlet.UpdateShopServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserDetailServlet</servlet-name>
+        <servlet-class>Controller.userservlet.UserDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CustomerDetailServlet</servlet-name>
+        <servlet-class>Controller.customerservlet.CustomerDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DebtRecordDetailServlet</servlet-name>
+        <servlet-class>Controller.debtrecordservlet.DebtRecordDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListDebtRecordDetailServlet</servlet-name>
+        <servlet-class>Controller.debtrecordservlet.ListDebtRecordDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ListOrdersServlet</servlet-name>
+        <servlet-class>Controller.orderservlet.ListOrdersServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -175,6 +207,38 @@
     <servlet-mapping>
         <servlet-name>ResetPasswordServlet</servlet-name>
         <url-pattern>/resetpassword</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShopDetailServlet</servlet-name>
+        <url-pattern>/shopdetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateShopServlet</servlet-name>
+        <url-pattern>/createshop</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateShopServlet</servlet-name>
+        <url-pattern>/updateshop</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserDetailServlet</servlet-name>
+        <url-pattern>/userdetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerDetailServlet</servlet-name>
+        <url-pattern>/customerdetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DebtRecordDetailServlet</servlet-name>
+        <url-pattern>/debtrecorddetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListDebtRecordDetailServlet</servlet-name>
+        <url-pattern>/listdebtrecorddetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListOrdersServlet</servlet-name>
+        <url-pattern>/listorders</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Login/login.jsp</welcome-file>

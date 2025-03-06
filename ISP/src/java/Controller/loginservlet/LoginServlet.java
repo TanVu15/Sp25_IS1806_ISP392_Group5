@@ -5,6 +5,8 @@
 package Controller.loginservlet;
 
 import dal.DAO;
+import dal.DAOShops;
+import dal.DAOUser;
 import model.Users;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Shops;
 
 /**
  *
@@ -42,12 +45,17 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
-        
+        HttpSession session = request.getSession();
 
         try {
             if (name != null && password != null) {
-                DAO userDAO = new DAO();
+                DAOUser userDAO = new DAOUser();
                 Users user = userDAO.getUserByName(name);
+                DAOShops daoShop = new DAOShops();
+                if(user.getShopID()!=0){
+                    Shops shop = daoShop.getShopByID(user.getShopID());
+                    session.setAttribute("shop", shop);
+                }
 
                 if (user != null && (user.getPasswordHash().equals(password) || user.getIsDelete() == 1)) {
                     if (user.getIsDelete() != 0) {
@@ -57,8 +65,8 @@ public class LoginServlet extends HttpServlet {
                         RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
                         dispatcher.forward(request, response);
                     } else {
-                        HttpSession session = request.getSession();
                         session.setAttribute("user", user);
+                        
                         response.sendRedirect("listproducts");
                     }
                 } else {

@@ -1,47 +1,57 @@
-<%-- 
-    Document   : UpdateZones
-    Created on : Feb 18, 2025, 5:14:07 PM
-    Author     : ASUS
---%>
+<%--  
+    Document   : UpdateZones  
+    Created on : Feb 18, 2025, 5:14:07 PM  
+    Author     : ASUS  
+--%>  
 
-<%@ page import="model.Zones" %>
-<%@ page import="dal.DAOZones" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Edit Zone</title>
-    </head>
-    <body>
-        <h1>Edit Zone</h1>
-        <form method="post" action="updatezone">
-            <h2>Update Zone Information</h2>
+<%@ page import="model.Zones" %>  
+<%@ page import="dal.DAOZones" %>  
+<%@page contentType="text/html" pageEncoding="UTF-8"%>  
 
-            <%
-                Zones zone = (Zones) request.getAttribute("z");
-            %>
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="stylesheet" href="css/add.css">  
+    <title>Cập Nhật Kho</title>  
+    <link rel="stylesheet" href="css/product.css">  
+</head>  
 
-            <input type="hidden" name="id" value="<%= zone.getID() %>"> <!-- Lấy ID của zone -->
+<body>  
+    <div class="container">  
+        <h2>Cập Nhật Kho</h2>  
 
-            <label for="zone">Zone Name:</label>
-            <input type="text" id="zone" name="zone" value="<%= zone.getZoneName() %>" required><br><br>
+        <%  
+            String errorMessage = (String) request.getAttribute("errorMessage");  
+            if (errorMessage != null) {  
+        %>  
+        <div class="error-message">  
+            <%= errorMessage %>  
+        </div>  
+        <%  
+            }  
+        %>  
 
+        <form action="updatezone" method="post">  
+            <%  
+                Zones z = (Zones) request.getAttribute("z");  
+            %>  
+            <div class="form-group">  
+                <label for="zone">Kho:</label>  
+                <input type="text" id="zone" name="zone" value="<%= z.getZoneName() %>" required>
+                
+                <label for="zone">Shop:</label>  
+                <input type="text" id="shop" name="shop" value="<%= z.getShopID() %>" required>
+            </div>  
 
+            <input type="hidden" name="id" value="<%= z.getID() %>">  
 
-            <input type="submit" value="Update Zone">
-        </form>
-
-        <%
-            String errorMessage = (String) request.getAttribute("errorMessage");
-            if (errorMessage != null) {
-        %>
-        <p style="color:red;"><%= errorMessage %></p>
-        <%
-            }
-        %>
-
-        <button onclick="window.location.href = 'listzones'">Back to Zones List</button>
-     
-    </body>
-</html>
+            <div class="button-container">  
+                <input type="submit" class="btn add-button" value="Cập nhật">  
+                <a href="listzones" class="btn cancel-button">Hủy</a>  
+            </div>  
+        </form>  
+    </div>  
+</body>  
+</html>  

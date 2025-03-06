@@ -19,6 +19,8 @@ public class DebtRecords {
     private Date InvoiceDate;
     private String Note;
     private String ImagePath;
+    private int ShopID;
+    private int Active;
     private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
@@ -29,7 +31,7 @@ public class DebtRecords {
     public DebtRecords() {
     }
 
-    public DebtRecords(int ID, int CustomerID, int AmountOwed, int PaymentStatus, Date InvoiceDate, String Note, String ImagePath, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
+    public DebtRecords(int ID, int CustomerID, int AmountOwed, int PaymentStatus, Date InvoiceDate, String Note, String ImagePath, int ShopID, int Active, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
         this.ID = ID;
         this.CustomerID = CustomerID;
         this.AmountOwed = AmountOwed;
@@ -37,6 +39,8 @@ public class DebtRecords {
         this.InvoiceDate = InvoiceDate;
         this.Note = Note;
         this.ImagePath = ImagePath;
+        this.ShopID = ShopID;
+        this.Active = Active;
         this.CreateAt = CreateAt;
         this.UpdateAt = UpdateAt;
         this.CreateBy = CreateBy;
@@ -101,6 +105,22 @@ public class DebtRecords {
         this.ImagePath = ImagePath;
     }
 
+    public int getShopID() {
+        return ShopID;
+    }
+
+    public void setShopID(int ShopID) {
+        this.ShopID = ShopID;
+    }
+
+    public int getActive() {
+        return Active;
+    }
+
+    public void setActive(int Active) {
+        this.Active = Active;
+    }
+
     public Date getCreateAt() {
         return CreateAt;
     }
@@ -148,8 +168,9 @@ public class DebtRecords {
     public void setDeleteBy(int deleteBy) {
         this.deleteBy = deleteBy;
     }
-    
-    
+
+   
+   
     
     
 }

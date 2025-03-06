@@ -1,3 +1,9 @@
+<%-- 
+    Document   : DebtRecordDetail
+    Created on : Feb 27, 2025, 11:14:37 PM
+    Author     : ADMIN
+--%>
+
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
@@ -6,8 +12,6 @@
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOUser" %>
-<%@ page import="model.Shops" %>
-<%@ page import="dal.DAOShops" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,13 +24,12 @@
     </head>
     <body>
 
-        <%  DAOShops daoShop = new DAOShops();
-            Shops shop = (Shops) session.getAttribute("shop");
+        <%  
             DAOUser dao = new DAOUser();
             DAOCustomers dao1 = new DAOCustomers();
             Users u = (Users) request.getAttribute("user");
             Customers customer = (Customers) request.getAttribute("customer");
-            ArrayList<DebtRecords> debtrecords = (ArrayList<DebtRecords>) request.getAttribute("debtrecords");
+            DebtRecords debtrecords = (DebtRecords) request.getAttribute("debtrecords");
 
             // Định dạng số tiền theo chuẩn VN (có dấu phân tách hàng nghìn)
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
@@ -34,7 +37,7 @@
 
         <div class="header">
             <div class="container">
-                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo" width="10">
+                <img src="Image/logo.png" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
@@ -59,40 +62,16 @@
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
-                        <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-user list-item-icon"></i>Cửa Hàng</a></li>
                     </ul>
                 </div>
 
                 <div class="homepage-body">
                     <div class="body-head">
                         <h3 class="body__head-title">
-                            Khách Hàng: <%= customer.getName() %> <br> <br> 
-                            Ví: <%= currencyFormat.format(customer.getWallet()) +" VND" %>
+                            Chi tiết công nợ
                         </h3>
-                        <div class="search-container">
-                            <form action='listcustomerdebtrecords?customerid=<%= customer.getID() %>' method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm công nợ..." class="search-input">
-                                <button type="submit" class="search-button">Search</button>
-                            </form>
-                            <% String message = (String) request.getAttribute("message"); %>
-                            <% if (message != null && !message.isEmpty()) { %>
-                            <div id="toast-message" class="toast-message"><%= message %></div>
-                            <% } %>
-
-                            <script>
-                                window.onload = function () {
-                                    var toast = document.getElementById("toast-message");
-                                    if (toast) {
-                                        toast.style.display = "block"; // Hiển thị thông báo
-                                        setTimeout(function () {
-                                            toast.style.opacity = "0";
-                                            setTimeout(() => toast.style.display = "none", 500);
-                                        }, 3000);
-                                    }
-                                };
-                            </script>
-                            <a href='adddebtrecords?customerid=<%= customer.getID() %>' class="add-product-button">Thêm công nợ</a>
-                        </div>
+                        <a href='listcustomerdebtrecords?customerid=<%= debtrecords.getCustomerID() %>' class="add-product-button">Trở lại</a>
                     </div>
                     <div class="table-container">
                         <table class="product-table">
@@ -103,34 +82,37 @@
                                     <th class="table-header-item">Trạng Thái</th>
                                     <th class="table-header-item">Ngày Tạo Phiếu</th>
                                     <th class="table-header-item">Ngày tạo</th>
-                                    <th class="table-header-item">Hành động</th>
+                                    <th class="table-header-item">Người tạo</th>
+                                    <th class="table-header-item">Hình ảnh</th>
+                                    <th class="table-header-item">Ghi Chú</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <% 
-                                for (DebtRecords debt : debtrecords) {
+                               
                                 %>
                                 <tr class="table-row">
-                                    <td class="table-cell"><%= debt.getID() %></td>
-                                    <td class="table-cell"><%= currencyFormat.format(debt.getAmountOwed()) +" VND" %></td>
-                                    <td class="table-cell"><% if (debt.getPaymentStatus() == 1) { %>
+                                    <td class="table-cell"><%= debtrecords.getID() %></td>
+                                    <td class="table-cell"><%= currencyFormat.format(debtrecords.getAmountOwed()) +" VND" %></td>
+                                    <td class="table-cell"><% if (debtrecords.getPaymentStatus() == 1) { %>
                                         Khách Trả Nợ
-                                        <% } if (debt.getPaymentStatus() == -1) { %>
+                                        <% } if (debtrecords.getPaymentStatus() == -1) { %>
                                         Khách Vay Nợ
                                         <% } %>
-                                        <% if (debt.getPaymentStatus() == 2) { %>
+                                        <% if (debtrecords.getPaymentStatus() == 2) { %>
                                         Chủ Đi Vay
                                         <% } %>
-                                        <%if (debt.getPaymentStatus() == -2) { %>
+                                        <%if (debtrecords.getPaymentStatus() == -2) { %>
                                         Chủ Đi Trả
-                                        <% } %></td>
-                                    <td class="table-cell"><%= debt.getInvoiceDate() %></td>
-                                    <td class="table-cell"><%= debt.getCreateAt() %></td>
-                                    <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'debtrecorddetail?debtid=<%= debt.getID() %>'">Chi tiết công nợ</button>
-                                    </td>
+                                    <% } %></td>
+                                    <td class="table-cell"><%= debtrecords.getInvoiceDate() %></td>
+                                    <td class="table-cell"><%= debtrecords.getCreateAt() %></td>
+                                    <td class="table-cell"><%= dao.getUserByID(debtrecords.getCreateBy()).getFullName() %></td>
+                                    <td class="table-cell"><img src="<%= debtrecords.getImagePath() %>"
+                                                                class="product-image"></td>
+                                    <td class="table-cell"><%= debtrecords.getNote() %></td>
                                 </tr>
-                                <% } %>
+                                <%  %>
                             </tbody>
                         </table>
                     </div>
@@ -146,3 +128,4 @@
         </div>
     </body>        
 </html>
+
