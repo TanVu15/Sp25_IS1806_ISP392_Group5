@@ -39,10 +39,6 @@
                     <input type="text" id="CustomerID" name="CustomerID" required>
                 </div>
                 <div class="form-group">
-                    <label for="OrderItemID">Mã Sản phẩm: </label>
-                    <input type="text" id="OrderItemID" name="OrderItemID" required>
-                </div>
-                <div class="form-group">
                     <label for="ShopID">Mã cửa hàng: </label>
                     <input type="text" id="ShopID" name="ShopID" required>
                 </div>

@@ -58,17 +58,16 @@ public class DAOOrders {
     }
 
     public void addOrders(Orders orders, int userid) {
-        String sql = "INSERT INTO Orders (ID, CustomerID, UserID, TotalAmount, ShopID, Status, CreateAt, CreateBy, isDelete) VALUES ( ?, ?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO Orders (CustomerID, UserID, TotalAmount, ShopID, Status, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, orders.getID());
-            ps.setInt(2, orders.getCustomerID());
-            ps.setInt(3, orders.getUserID());
-            ps.setInt(4, orders.getTotalAmount());
-            ps.setInt(5, orders.getShopID());
-            ps.setInt(6, orders.getStatus());
-            ps.setDate(7, today);
-            ps.setInt(8, userid);
-            ps.setInt(9, 0); // Set isDelete to 0 (not deleted)
+            ps.setInt(1, orders.getCustomerID());
+            ps.setInt(2, orders.getUserID());
+            ps.setInt(3, orders.getTotalAmount());
+            ps.setInt(4, orders.getShopID());
+            ps.setInt(5, orders.getStatus());
+            ps.setDate(6, today);
+            ps.setInt(7, userid);
+            ps.setInt(8, 0); // Set isDelete to 0 (not deleted)
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
