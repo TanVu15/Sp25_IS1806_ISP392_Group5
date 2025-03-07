@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package Controller.customerservlet;
 
 import Controller.userservlet.UpdateUserServlet;
@@ -20,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Shops;
 import model.Users;
 
 /**
@@ -27,11 +27,11 @@ import model.Users;
  * @author ADMIN
  */
 public class UpdateCustomerServlet extends HttpServlet {
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -39,7 +39,7 @@ public class UpdateCustomerServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         DAOCustomers dao = new DAOCustomers();
         HttpSession session = request.getSession();
         request.setAttribute("message", "");
@@ -48,33 +48,26 @@ public class UpdateCustomerServlet extends HttpServlet {
         ArrayList<Customers> customers = dao.getAllCustomers();
         request.setAttribute("customers", customers);
         int customerid = Integer.parseInt(request.getParameter("id"));
-        
-        
+
         //authen
         try {
-            int shopid = DAOCustomers.INSTANCE.getCustomersByID(customerid).getShopID();
-            int shopid2 = user.getShopID();
-            if( (shopid != shopid2 && user.getRoleid() != 1)){
+            Customers cus = dao.getCustomersByID(customerid);
+            Shops shop = (Shops) session.getAttribute("shop");
+            if (shop.getID() != cus.getShopID() || cus == null) {
                 request.getRequestDispatcher("logout").forward(request, response);
                 return;
             }
-            
+            request.setAttribute("cus", cus);
+            request.getRequestDispatcher("CustomersManager/UpdateCustomer.jsp").forward(request, response);
         } catch (Exception ex) {
             request.getRequestDispatcher("logout").forward(request, response);
             return;
         }
-        
-        
-        try {
-            Customers cus = dao.getCustomersByID(customerid);
-            request.setAttribute("cus", cus);
-            request.getRequestDispatcher("CustomersManager/UpdateCustomer.jsp").forward(request, response);
-        } catch (Exception ex) {
-        }
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -82,8 +75,8 @@ public class UpdateCustomerServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        
+            throws ServletException, IOException {
+
         int userid = Integer.parseInt(request.getParameter("id"));
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
@@ -95,14 +88,14 @@ public class UpdateCustomerServlet extends HttpServlet {
         cus.setPhone(phone);
         cus.setAddress(address);
         DAOCustomers.INSTANCE.updateCustomers(cus);
-        
 
         // Chuyển hướng tới trang danh sách người dùng sau khi cập nhật thành công
         response.sendRedirect("listcustomers");
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override
