@@ -19,7 +19,6 @@
     </head>
 
     <body>
-        
         <% 
             DAOUser dao = new DAOUser();
             Users u = (Users) request.getAttribute("user");
@@ -59,6 +58,9 @@
                 </div>
 
                 <div class="homepage-body">
+                    <div class="body-head">
+                        <h3 class="body__head-title">Thông tin tài khoản</h3>
+                    </div>
                     <div class="user-info-container">
                         <div class="user-info-item">
                             <span class="user-info-label">Tài khoản:</span>
