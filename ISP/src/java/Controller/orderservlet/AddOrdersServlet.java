@@ -76,6 +76,7 @@ public class AddOrdersServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         int customerID = Integer.parseInt(request.getParameter("CustimerID"));
+        int userID = Integer.parseInt(request.getParameter("UserrID"));
         int shopID = Integer.parseInt(request.getParameter("ShopID"));
         String totalamount = request.getParameter("amount");
         String statusString = request.getParameter("status");
@@ -110,8 +111,9 @@ public class AddOrdersServlet extends HttpServlet {
         try {
             if (user != null) {
                 order.setCustomerID(customerID);;
-                order.setShopID(shopID);
+                order.setUserID(userID);
                 order.setTotalAmount(amount);
+                order.setShopID(shopID);
                 order.setStatus(status);
                 order.setCreateAt(new Date(System.currentTimeMillis()));
                 order.setUserID(user.getID());
