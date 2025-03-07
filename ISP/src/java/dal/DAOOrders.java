@@ -58,51 +58,50 @@ public class DAOOrders {
     }
 
     public void addOrders(Orders orders, int userid) {
-        String sql = "INSERT INTO Orders (ID, CustomerID, UserID, TotalAmount, ShopID, Status, CreateAt, CreateBy, isDelete) VALUES ( ?, ?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO Orders (CustomerID, UserID, TotalAmount, ShopID, Status, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, orders.getID());
-            ps.setInt(2, orders.getCustomerID());
-            ps.setInt(3, orders.getUserID());
-            ps.setInt(4, orders.getTotalAmount());
-            ps.setInt(5, orders.getShopID());
-            ps.setInt(6, orders.getStatus());
-            ps.setDate(7, today);
-            ps.setInt(8, userid);
-            ps.setInt(9, 0); // Set isDelete to 0 (not deleted)
+            ps.setInt(1, orders.getCustomerID());
+            ps.setInt(2, orders.getUserID());
+            ps.setInt(3, orders.getTotalAmount());
+            ps.setInt(4, orders.getShopID());
+            ps.setInt(5, orders.getStatus());
+            ps.setDate(6, today);
+            ps.setInt(7, userid);
+            ps.setInt(8, 0); // Set isDelete to 0 (not deleted)
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
-//    public void updateOrders(Orders orders) {
-//        String sql = "UPDATE Orders SET CustomerID = ?, UserID = ?, OrderItemID = ?, TotalAmount = ?, ShopID = ?, Status = ?, UpdateAt = ?, ImageLink = ?, Location = ? WHERE ID = ?";
-//        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-//            ps.setInt(1, orders.getCustomerID());
-//            ps.setInt(2, orders.getUserID());
-//            ps.setInt(4, orders.getTotalAmount());
-//            ps.setInt(5, orders.getShopID());
-//            ps.setInt(6, orders.getStatus());
-//            ps.setDate(7, today);
-//            ps.setInt(8, orders.getID());
-//            ps.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void updateOrders(Orders orders) {
+        String sql = "UPDATE Orders SET CustomerID = ?, UserID = ?, OrderItemID = ?, TotalAmount = ?, ShopID = ?, Status = ?, UpdateAt = ?, ImageLink = ?, Location = ? WHERE ID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, orders.getCustomerID());
+            ps.setInt(2, orders.getUserID());
+            ps.setInt(4, orders.getTotalAmount());
+            ps.setInt(5, orders.getShopID());
+            ps.setInt(6, orders.getStatus());
+            ps.setDate(7, today);
+            ps.setInt(8, orders.getID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-//    public void deleteOrders(int deleteid, int userid) {
-//        String sql = "UPDATE Orders SET isDelete = ?, DeleteBy = ?, DeletedAt = ? WHERE ID = ?";
-//        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-//            ps.setInt(1, 1);
-//            ps.setInt(2, userid);
-//            ps.setDate(3, today);
-//            ps.setInt(4, deleteid);
-//            ps.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void deleteOrders(int deleteid, int userid) {
+        String sql = "UPDATE Orders SET isDelete = ?, DeleteBy = ?, DeletedAt = ? WHERE ID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, 1);
+            ps.setInt(2, userid);
+            ps.setDate(3, today);
+            ps.setInt(4, deleteid);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Orders getOrderByID(int ID) throws Exception {
         String query = "SELECT * FROM Orders WHERE ID=? ";
@@ -153,28 +152,28 @@ public class DAOOrders {
 
                 // Lấy thông tin người tạo 
                 Users userCreate = DAO.INSTANCE.getUserByID(o.getCreateBy());
-                
+
                 Customers customer = DAOCustomers.INSTANCE.getCustomersByID(o.getCustomerID());
                 // Tạo một chuỗi chứa toàn bộ thông tin của order
-                String orderData = (o.getCustomerID()+" "
-                        +customer.getName().toLowerCase()+" "
-                        +o.getUserID()+" "
-                        +o.getShopID()+" "
-                        +o.getCreateAt()+" "
-                        +o.getUpdateAt()+" "
-                        +userCreate.getFullName().toLowerCase() + " "
-                        +o.getIsDelete());
-                
+                String orderData = (o.getCustomerID() + " "
+                        + customer.getName().toLowerCase() + " "
+                        + o.getUserID() + " "
+                        + o.getShopID() + " "
+                        + o.getCreateAt() + " "
+                        + o.getUpdateAt() + " "
+                        + userCreate.getFullName().toLowerCase() + " "
+                        + o.getIsDelete());
+
                 // Lấy thông tin người xóa nếu có
                 if (o.getIsDelete() != 0) {
                     Users userDelete = DAO.INSTANCE.getUserByID(o.getDeleteBy());
                     orderData += ("xóa" + o.getIsDelete() + " "
                             + o.getDeletedAt() + " "
                             + userDelete.getFullName().toLowerCase());
-                }else{
+                } else {
                     orderData += "Hoạt Động";
                 }
-                
+
                 // Kiểm tra nếu information xuất hiện trong bất kỳ trường nào của order
                 if (orderData.toLowerCase().contains(information.toLowerCase())) {
                     orders.add(o);
@@ -185,7 +184,7 @@ public class DAOOrders {
         }
         return orders;
     }
-    
+
     public static void main(String[] args) {
         DAOOrders dao = new DAOOrders();
         System.out.println(dao.getAllOrders());
