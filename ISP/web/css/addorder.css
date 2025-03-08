@@ -1,0 +1,177 @@
+html{
+    min-height: 100vh;
+}
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: rgb(62,180,137);
+    background: linear-gradient(159deg, rgba(62,180,137,1) 0%, rgba(144,238,144,1) 100%);
+
+
+}
+
+.search-container, .invoice-details {
+    border: 2px solid #333; /* Blue border */
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #ffffff; /* White background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.search-heading{
+    font-size: 24px;
+}
+
+.search-container {
+    flex: 1;
+    min-width: 300px;
+    max-width: 300px;
+    height: fit-content;
+}
+
+.customer-search{
+    margin: 12px 4px;
+}
+
+.product-search{
+   margin: 12px 4px 20px 4px;
+   
+}
+
+
+.invoice-details {
+    flex: 2;
+    min-width: 400px;
+}
+
+h2 {
+    margin: 0 0 10px 0;
+    color: #4CAF50; /* Deep blue text color */
+    font-size: 35px;
+}
+
+h4 {
+    margin: 0 0 34px 0;
+    color: #706b6b; 
+    font-weight: 500;
+    font-size: 16px;
+}
+
+label{
+    font-size: 16px;
+    margin-top: 4px;
+    min-width: 126px;
+}
+
+input {
+    width: calc(100% - 10px);
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding-right: 2px;
+}
+
+.input-info{
+    border: none;
+    flex: 1;
+    margin-left: 36px;
+    border-bottom: 1px solid #4CAF50;
+    border-radius: 0;
+    outline: none;
+
+}
+
+/* Invoice detail */
+
+.invoice-info{
+    margin-bottom: 46px;
+}
+
+.input-container{
+    display: flex; 
+    align-items: center;
+    width: 80%;
+}
+
+
+
+/* Table */
+
+.product-list{
+   padding: 10px 10px 20px 10px;
+   margin-bottom: 20px;
+   background-color: #c0eead;
+   border-radius: 4px;
+}
+
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #fffbfb;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #333; /* Deep blue header */
+    color: #fff; /* White text in header */
+}
+
+.delete-btn {
+    background-color: #4CAF50; /* Yellow button */
+    color: #fff; /* Blue text on button */
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.delete-btn:hover {
+    background-color: #45a049; /* Slightly darker yellow on hover */
+}
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+.action-buttons button {
+    color: #fff; /* White text */
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    margin: 8px;
+}
+
+#createButton{
+    background-color: #4CAF50;
+}
+
+#createButton:hover{
+    cursor: pointer;
+    background-color: #c0eead;
+    color: #000000;
+}
+
+#cancelButton{
+    background-color: #000000;
+}
+#cancelButton:hover {
+    background-color: #bab5b5; /* Darker black on hover */
+    color: #000000;
+}
+

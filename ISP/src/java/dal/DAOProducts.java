@@ -23,7 +23,7 @@ public class DAOProducts {
 
     public ArrayList<Products> getAllProducts() {
         ArrayList<Products> products = new ArrayList<>();
-        String sql = "SELECT p.ID, p.ProductName, p.Description, p.Price, p.Quantity, p.ImageLink, " +
+        String sql = "SELECT p.ID, p.ProductName, p.Description, p.Price, p.Quantity, p.ImageLink,p.ShopID, " +
                      "p.CreateAt, p.UpdateAt, p.CreateBy, p.isDelete " +
                      "FROM Products p WHERE p.isDelete = 0";
 
@@ -32,6 +32,7 @@ public class DAOProducts {
                 Products product = new Products();
                 product.setID(rs.getInt("ID"));
                 product.setImageLink(rs.getString("ImageLink"));
+                product.setShopID(rs.getInt("ShopID"));
                 product.setProductName(rs.getString("ProductName"));
                 product.setDescription(rs.getString("Description"));
                 product.setPrice(rs.getInt("Price"));
@@ -84,7 +85,7 @@ public class DAOProducts {
     }
 
     public void updateProducts(Products product) {
-        String sql = "UPDATE Products SET ProductName = ?, Description = ?, Price = ?, Quantity = ?, UpdateAt = ?, ImageLink = ? WHERE ID = ?";
+        String sql = "UPDATE Products SET ProductName = ?, Description = ?, Price = ?, Quantity = ?, UpdateAt = ?, ImageLink = ?, ShopID = ? WHERE ID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, product.getProductName());
             ps.setString(2, product.getDescription());
@@ -92,6 +93,7 @@ public class DAOProducts {
             ps.setInt(4, product.getQuantity());
             ps.setDate(5, today);
             ps.setString(6, product.getImageLink());
+            ps.setInt(6, product.getShopID());
             ps.setInt(7, product.getID());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -165,6 +167,7 @@ public void clearProductZones(int productId) {
                 p.setID(rs.getInt("ID"));
                 p.setProductName(rs.getString("ProductName"));
                 p.setImageLink(rs.getString("ImageLink"));
+                p.setShopID(rs.getInt("ShopID"));
                 p.setDescription(rs.getString("Description"));
                 p.setPrice(rs.getInt("Price"));
                 p.setQuantity(rs.getInt("Quantity"));
@@ -180,10 +183,11 @@ public void clearProductZones(int productId) {
         return null; // Trả về null nếu không tìm thấy sản phẩm
     }
     
-    public int getTotalProducts() {
-    String sql = "SELECT COUNT(*) FROM Products WHERE isDelete = 0";
-    try (PreparedStatement ps = connect.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
+public int getTotalProductsByShopId(int shopId) {
+    String sql = "SELECT COUNT(*) FROM Products WHERE isDelete = 0 AND ShopID = ?";
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setInt(1, shopId);
+        ResultSet rs = ps.executeQuery();
         if (rs.next()) {
             return rs.getInt(1);
         }
@@ -193,13 +197,14 @@ public void clearProductZones(int productId) {
     return 0;
 }
     
-    public ArrayList<Products> getProductsByPage(int page, int productsPerPage) {
+ public ArrayList<Products> getProductsByPage(int page, int productsPerPage, int shopId) {
     ArrayList<Products> products = new ArrayList<>();
-    String sql = "SELECT * FROM Products WHERE isDelete = 0 ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-    
+    String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
     try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setInt(1, (page - 1) * productsPerPage);
-        ps.setInt(2, productsPerPage);
+        ps.setInt(1, shopId);
+        ps.setInt(2, (page - 1) * productsPerPage);
+        ps.setInt(3, productsPerPage);
         ResultSet rs = ps.executeQuery();
         
         while (rs.next()) {
@@ -210,6 +215,7 @@ public void clearProductZones(int productId) {
             product.setPrice(rs.getInt("Price"));
             product.setQuantity(rs.getInt("Quantity"));
             product.setImageLink(rs.getString("ImageLink"));
+            product.setShopID(rs.getInt("ShopID"));
             product.setCreateAt(rs.getDate("CreateAt"));
             product.setUpdateAt(rs.getDate("UpdateAt"));
             product.setCreateBy(rs.getInt("CreateBy"));
@@ -221,7 +227,6 @@ public void clearProductZones(int productId) {
     }
     return products;
 }
-
     public ArrayList<Products> getProductsBySearch(String information) throws Exception {
         information = information.toLowerCase();
         ArrayList<Products> products = new ArrayList<>();
@@ -232,6 +237,7 @@ public void clearProductZones(int productId) {
                 Products product = new Products();
                 product.setID(rs.getInt("ID"));
                 product.setImageLink(rs.getString("ImageLink"));
+                product.setShopID(rs.getInt("ShopID"));
                 product.setProductName(rs.getString("ProductName"));
                 product.setDescription(rs.getString("Description"));
                 product.setPrice(rs.getInt("Price"));
@@ -283,26 +289,26 @@ public void clearProductZones(int productId) {
     // newProduct.setProductZone(new Zones(1, "Khu vực 1"));
 
     // Thêm sản phẩm mới vào cơ sở dữ liệu
-    int newProductId = dao.addProducts(newProduct, userId);
+//    int newProductId = dao.addProducts(newProduct, userId);
     
-    if (newProductId != -1) {
-        System.out.println("Thêm sản phẩm thành công! ID sản phẩm mới: " + newProductId);
-    } else {
-        System.out.println("Thêm sản phẩm không thành công.");
-    }
+//    if (newProductId != -1) {
+//        System.out.println("Thêm sản phẩm thành công! ID sản phẩm mới: " + newProductId);
+//    } else {
+//        System.out.println("Thêm sản phẩm không thành công.");
+//    }
 
     // Kiểm tra danh sách sản phẩm
-    int currentPage = 1; // Bạn có thể thay đổi giá trị này để kiểm tra các trang khác
+    int currentPage =3; // Bạn có thể thay đổi giá trị này để kiểm tra các trang khác
     int productsPerPage = 5; // Số sản phẩm trên mỗi trang
 
-    ArrayList<Products> products = dao.getProductsByPage(currentPage, productsPerPage);
+    ArrayList<Products> products = dao.getProductsByPage(currentPage, productsPerPage, 1);
     
     // Kiểm tra danh sách sản phẩm
     if (products != null && !products.isEmpty()) {
         System.out.println("Danh sách sản phẩm trên trang " + currentPage + ":");
         for (Products product : products) {
             System.out.println("ID: " + product.getID() + ", Tên: " + product.getProductName() + ", Giá: " 
-                + product.getPrice() + " VND, Số lượng: " + product.getQuantity());
+                + product.getPrice() + " VND, Số lượng: " + product.getQuantity() + " shop: " + product.getShopID());
         }
     } else {
         System.out.println("Không có sản phẩm nào để hiển thị trên trang " + currentPage);

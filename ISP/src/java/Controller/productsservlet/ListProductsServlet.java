@@ -31,13 +31,13 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         // Lấy trang hiện tại từ tham số URL, mặc định là 1
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
         int productsPerPage = 5; // Số sản phẩm trên mỗi trang
+
+       // Lấy tổng số sản phẩm cho shop hiện tại
+        int totalProducts = dao.getTotalProductsByShopId(user.getShopID());
+        int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
         
         // Lấy danh sách sản phẩm cho trang hiện tại
-        ArrayList<Products> products = dao.getProductsByPage(currentPage, productsPerPage);
-        
-        // Lấy tổng số sản phẩm để tính tổng số trang
-        int totalProducts = dao.getTotalProducts();
-        int totalPages = (int) Math.ceil(totalProducts / (double) productsPerPage);
+        ArrayList<Products> products = dao.getProductsByPage(currentPage, productsPerPage, user.getShopID());
         
         // Thiết lập các thuộc tính cho JSP
         request.setAttribute("products", products);
@@ -81,7 +81,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 request.setAttribute("message", "Kết quả tìm kiếm cho: " + information);
             }
 
-            // Thiết lập currentPage và totalPages
+           // Cập nhật currentPage và totalPages
             int totalProducts = products.size(); // Tổng sản phẩm tìm được
             int totalPages = (int) Math.ceil(totalProducts / 5.0); // Cập nhật với số sản phẩm mỗi trang
             

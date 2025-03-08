@@ -89,6 +89,9 @@ public class AddProductServlet extends HttpServlet {
                 product.setQuantity(quantity);
                 product.setCreateAt(new Date(System.currentTimeMillis()));
                 product.setCreateBy(user.getID());
+                
+                  // Lấy ShopID từ đối tượng user và thiết lập cho sản phẩm
+            product.setShopID(user.getShopID()); // Đảm bảo rằng ShopID được thiết lập
 
                 // Add product to the database
                 int newProductId = dao.addProducts(product, user.getID());

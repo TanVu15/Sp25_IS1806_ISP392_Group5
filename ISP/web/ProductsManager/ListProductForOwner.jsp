@@ -26,7 +26,7 @@
     </head>
 
     <body>
-        
+
         <%
             DAOShops daoShop = new DAOShops();
             Shops shop = (Shops) session.getAttribute("shop");
@@ -35,15 +35,15 @@
             ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
-                <%
-                        Integer currentPage = (Integer) request.getAttribute("currentPage");
-                        Integer totalPages = (Integer) request.getAttribute("totalPages");
+        <%
+            Integer currentPage = (Integer) request.getAttribute("currentPage");
+            Integer totalPages = (Integer) request.getAttribute("totalPages");
 
-                        // Kiểm tra xem các biến có được nhận hay không
-                        if (currentPage == null || totalPages == null) {
-                            out.println("<script>alert('Không thể nhận được currentPage hoặc totalPages.');</script>");
-                        }
-                    %>
+            // Kiểm tra xem các biến có được nhận hay không
+            if (currentPage == null || totalPages == null) {
+                out.println("<script>alert('Không thể nhận được currentPage hoặc totalPages.');</script>");
+            }
+        %>
         <!-- Homepage Header -->
         <div class="header">
             <div class="container">
@@ -55,7 +55,7 @@
                 </span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="userdetail?id=<%= u.getID() %>"class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u.getID()%>"class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
@@ -125,20 +125,21 @@
                             <tbody>
                                 <%
                                     DAOProducts dao1 = new DAOProducts();
-                                  if(shop.getID() == u.getShopID()){
-                                    for (Products product : products) {                                  
-                                        if (product.getIsDelete() == 0) {
-                                            // Lấy danh sách khu vực cho sản phẩm
-                                            String zoneDisplay = "Chưa xác định"; // Giá trị mặc định
-                                            ArrayList<Zones> zonesList = dao1.getZonesByProductId(product.getID());
-                                            if (zonesList != null && !zonesList.isEmpty()) {
-                                                StringBuilder zonesNames = new StringBuilder();
-                                                for (Zones zone : zonesList) {
-                                                    zonesNames.append(zone.getZoneName()).append(", ");
+
+                                    for (Products product : products) {
+                                        if (shop.getID() == product.getShopID()) {
+                                            if (product.getIsDelete() == 0) {
+                                                // Lấy danh sách khu vực cho sản phẩm
+                                                String zoneDisplay = "Chưa xác định"; // Giá trị mặc định
+                                                ArrayList<Zones> zonesList = dao1.getZonesByProductId(product.getID());
+                                                if (zonesList != null && !zonesList.isEmpty()) {
+                                                    StringBuilder zonesNames = new StringBuilder();
+                                                    for (Zones zone : zonesList) {
+                                                        zonesNames.append(zone.getZoneName()).append(", ");
+                                                    }
+                                                    // Xóa dấu phẩy cuối
+                                                    zoneDisplay = zonesNames.length() > 0 ? zonesNames.substring(0, zonesNames.length() - 2) : zoneDisplay;
                                                 }
-                                                // Xóa dấu phẩy cuối
-                                                zoneDisplay = zonesNames.length() > 0 ? zonesNames.substring(0, zonesNames.length() - 2) : zoneDisplay;
-                                            }
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><img src="<%= product.getImageLink()%>" alt="<%= product.getProductName()%>"
@@ -157,7 +158,7 @@
                                     </td>
                                 </tr>
                                 <%
-                                    }
+                                            }
                                         }
 
                                     }
@@ -167,19 +168,19 @@
                     </div>
 
                     <!-- Pagination -->
-            
+
                     <div class="pagination">
                         <div class="pagination-controls">
                             <button 
                                 class="pagination-button" 
-                                <% if (currentPage == 1) { %> disabled <% }%> 
+                                <% if (currentPage <= 1) { %> disabled <% }%> 
                                 onclick="window.location.href = 'listproducts?page=<%= currentPage - 1%>'">Trước</button>
 
                             <span class="pagination-info">Trang <%= currentPage%> / <%= totalPages%></span>
 
                             <button 
                                 class="pagination-button" 
-                                <% if (currentPage == totalPages) { %> disabled <% }%> 
+                                <% if (currentPage >= totalPages) { %> disabled <% }%> 
                                 onclick="window.location.href = 'listproducts?page=<%= currentPage + 1%>'">Sau</button>
                         </div>
                     </div>
