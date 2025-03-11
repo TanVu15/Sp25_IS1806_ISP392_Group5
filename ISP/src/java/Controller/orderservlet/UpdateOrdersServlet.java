@@ -70,7 +70,6 @@ public class UpdateOrdersServlet extends HttpServlet {
         Orders order = new Orders();
         order.setID(orderId);
         order.setCustomerID(customerID);
-        order.setUserID(userID);
         order.setShopID(shopID);
         order.setTotalAmount(amount);
         order.setStatus(status);

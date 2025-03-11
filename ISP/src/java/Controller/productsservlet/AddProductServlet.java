@@ -1,8 +1,12 @@
 package Controller.productsservlet;
 
+import dal.DAOCustomers;
+import dal.DAOOrders;
 import dal.DAOProducts;
+import dal.DAOZones; 
 import model.Products;
 import model.Users;
+import model.Zones;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -16,13 +20,32 @@ import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 
 @MultipartConfig
+@WebServlet("/AddProduct")
 public class AddProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        DAOOrders dao = new DAOOrders();
+        DAOCustomers dao1 = new DAOCustomers();
+        DAOProducts dao2 = new  DAOProducts();
+        HttpSession session = request.getSession();
+        request.setAttribute("message", "");
+        Users user = (Users) session.getAttribute("user");
+        request.setAttribute("user", user);
+        if(user.getShopID()==0&&user.getRoleid()==2){
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
+            requestDispatcher.forward(request, response);
+            return;
+        }
+        // Get the list of zones
+        DAOZones zoneDAO = new DAOZones();
+        ArrayList<Zones> zones = zoneDAO.getAllZones();
+        request.setAttribute("zones", zones); // Add the zones list to the request
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/AddProduct.jsp");
         dispatcher.forward(request, response);
     }
@@ -34,39 +57,36 @@ public class AddProductServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String productName = request.getParameter("productName");
         String description = request.getParameter("description");
-        Part filePart = request.getPart("image"); // Nhận tệp hình ảnh
+        Part filePart = request.getPart("image");
         String priceParam = request.getParameter("price");
-        String location = request.getParameter("location");
+        String[] zoneIDs = request.getParameterValues("zoneIDs"); // Get all zoneIDs
 
         int price = 0;
 
+        // Validate price
         if (priceParam != null && !priceParam.isEmpty()) {
             price = Integer.parseInt(priceParam);
             if (price < 0) {
-                request.setAttribute("errorMessage", "Giá không thể âm.");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/AddProduct.jsp");
-                dispatcher.forward(request, response);
+                request.setAttribute("errorMessage", "Price cannot be negative.");
+                doGet(request, response);
                 return;
             }
         }
 
-        int quantity = 0; // Default quantity to 0 for new products
+        int quantity = 0; // Default quantity for the new product
         String imageLink = "";
 
-        // Lấy đường dẫn thư mục ảnh
+        // Save image to directory
         String imageDirectory = getServletContext().getRealPath("/Image/");
-
-        // Lưu ảnh vào thư mục
         if (filePart != null && filePart.getSize() > 0) {
             String fileName = filePart.getSubmittedFileName();
             File dir = new File(imageDirectory);
-            // Tạo thư mục nếu nó không tồn tại
             if (!dir.exists()) {
                 dir.mkdir();
             }
             File file = new File(dir, fileName);
             filePart.write(file.getAbsolutePath());
-            imageLink = "Image/" + fileName; // Đường dẫn lưu trữ ảnh
+            imageLink = "Image/" + fileName; // Path to the stored image
         }
 
         DAOProducts dao = DAOProducts.INSTANCE;
@@ -78,29 +98,40 @@ public class AddProductServlet extends HttpServlet {
             if (user != null) {
                 product.setProductName(productName);
                 product.setDescription(description);
-                product.setImageLink(imageLink); 
+                product.setImageLink(imageLink);
                 product.setPrice(price);
                 product.setQuantity(quantity);
-                product.setLocation(location);
-                product.setCreateAt(new Date(System.currentTimeMillis())); 
-                product.setCreateBy(user.getID()); 
+                product.setCreateAt(new Date(System.currentTimeMillis()));
+                product.setCreateBy(user.getID());
+                
+                  // Lấy ShopID từ đối tượng user và thiết lập cho sản phẩm
+            product.setShopID(user.getShopID()); // Đảm bảo rằng ShopID được thiết lập
 
-                dao.AddProducts(product, user.getID());
-                response.sendRedirect("listproducts"); 
+                // Add product to the database
+                int newProductId = dao.addProducts(product, user.getID());
+
+                // Add all zones to the linking table using the method in DAOProducts
+                if (zoneIDs != null) {
+                    for (String zoneID : zoneIDs) {
+                        int zoneIdInt = Integer.parseInt(zoneID);
+                        dao.addProductZones(newProductId, new Zones(zoneIdInt)); // Create a new Zones object
+                    }
+                }
+
+                response.sendRedirect("listproducts");
             } else {
-                request.setAttribute("errorMessage", "Thông tin không phù hợp.");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/AddProduct.jsp");
-                dispatcher.forward(request, response);
+                request.setAttribute("errorMessage", "User information is not valid.");
+                doGet(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/AddProduct.jsp");
-            dispatcher.forward(request, response);
+            request.setAttribute("errorMessage", "An error occurred. Please try again.");
+            doGet(request, response);
         }
     }
 
     @Override
     public String getServletInfo() {
-        return "Servlet quản lý thêm sản phẩm";
+        return "Servlet for managing product addition.";
     }
 }

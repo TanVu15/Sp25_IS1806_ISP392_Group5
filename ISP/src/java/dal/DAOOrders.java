@@ -38,8 +38,7 @@ public class DAOOrders {
                 Orders o = new Orders();
                 o.setID(rs.getInt("ID"));
                 o.setCustomerID(rs.getInt("CustomerID"));
-                o.setUserID(rs.getInt("UserID"));
-                o.setTotalAmount(rs.getInt("TotalAmount"));
+                o.setTotalAmount(rs.getFloat("TotalAmount"));
                 o.setShopID(rs.getInt("ShopID"));
                 o.setStatus(rs.getInt("status"));
                 o.setCreateAt(rs.getDate("CreateAt"));
@@ -58,16 +57,15 @@ public class DAOOrders {
     }
 
     public void addOrders(Orders orders, int userid) {
-        String sql = "INSERT INTO Orders (CustomerID, UserID, TotalAmount, ShopID, Status, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO Orders (CustomerID, TotalAmount, ShopID, Status, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, orders.getCustomerID());
-            ps.setInt(2, orders.getUserID());
-            ps.setInt(3, orders.getTotalAmount());
-            ps.setInt(4, orders.getShopID());
-            ps.setInt(5, orders.getStatus());
-            ps.setDate(6, today);
-            ps.setInt(7, userid);
-            ps.setInt(8, 0); // Set isDelete to 0 (not deleted)
+                ps.setInt(1, orders.getCustomerID());               
+                ps.setFloat(2, orders.getTotalAmount());           
+                ps.setInt(3, orders.getShopID());                  
+                ps.setInt(4, orders.getStatus());                  
+                ps.setDate(5, today);                             
+                ps.setInt(6, userid);                             
+                ps.setInt(7, 0); 
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -78,8 +76,7 @@ public class DAOOrders {
         String sql = "UPDATE Orders SET CustomerID = ?, UserID = ?, OrderItemID = ?, TotalAmount = ?, ShopID = ?, Status = ?, UpdateAt = ?, ImageLink = ?, Location = ? WHERE ID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, orders.getCustomerID());
-            ps.setInt(2, orders.getUserID());
-            ps.setInt(4, orders.getTotalAmount());
+            ps.setDouble(4, orders.getTotalAmount());
             ps.setInt(5, orders.getShopID());
             ps.setInt(6, orders.getStatus());
             ps.setDate(7, today);
@@ -113,7 +110,6 @@ public class DAOOrders {
             Orders o = new Orders();
             o.setID(rs.getInt("ID"));
             o.setCustomerID(rs.getInt("CustomerID"));
-            o.setUserID(rs.getInt("UserID"));
             o.setTotalAmount(rs.getInt("TotalAmount"));
             o.setShopID(rs.getInt("ShopID"));
             o.setStatus(rs.getInt("status"));
@@ -139,8 +135,7 @@ public class DAOOrders {
                 Orders o = new Orders();
                 o.setID(rs.getInt("ID"));
                 o.setCustomerID(rs.getInt("CustomerID"));
-                o.setUserID(rs.getInt("UserID"));
-                o.setTotalAmount(rs.getInt("TotalAmount"));
+                o.setTotalAmount(rs.getFloat("TotalAmount"));
                 o.setShopID(rs.getInt("ShopID"));
                 o.setStatus(rs.getInt("status"));
                 o.setCreateAt(rs.getDate("CreateAt"));
@@ -152,28 +147,29 @@ public class DAOOrders {
 
                 // Lấy thông tin người tạo 
                 Users userCreate = DAO.INSTANCE.getUserByID(o.getCreateBy());
-
-                Customers customer = DAOCustomers.INSTANCE.getCustomersByID(o.getCustomerID());
+                
+                Customers customerOr = DAOCustomers.INSTANCE.getCustomersByID(o.getCustomerID());
+                String customerName = (customerOr != null) ? customerOr.getName() : "Unknown Customer";
+                
                 // Tạo một chuỗi chứa toàn bộ thông tin của order
-                String orderData = (o.getCustomerID() + " "
-                        + customer.getName().toLowerCase() + " "
-                        + o.getUserID() + " "
-                        + o.getShopID() + " "
-                        + o.getCreateAt() + " "
-                        + o.getUpdateAt() + " "
-                        + userCreate.getFullName().toLowerCase() + " "
-                        + o.getIsDelete());
-
+                String orderData = (o.getCustomerID()+" "
+                        +customerName+" "
+                        +o.getShopID()+" "
+                        +o.getCreateAt()+" "
+                        +o.getUpdateAt()+" "
+                        +userCreate.getFullName().toLowerCase() + " "
+                        +o.getIsDelete());
+                
                 // Lấy thông tin người xóa nếu có
                 if (o.getIsDelete() != 0) {
                     Users userDelete = DAO.INSTANCE.getUserByID(o.getDeleteBy());
                     orderData += ("xóa" + o.getIsDelete() + " "
                             + o.getDeletedAt() + " "
                             + userDelete.getFullName().toLowerCase());
-                } else {
+                }else{
                     orderData += "Hoạt Động";
                 }
-
+                
                 // Kiểm tra nếu information xuất hiện trong bất kỳ trường nào của order
                 if (orderData.toLowerCase().contains(information.toLowerCase())) {
                     orders.add(o);
@@ -185,10 +181,19 @@ public class DAOOrders {
         return orders;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         DAOOrders dao = new DAOOrders();
         System.out.println(dao.getAllOrders());
         System.out.println("================");
         //dao.addOrders(orders, 0);
+        DAOCustomers cus = new DAOCustomers();
+        
+        System.out.println(cus.getCustomerIdByNameAndShop("Nguyen Van D", 2));
+        int id = cus.getCustomerIdByNameAndShop("Nguyen Van D", 2);
+        Orders orders = new Orders(2, id, 1000, 2, today, today, 3, 0, today, 0, 1);
+        //dao.addOrders(orders, 3);
+        System.out.println(dao.getOrderByID(1));
+        Customers c = new Customers();
+        System.out.println(cus.getCustomersByID(4).getName());
     }
 }

@@ -111,7 +111,7 @@
                                     <td class="table-cell"><%= product.getProductName()%></td>
                                     <td class="table-cell"><%= product.getPrice()%>đ</td>
                                     <td class="table-cell"><%= product.getQuantity()%></td>
-                                    <td class="table-cell"><%= product.getLocation()%></td>
+                                   
                                     <td class="table-cell description"><%= product.getDescription()%></td>
                                     <td class="table-cell">
                                         <a href="updateproduct?id=<%= product.getID()%>" class="action-button">Sửa</a>

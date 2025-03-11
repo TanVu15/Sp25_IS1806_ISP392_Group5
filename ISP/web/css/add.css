@@ -113,23 +113,39 @@ textarea:focus {
     z-index: 1000;
     display: none;
 }
-.form-group select {
-    width: 100%; /* Đảm bảo select có chiều rộng bằng input */
-    padding: 8px;
-    border: 1px solid #ccc;
+
+
+.form-group {
+    margin-right: 18px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#zoneIDs {
+    width: 100%; /* Ensure select box takes full width */
+}
+
+.select2-container--default .select2-selection--multiple {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    border: 1px solid #ccc; /* Same border as input fields */
     border-radius: 4px;
-    font-size: 16px;
-    background-color: white;
-    outline: none;
+    padding: 8px; /* Add padding for spacing */
 }
 
-/* Hiệu ứng khi hover */
-.form-group select:hover {
-    border-color: #888;
+.select2-selection__choice {
+    margin: 2px 5px; /* Space between selected items */
+    background-color: #7ab452; /* Same as add button */
+    color: white;
+    border-radius: 4px;
+    padding: 5px 10px;
 }
 
-/* Hiệu ứng khi focus */
-.form-group select:focus {
-    border-color: #80bdff;
-    box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+.select2-selection__choice__remove {
+    cursor: pointer;
+    margin-left: 5px;
+    color: #721c24; /* Red color for remove icon */
 }
