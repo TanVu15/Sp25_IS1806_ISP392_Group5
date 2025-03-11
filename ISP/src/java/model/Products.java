@@ -2,37 +2,36 @@ package model;
 
 import java.sql.Date;
 
-/**
- *
- * @author ADMIN
- */
 public class Products {
     
     private int ID;
-    private String ImageLink; // Đổi tên trường từ Image thành ImageLink
+    private String ImageLink; 
     private String ProductName;
     private String Description;
     private int Price;
     private int Quantity;
-    private String Location;
+    private Zones productZone; // Thêm trường để lưu thông tin khu vực
     private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
     private int isDelete;
     private Date deletedAt;
     private int deleteBy;
+    private int ShopID;
 
     public Products() {
     }
 
-    public Products(int ID, String imageLink, String ProductName, String Description, int Price, int Quantity, String Location, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
+    public Products(int ID, String imageLink, String ProductName, String Description, int Price, int Quantity, 
+                    Zones productZone, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, 
+                    Date deletedAt, int deleteBy) {
         this.ID = ID;
-        this.ImageLink = imageLink; // Sửa tham số
+        this.ImageLink = imageLink;
         this.ProductName = ProductName;
         this.Description = Description;
         this.Price = Price;
         this.Quantity = Quantity;
-        this.Location = Location;
+        this.productZone = productZone; // Khởi tạo thông tin khu vực
         this.CreateAt = CreateAt;
         this.UpdateAt = UpdateAt;
         this.CreateBy = CreateBy;
@@ -41,13 +40,32 @@ public class Products {
         this.deleteBy = deleteBy;
     }
 
-    public String getLocation() {
-        return Location;
+    public Products(int ID, String ImageLink, String ProductName, String Description, int Price, int Quantity, Zones productZone, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy, int ShopID) {
+        this.ID = ID;
+        this.ImageLink = ImageLink;
+        this.ProductName = ProductName;
+        this.Description = Description;
+        this.Price = Price;
+        this.Quantity = Quantity;
+        this.productZone = productZone;
+        this.CreateAt = CreateAt;
+        this.UpdateAt = UpdateAt;
+        this.CreateBy = CreateBy;
+        this.isDelete = isDelete;
+        this.deletedAt = deletedAt;
+        this.deleteBy = deleteBy;
+        this.ShopID = ShopID;
     }
 
-    public void setLocation(String Location) {
-        this.Location = Location;
+    public int getShopID() {
+        return ShopID;
     }
+
+    public void setShopID(int ShopID) {
+        this.ShopID = ShopID;
+    }
+    
+    
 
     public int getID() {
         return ID;
@@ -57,12 +75,12 @@ public class Products {
         this.ID = ID;
     }
 
-    public String getImageLink() { // Sửa tên phương thức
+    public String getImageLink() {
         return ImageLink;
     }
 
-    public void setImageLink(String imageLink) { // Sửa tên phương thức
-        this.ImageLink = imageLink; // Sửa tham số
+    public void setImageLink(String ImageLink) {
+        this.ImageLink = ImageLink;
     }
 
     public String getProductName() {
@@ -95,6 +113,14 @@ public class Products {
 
     public void setQuantity(int Quantity) {
         this.Quantity = Quantity;
+    }
+
+    public Zones getProductZone() {
+        return productZone; // Getter cho ProductZones
+    }
+
+    public void setProductZone(Zones productZone) {
+        this.productZone = productZone; // Setter cho ProductZones
     }
 
     public Date getCreateAt() {

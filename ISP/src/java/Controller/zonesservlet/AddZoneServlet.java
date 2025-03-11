@@ -84,7 +84,7 @@ public class AddZoneServlet extends HttpServlet {
                 addzone.setZoneName(zone);
                 addzone.setShopID(shop);
 
-                dao.AddZone(addzone, user.getID());
+                dao.addZone(addzone, user.getID());
                 response.sendRedirect("listzones");
 
             } else {

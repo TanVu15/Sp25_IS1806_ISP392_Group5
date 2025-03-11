@@ -1,5 +1,6 @@
-<%@ page contentType="text/html" pageEncoding="UTF-8" %>
-<%@ page import="model.Users" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="model.Zones" %>
+<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +9,9 @@
     <link rel="stylesheet" href="css/add.css">
     <title>Thêm Sản Phẩm Mới</title>
     <link rel="stylesheet" href="css/product.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         function validateForm() {
             var price = document.getElementById("price").value;
@@ -23,6 +27,14 @@
             }
             return true; // Allow form submission
         }
+
+        $(document).ready(function() {
+            $('#zoneIDs').select2({
+                placeholder: "Chọn khu vực",
+                allowClear: true,
+                tags: true
+            });
+        });
     </script>
 </head>
 <body>
@@ -55,8 +67,19 @@
                 <input type="number" id="quantity" name="quantity" value="0" required readonly>
             </div>
             <div class="form-group">
-                <label for="location">Vị trí:</label>
-                <input type="text" id="location" name="location" required>
+                <label for="zoneIDs">Khu vực:</label>
+                <select id="zoneIDs" name="zoneIDs" multiple="multiple" required>
+                    <%
+                        List<Zones> zones = (List<Zones>) request.getAttribute("zones"); // Lấy danh sách khu vực từ request
+                        if (zones != null) {
+                            for (Zones zone : zones) {
+                    %>
+                        <option value="<%= zone.getID() %>"><%= zone.getZoneName() %></option>
+                    <%
+                            }
+                        }
+                    %>
+                </select>
             </div>
             <div class="button-container">
                 <input type="submit" class="btn add-button" value="Thêm Sản Phẩm">

@@ -25,6 +25,12 @@ public class Zones {
     public Zones() {
     }
 
+    public Zones(int ID) {
+        this.ID = ID;
+    }
+    
+    
+
     public Zones(int ID, String ZoneName, int ShopID, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
         this.ID = ID;
         this.ZoneName = ZoneName;

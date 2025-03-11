@@ -14,13 +14,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý đơn hàng</title>
-        <link rel="stylesheet" href="css/product.css">
+        <link rel="stylesheet" href="css/product.css"> 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-        <% 
+        <%
             DAOUser dao = new DAOUser();
-             DAOCustomers dao1 = new DAOCustomers();
+            DAOCustomers dao1 = new DAOCustomers();
             Users u = (Users) request.getAttribute("user");
             ArrayList<Orders> orders = (ArrayList<Orders>) request.getAttribute("orders");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
@@ -30,10 +30,10 @@
                 <img src="Image/logo.png" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
-                <span class="navbar__user--name"> <%= u.getFullName() %></span>
+                <span class="navbar__user--name"> <%= u.getFullName()%></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="userdetail?id=<%= u.getID() %>" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u.getID()%>" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
@@ -52,6 +52,7 @@
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
+                        <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
                     </ul>
                 </div>
 
@@ -64,8 +65,8 @@
                                 <button type="submit" class="search-button">Search</button>
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>
-                            <% if (message != null && !message.isEmpty()) { %>
-                            <div id="toast-message" class="toast-message"><%= message %></div>
+                            <% if (message != null && !message.isEmpty()) {%>
+                            <div id="toast-message" class="toast-message"><%= message%></div>
                             <% } %>
 
                             <script>
@@ -80,7 +81,17 @@
                                     }
                                 };
                             </script>
-                            <a href="addorder" class="add-product-button">Thêm đơn</a>
+              
+                                  <div class="addorder__btn">
+                                <a href="addorder" class="add-product-button">Thêm đơn</a>
+                                <div class="dropdown">
+                                    <div class="dropdown-content">
+                                        <a href="addimportorder">Nhập Kho</a>
+                                        <a href="addexportorder">Xuất Kho</a>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <div class="table-container">
@@ -98,32 +109,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% if (orders != null && !orders.isEmpty()) { 
-                                    for (Orders order : orders) {
-                                    if(order.getShopID() == u.getShopID()){
+                                <% if (orders != null && !orders.isEmpty()) {
+                                        for (Orders order : orders) {
+                                            if (order.getShopID() == u.getShopID()) {
                                 %>
 
                                 <tr class="table-row">
 
-                                     <td class="table-cell"><%= order.getID() %></td>
-                                    <td class="table-cell"><%= order.getCustomerID() %></td>
-                                    <td class="table-cell"><%= dao1.getCustomersByID(order.getCustomerID()).getName() %></td>
-                                    <td class="table-cell"><%= order.getTotalAmount() %></td>
+                                    <td class="table-cell"><%= order.getID()%></td>
+                                    <td class="table-cell"><%= order.getCustomerID()%></td>
+                                    <td class="table-cell"><%= dao1.getCustomersByID(order.getCustomerID()).getName()%></td>
+                                    <td class="table-cell"><%= order.getTotalAmount()%></td>
                                     <td class="table-cell"><% if (order.getStatus() == -1) { %>
                                         Nhập hàng
-                                        <% } if (order.getStatus() == 1) { %>
+                                        <% }
+                                            if (order.getStatus() == 1) { %>
                                         Bán hàng
-                                        <% } %>
+                                        <% }%>
                                     </td>
-                                    <td class="table-cell"><%= order.getCreateAt() %></td>
-                                    <td class="table-cell"><%= dao.getUserByID(order.getCreateBy()).getFullName() %></td>
+                                    <td class="table-cell"><%= order.getCreateAt()%></td>
+                                    <td class="table-cell"><%= dao.getUserByID(order.getCreateBy()).getFullName()%></td>
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = ''">Chi tiết</button>
                                     </td>
                                 </tr>
-                                <%      } 
-                                    } 
-                                }
+                                <%      }
+                                        }
+                                    }
                                 %>
                             </tbody>
                         </table>

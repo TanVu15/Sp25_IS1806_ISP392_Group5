@@ -1,5 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page import="dal.DAOZones"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="model.Products" %>
+<%@ page import="model.Zones" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="dal.DAOProducts" %>
+<%@ page import="dal.DAOZones" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +15,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" 
           integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" 
           crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         function validateForm() {
             var price = document.getElementById("price").value;
@@ -25,6 +33,13 @@
             }
             return true; // Allow form submission
         }
+
+        $(document).ready(function() {
+            $('#zoneIDs').select2({
+                placeholder: "Chọn khu vực",
+                allowClear: true
+            });
+        });
     </script>
 </head>
 <body>
@@ -70,9 +85,19 @@
         </div>
 
         <div class="form-group">
-            <label for="location">Vị trí:</label>
-            <input type="text" id="location" name="location" class="form-control" 
-                   value="${product.location}" >
+            <label for="zoneIDs">Khu vực:</label>
+            <select id="zoneIDs" name="zoneIDs" multiple="multiple" required>
+                <% 
+                    DAOZones daoZone = new DAOZones();
+                    ArrayList<Zones> zonesList = daoZone.getAllZones(); // Lấy tất cả khu vực
+                    ArrayList<Zones> productZones = (ArrayList<Zones>) request.getAttribute("productZones"); // Khu vực của sản phẩm hiện tại
+                    for (Zones zone : zonesList) {
+                %>
+                    <option value="<%= zone.getID() %>" <%= productZones != null && productZones.contains(zone) ? "selected" : "" %>> 
+                        <%= zone.getZoneName() %>
+                    </option>
+                <% } %>
+            </select>
         </div>
 
         <button type="submit" class="btn btn-primary">Cập Nhập</button>
