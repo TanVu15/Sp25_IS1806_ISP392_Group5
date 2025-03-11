@@ -4,6 +4,7 @@
  */
 package dal;
 
+import static dal.DAO.today;
 import model.Users;
 import java.sql.Connection;
 import java.sql.Date;
@@ -23,13 +24,21 @@ public class DAOUser {
 
     public static long millis = System.currentTimeMillis();
     public static Date today = new Date(millis);
+    
+    public boolean authenticateUser(String username, String password) throws Exception {
+        Users user = getUserByName(username);
+        if (user != null) {
+            return DAO.PasswordUtils.hashPassword(password).equals(user.getPasswordHash()); // So sánh mật khẩu nhập vào với mật khẩu đã lưu
+        }
+        return false;
+    }
 
     public void Register(Users user, int userid) {
         String sql = "INSERT INTO Users (Username, passwordhash, roleid, CreateAt, CreateBy, isDelete, shopid) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
 
             ps.setString(1, user.getUsername());
-            ps.setString(2, user.getPasswordHash());
+            ps.setString(2, DAO.PasswordUtils.hashPassword(user.getPasswordHash()));
             ps.setInt(3, user.getRoleid());
             ps.setDate(4, today);
             ps.setInt(5, userid);
@@ -86,7 +95,7 @@ public class DAOUser {
     public void updateUser(Users user) {
         String sql = "UPDATE Users SET passwordhash = ?,FullName = ? , UpdateAt = ? WHERE id = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setString(1, user.getPasswordHash());
+            ps.setString(1, DAO.PasswordUtils.hashPassword(user.getPasswordHash()));
             ps.setString(2, user.getFullName());
             ps.setDate(3, today);
             ps.setInt(4, user.getID());
@@ -244,7 +253,7 @@ public class DAOUser {
     public void resetPasswordUser(int userid) {
         String sql = "UPDATE Users SET passwordhash = ?, UpdateAt = ? WHERE id = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setString(1, "12345678");
+            ps.setString(1, DAO.PasswordUtils.hashPassword("12345678"));
             ps.setDate(2, today);
             ps.setInt(3, userid);
             ps.executeUpdate();

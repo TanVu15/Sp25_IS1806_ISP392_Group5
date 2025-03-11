@@ -50,7 +50,7 @@
 
             <div class="button-container">
                 <input type="submit" class="btn add-button" value="Sửa">
-                <a href="listproducts" class="btn cancel-button">Hủy</a>
+                <a href="shopdetail" class="btn cancel-button">Hủy</a>
             </div>
         </form>
     </div>

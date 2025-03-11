@@ -132,7 +132,6 @@ public class DAOCustomers {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-        DAODebtRecords.INSTANCE.updateCustomerWallet();
     }
 
     public ArrayList<Customers> getCustomersBySearch(String information) throws Exception {
