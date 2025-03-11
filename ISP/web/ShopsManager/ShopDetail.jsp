@@ -87,18 +87,20 @@
                                     <td class="table-cell"><%= shop.getLocation() %></td>
                                     <td class="table-cell"><%= shop.getEmail() %></td>
                                     <td class="table-cell">
+                                        <%
+                                        if(user.getRoleid()!=3){
+                                    
+                                        %>
                                         <button class="action-button" onclick="window.location.href = 'updateshop'">Chỉnh sửa cửa hàng</button>
+                                        <%
+                                            }
+                                        %>
                                     </td>
                                 </tr>
                                 <% 
                                                 }
                                 %>
-                                <%
-                                    if(user.getRoleid()!=3){
-                                %>
-                            <%
-                                }
-                            %>
+
                             </tbody>
                         </table>
                     </div>

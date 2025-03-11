@@ -61,12 +61,16 @@
                 <input type="text" id="username" name="username" value="<%= user.getUsername() %>" readonly>
             </div>
             <div class="form-group">
-                <label for="password">New Password:</label>
-                <input type="password" id="password" name="password" value="<%=password %>"required>
+                <label for="password">Mật khẩu cũ:</label>
+                <input type="password" id="oldpassword" name="oldpassword" value="<%= password %>"required>
             </div>
             <div class="form-group">
-                <label for="password2">Nhập lại password:</label>
-                <input type="password" id="password2" name="password2" value="<%=password2 %>"required>
+                <label for="password">Mật khẩu mới:</label>
+                <input type="password" id="password" name="password" value="<%= password %>"required>
+            </div>
+            <div class="form-group">
+                <label for="password2">Nhập lại mật khẩu:</label>
+                <input type="password" id="password2" name="password2" value="<%= password2 %>"required>
             </div>
             <div class="form-group">
                 <label for="name">Họ và Tên:</label>

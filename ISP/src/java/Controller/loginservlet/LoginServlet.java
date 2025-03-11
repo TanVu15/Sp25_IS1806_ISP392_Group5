@@ -53,13 +53,14 @@ public class LoginServlet extends HttpServlet {
                 Users user = userDAO.getUserByName(name);
                 DAOShops daoShop = new DAOShops();
 
-                if (user != null && (user.getPasswordHash().equals(password) || user.getIsDelete() == 1)) {
+                if (user != null && (userDAO.authenticateUser(name, password) && user.getIsDelete() == 0)) {
                     if (user.getIsDelete() != 0) {
                         request.setAttribute("message", "Hãy xem lại tài khoản và mật khẩu!");
                         request.setAttribute("name", name);
                         request.setAttribute("password", password);
                         RequestDispatcher dispatcher = request.getRequestDispatcher("Login/login.jsp");
                         dispatcher.forward(request, response);
+                        return;
                     } else {
                         session.setAttribute("user", user);
                         if (user.getShopID() != 0) {

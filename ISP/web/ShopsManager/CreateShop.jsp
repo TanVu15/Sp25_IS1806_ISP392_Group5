@@ -47,7 +47,6 @@
             </div>
             <div class="button-container">
                 <input type="submit" class="btn add-button" value="Tạo Cửa Hàng">
-                <a href="listproducts" class="btn cancel-button">Hủy</a>
             </div>
         </form>
     </div>
