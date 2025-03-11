@@ -14,6 +14,7 @@ import jakarta.servlet.http.Part;
 
 import java.io.File;
 import java.io.IOException;
+import model.Users;
 import model.Zones;
 
 @MultipartConfig
@@ -28,6 +29,12 @@ public class UpdateProductServlet extends HttpServlet {
 
         try {
             Products product = dao.getProductByID(productId);
+            int shopid = product.getShopID();
+            int shopid2 = ((Users)session.getAttribute("user")).getShopID();
+            if(shopid != shopid2 && ((Users)session.getAttribute("user")).getRoleid() != 1){
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("product", product);
             request.getRequestDispatcher("ProductsManager/UpdateProduct.jsp").forward(request, response);
         } catch (Exception ex) {
