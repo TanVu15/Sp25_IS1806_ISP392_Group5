@@ -9,6 +9,8 @@
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -26,6 +28,8 @@
             DAOUser dao = new DAOUser();
             DAOCustomers dao1 = new DAOCustomers();
             Users u = (Users) request.getAttribute("user");
+            DAOShops daoShop = new DAOShops();
+            Shops shop = (Shops) session.getAttribute("shop");
             Customers customer = (Customers) request.getAttribute("customer");
             DebtRecords debtrecords = (DebtRecords) request.getAttribute("debtrecords");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
@@ -33,7 +37,7 @@
 
         <div class="header">
             <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
+                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>

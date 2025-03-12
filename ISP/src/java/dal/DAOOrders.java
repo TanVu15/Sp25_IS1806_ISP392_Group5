@@ -188,12 +188,11 @@ public class DAOOrders {
         //dao.addOrders(orders, 0);
         DAOCustomers cus = new DAOCustomers();
         
-        System.out.println(cus.getCustomerIdByNameAndShop("Nguyen Van D", 2));
         int id = cus.getCustomerIdByNameAndShop("Nguyen Van D", 2);
         Orders orders = new Orders(2, id, 1000, 2, today, today, 3, 0, today, 0, 1);
         //dao.addOrders(orders, 3);
         System.out.println(dao.getOrderByID(1));
         Customers c = new Customers();
-        System.out.println(cus.getCustomersByID(4).getName());
+        System.out.println(cus.getCustomersByID(2).getName());
     }
 }

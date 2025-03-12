@@ -5,6 +5,7 @@
 
 package Controller.zonesservlet;
 
+import dal.DAOShops;
 import dal.DAOZones;
 import model.Zones;
 import model.Users;
@@ -66,6 +67,12 @@ public class ListZonesServlet extends HttpServlet {
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
+        DAOShops daoShop = new DAOShops();
+        if (user.getShopID() == 0 && user.getRoleid() == 2) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
+            requestDispatcher.forward(request, response);
+            return;
+        }
         ArrayList<Zones> zones = dao.getAllZones();
         request.setAttribute("zones", zones);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("ZoneManager/ListZones.jsp");

@@ -5,6 +5,8 @@
 <%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOOrders" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -21,13 +23,14 @@
         <%
             DAOUser dao = new DAOUser();
             DAOCustomers dao1 = new DAOCustomers();
+            Shops shop = (Shops) session.getAttribute("shop");
             Users u = (Users) request.getAttribute("user");
             ArrayList<Orders> orders = (ArrayList<Orders>) request.getAttribute("orders");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
         <div class="header">
             <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
+                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName()%></span>
