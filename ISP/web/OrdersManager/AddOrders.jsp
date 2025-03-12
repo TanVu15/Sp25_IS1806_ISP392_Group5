@@ -1,148 +1,125 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="model.Orders" %>
+<%@ page import="model.Products, model.Zones" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hóa Đơn Nhập Kho</title>
-    <link rel="stylesheet" href="assets/css/order.css">
+    <link rel="stylesheet" href="css/addorder.css">
+    <script>
+        function calculateTotal() {
+            let total = 0;
+            const productList = document.querySelectorAll('#productList tr');
+
+            productList.forEach(row => {
+                const quantity = parseInt(row.querySelector('input[name="quantity"]').value) || 0;
+                const price = parseFloat(row.querySelector('input[name="price"]').value) || 0;
+                const discount = parseFloat(row.querySelector('input[name="discount"]').value) || 0;
+
+                // Tính thành tiền cho hàng
+                const totalPrice = (price * quantity) - discount;
+                row.querySelector('input[name="total"]').value = totalPrice.toFixed(2);
+
+                // Cộng dồn vào tổng chi phí
+                total += totalPrice;
+            });
+
+            // Cập nhật tổng chi phí
+            document.getElementById('totalCost').value = total.toFixed(2);
+        }
+
+        function addProductRow() {
+            const table = document.getElementById('productList');
+            const newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" name="productName" required oninput="searchProduct(this)"></td>
+                <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
+                <td><input type="text" name="area"></td>
+                <td><input type="text" name="spec"></td>
+                <td><input type="number" name="price" min="0" required onchange="calculateTotal()"></td>
+                <td><input type="number" name="discount" min="0" onchange="calculateTotal()"></td>
+                <td><input type="text" name="total" readonly></td>
+                <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
+            `;
+        }
+
+        function deleteProductRow(button) {
+            const row = button.parentElement.parentElement;
+            row.parentElement.removeChild(row);
+            calculateTotal(); // Cập nhật tổng chi phí sau khi xóa
+        }
+
+        function searchProduct(input) {
+            // Logic tìm kiếm sản phẩm có thể được thêm vào đây.
+            // Ví dụ: Gọi API hoặc lọc danh sách sản phẩm từ một mảng.
+            console.log("Tìm kiếm sản phẩm: ", input.value);
+        }
+    </script>
 </head>
 <body>
 
-<div class="search-container">
-    <div class="customer-search">
-        <h2 class="search-heading">Tìm Khách Hàng</h2>
-        <input type="text" placeholder="Nhập tên khách hàng..." id="customerSearch">
-    </div>
-    <div class="product-search">
-        <h2 class="search-heading">Tìm Sản Phẩm</h2>
-        <input type="text" placeholder="Nhập tên sản phẩm..." id="productSearch">
-    </div>
-</div>
+<form action="CreateInvoiceServlet" method="post" id="invoiceForm">
 
-<div class="invoice-details">
-    <h2>Chi Tiết Hóa Đơn</h2>
-    <h4>Loại Hóa Đơn: Nhập</h4>
-    
-    <div class="invoice-info">
-        <div class="input-container">
-            <label for="customerName">Tên Khách Hàng:</label>
-            <input class="input-info" type="text" id="customerName">
+    <div class="invoice-details">
+        <h2>Chi Tiết Hóa Đơn</h2>
+        <h4>Loại Hóa Đơn: Nhập</h4>
+
+        <div class="invoice-info">
+            <div class="input-container">
+                <label for="customerName">Tên Khách Hàng:</label>
+                <input class="input-info" type="text" id="customerName" placeholder="Tìm kiếm khách hàng...">
+            </div>
+            <div class="input-container">
+                <label for="customerPhone">Số ĐT:</label>
+                <input class="input-info" type="text" id="customerPhone" name="customerPhone">
+            </div>
+            <div class="input-container">
+                <label for="creater">Người tạo:</label>
+                <input class="input-info" type="text" id="creater" name="creater">
+            </div>
         </div>
-        <div class="input-container">
-            <label for="customerPhone">Số ĐT:</label>
-            <input class="input-info" type="text" id="customerPhone">
+
+        <div class="product-list">
+            <table id="productTable">
+                <thead>
+                    <tr>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Số Lượng</th>
+                        <th>Khu Vực</th>
+                        <th>Quy Cách</th>
+                        <th>Giá Gốc</th>
+                        <th>Giảm Giá</th>
+                        <th>Thành Tiền</th>
+                        <th>Xóa</th>
+                    </tr>
+                </thead>
+                <tbody id="productList">
+                    <tr>
+                        <td><input type="text" name="productName" required oninput="searchProduct(this)"></td>
+                        <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
+                        <td><input type="text" name="area"></td>
+                        <td><input type="text" name="spec"></td>
+                        <td><input type="number" name="price" min="0" required onchange="calculateTotal()"></td>
+                        <td><input type="number" name="discount" min="0" onchange="calculateTotal()"></td>
+                        <td><input type="text" name="total" readonly></td>
+                        <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" onclick="addProductRow()">Thêm Sản Phẩm</button>
         </div>
+
         <div class="input-container">
-            <label for="creater">Người tạo:</label>
-            <input class="input-info" type="text" id="creater" placeholder="">
+            <label for="totalCost">Tổng chi phí:</label>
+            <input class="input-info" type="number" id="totalCost" name="totalCost" readonly>
+        </div>
+        <div class="action-buttons">
+            <button type="submit" id="createButton">Tạo</button>
+            <button type="button" id="cancelButton">Hủy</button>
         </div>
     </div>
-    
-    <div class="product-list">
-        <table>
-            <thead>
-                <tr>
-                    <th>Tên Sản Phẩm</th>
-                    <th>Số Lượng</th>
-                    <th>Khu Vực</th> <!-- Cột Khu Vực -->
-                    <th>Quy Cách</th>
-                    <th>Giá Gốc</th>
-                    <th>Giảm Giá</th>
-                    <th>Thành Tiền</th>
-                    <th>Xóa</th>
-                </tr>
-            </thead>
-            <tbody id="productList">
-                <!-- Sản phẩm sẽ được thêm vào đây -->
-            </tbody>
-        </table>
-    </div>
-
-    <div class="input-container">
-        <label for="totalCost">Tổng chi phí:</label>
-        <input class="input-info" type="number" id="totalCost" readonly>
-    </div>
-    <div class="action-buttons">
-        <button id="createButton">Tạo</button>
-        <button id="cancelButton">Hủy</button>
-    </div>
-</div>
-
-<script>
-    const productSearch = document.getElementById('productSearch');
-    const customerSearch = document.getElementById('customerSearch');
-    const customerName = document.getElementById('customerName');
-    const productList = document.getElementById('productList');
-    const totalCost = document.getElementById('totalCost');
-
-// thêm product mới cho bảng hóa đơn
-    productSearch.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter' && productSearch.value) {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${productSearch.value}</td>
-                <td><input type="number" value="1" min="1" style="width: 100px" class="qty"></td>
-                <td><input type="text" placeholder="Khu vực" class="area"></td> <!-- Input Khu Vực -->
-                <td><input type="text" placeholder="kg/bao" class="spec"></td>
-                <td><input type="number" placeholder="Giá gốc" class="price"></td>
-                <td><input type="number" placeholder="Giảm giá" class="discount" value="0"></td>
-                <td><input type="text" placeholder="Thành tiền" style="width: 180px" readonly class="total"></td>
-                <td><button class="delete-btn">Xóa</button></td>
-            `;
-            productList.appendChild(newRow);
-            productSearch.value = ''; // Xóa ô tìm kiếm sau khi thêm sản phẩm
-
-            const qtyInput = newRow.querySelector('.qty');
-            const priceInput = newRow.querySelector('.price');
-            const discountInput = newRow.querySelector('.discount');
-            const specInput = newRow.querySelector('.spec');
-            const totalInput = newRow.querySelector('.total');
-            const deleteBtn = newRow.querySelector('.delete-btn');
-
-            const calculateTotal = () => {
-                const qty = parseFloat(qtyInput.value) || 0;
-                const price = parseFloat(priceInput.value) || 0;
-                const discount = parseFloat(discountInput.value) || 0;
-                const total = (price - discount) * qty;
-                totalInput.value = formatCurrency(total);
-                updateGrandTotal(); // Cập nhật tổng chi phí
-            };
-
-            const formatCurrency = (value) => {
-                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            };
-
-            const updateGrandTotal = () => {
-                let grandTotal = 0;
-                const totals = document.querySelectorAll('.total');
-                totals.forEach(total => {
-                    grandTotal += parseFloat(total.value.replace(/\./g, '')) || 0;
-                });
-                totalCost.value = formatCurrency(grandTotal);
-            };
-
-            qtyInput.addEventListener('input', calculateTotal);
-            priceInput.addEventListener('input', calculateTotal);
-            discountInput.addEventListener('input', calculateTotal);
-            specInput.addEventListener('input', calculateTotal);
-
-            deleteBtn.addEventListener('click', () => {
-                productList.removeChild(newRow);
-                updateGrandTotal(); // Cập nhật tổng chi phí khi xóa sản phẩm
-            });
-        }
-    });
-
-    customerSearch.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter' && customerSearch.value) {
-            customerName.value = customerSearch.value; // Điền tên khách hàng vào trường
-            customerSearch.value = ''; // Xóa ô tìm kiếm tên khách hàng
-            customerName.focus(); // Đưa con trỏ đến ô tên khách hàng
-        }
-    });
-</script>
+</form>
 
 </body>
 </html>

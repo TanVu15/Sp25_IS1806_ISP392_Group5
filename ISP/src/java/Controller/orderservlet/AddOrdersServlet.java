@@ -1,6 +1,8 @@
 package Controller.orderservlet;
 
+import com.google.gson.Gson;
 import dal.DAOOrders;
+import dal.DAOProducts;
 import model.Orders;
 import model.Users;
 import jakarta.servlet.RequestDispatcher;
@@ -17,6 +19,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Products;
 
 public class AddOrdersServlet extends HttpServlet {
 
@@ -56,11 +62,32 @@ public class AddOrdersServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("OrdersManager/AddOrders.jsp");
-        dispatcher.forward(request, response);
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    String search = request.getParameter("search");
+    DAOProducts dao = DAOProducts.INSTANCE;
+    
+    ArrayList<Products> products = new ArrayList<>(); // Initialize the list
+    try {
+        if (search != null && !search.trim().isEmpty()) {
+            products = dao.searchProductsByName(search); // Use the existing method
+        }
+    } catch (Exception ex) {
+        Logger.getLogger(AddOrdersServlet.class.getName()).log(Level.SEVERE, null, ex);
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        // Return a JSON error message
+        PrintWriter out = response.getWriter();
+        out.print("{\"error\": \"An error occurred while fetching products.\"}");
+        out.flush();
+        return; // Exit after sending the error response
     }
+    
+    response.setContentType("application/json");
+    PrintWriter out = response.getWriter();
+    Gson gson = new Gson();
+    out.print(gson.toJson(products));
+    out.flush();
+}
 
     /**
      * Handles the HTTP <code>POST</code> method.
@@ -73,61 +100,9 @@ public class AddOrdersServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-
-        int customerID = Integer.parseInt(request.getParameter("CustimerID"));
-        int shopID = Integer.parseInt(request.getParameter("ShopID"));
-        String totalamount = request.getParameter("amount");
-        String statusString = request.getParameter("status");
-
-        int status = 0;
-
-        if (statusString != null) {
-            try {
-                status = Integer.parseInt(statusString);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-
-        int amount = 0;
-
-        if (totalamount != null && !totalamount.isEmpty()) {
-            amount = Integer.parseInt(totalamount);
-            if (amount < 0) {
-                request.setAttribute("errorMessage", "Giá trị không thể âm.");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("OrdersManager/AddOrders.jsp");
-                dispatcher.forward(request, response);
-                return;
-            }
-        }
-
-        DAOOrders dao = DAOOrders.INSTANCE;
-        Orders order = new Orders();
-        HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
-
-        try {
-            if (user != null) {
-                order.setCustomerID(customerID);;
-                order.setShopID(shopID);
-                order.setTotalAmount(amount);
-                order.setStatus(status);
-                order.setCreateAt(new Date(System.currentTimeMillis()));
-                order.setUserID(user.getID());
-
-                dao.addOrders(order, user.getID());
-                response.sendRedirect("listorders");
-            } else {
-                request.setAttribute("errorMessage", "Thông tin không phù hợp.");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("OrdersManager/AddOrders.jsp");
-                dispatcher.forward(request, response);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            RequestDispatcher dispatcher = request.getRequestDispatcher("OrdersManager/AddOrders.jsp");
-            dispatcher.forward(request, response);
-        }
+        
+        
+     
     }
 
     /**

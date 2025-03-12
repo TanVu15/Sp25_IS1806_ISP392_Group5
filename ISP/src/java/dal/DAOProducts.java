@@ -267,6 +267,37 @@ public int getTotalProductsByShopId(int shopId) {
         }
         return products;
     }
+    
+//    search product by name for order
+    public ArrayList<Products> searchProductsByName(String productName) {
+    ArrayList<Products> products = new ArrayList<>();
+    String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ProductName LIKE ?";
+
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setString(1, "%" + productName + "%"); // Use LIKE for partial matching
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Products product = new Products();
+            product.setID(rs.getInt("ID"));
+            product.setProductName(rs.getString("ProductName"));
+            product.setDescription(rs.getString("Description"));
+            product.setPrice(rs.getInt("Price"));
+            product.setQuantity(rs.getInt("Quantity"));
+            product.setImageLink(rs.getString("ImageLink"));
+            product.setShopID(rs.getInt("ShopID"));
+            product.setCreateAt(rs.getDate("CreateAt"));
+            product.setUpdateAt(rs.getDate("UpdateAt"));
+            product.setCreateBy(rs.getInt("CreateBy"));
+            product.setIsDelete(rs.getInt("isDelete"));
+
+            products.add(product);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return products;
+}
 
     public static void main(String[] args) throws Exception {
         DAOProducts dao = DAOProducts.INSTANCE;
