@@ -70,6 +70,7 @@ public class UpdateUserServlet extends HttpServlet {
         try {
             user = DAOUser.INSTANCE.getUserByID(userid);
             String username = request.getParameter("username");
+            String oldpassword = request.getParameter("oldpassword");
             String password = request.getParameter("password");
             String password2 = request.getParameter("password2");
             
@@ -81,7 +82,7 @@ public class UpdateUserServlet extends HttpServlet {
             user.setPasswordHash(password2);
             user.setFullName(fullname);
 
-            if (!password.endsWith(password2) || password == null) {
+            if (!password.endsWith(password2) || password == null || DAOUser.INSTANCE.authenticateUser(username, oldpassword) == false) {
                 request.setAttribute("message", "Hãy kiểm tra lại mật khẩu!");
                 request.setAttribute("username", username);
                 request.setAttribute("password", password);
@@ -101,7 +102,9 @@ public class UpdateUserServlet extends HttpServlet {
             // Chuyển hướng tới trang danh sách người dùng sau khi cập nhật thành công
             response.sendRedirect("listusers");
         } catch (Exception ex) {
-            Logger.getLogger(UpdateUserServlet.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("message", "Hãy kiểm tra lại mật khẩu!");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/UpdateUser.jsp");
+                dispatcher.forward(request, response);
         }
 
     }

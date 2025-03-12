@@ -1,5 +1,7 @@
 package Controller.productsservlet;
 
+import dal.DAOCustomers;
+import dal.DAOOrders;
 import dal.DAOProducts;
 import dal.DAOZones; 
 import model.Products;
@@ -27,6 +29,18 @@ public class AddProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        DAOOrders dao = new DAOOrders();
+        DAOCustomers dao1 = new DAOCustomers();
+        DAOProducts dao2 = new  DAOProducts();
+        HttpSession session = request.getSession();
+        request.setAttribute("message", "");
+        Users user = (Users) session.getAttribute("user");
+        request.setAttribute("user", user);
+        if(user.getShopID()==0&&user.getRoleid()==2){
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
+            requestDispatcher.forward(request, response);
+            return;
+        }
         // Get the list of zones
         DAOZones zoneDAO = new DAOZones();
         ArrayList<Zones> zones = zoneDAO.getAllZones();

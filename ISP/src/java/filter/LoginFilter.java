@@ -108,7 +108,6 @@ public class LoginFilter implements Filter {
             res.sendRedirect("LoginServlet");
         }
       
-	
         
         
         Throwable problem = null;

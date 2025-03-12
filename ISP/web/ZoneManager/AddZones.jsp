@@ -23,7 +23,10 @@
 <body>
     <div class="container">
         <h2>Thêm Kho Mới</h2>
-        
+                            <%      
+                                DAOUser dao = new DAOUser();
+                                Users u = (Users) request.getAttribute("user");
+                            %>
         <%
             String errorMessage = (String) request.getAttribute("errorMessage");
             if (errorMessage != null) {

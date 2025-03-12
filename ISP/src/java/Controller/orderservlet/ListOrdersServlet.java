@@ -5,19 +5,14 @@
 
 package Controller.orderservlet;
 
-import Controller.customerservlet.ListCustomersServlet;
-import dal.DAOOrderItem;
 import dal.DAOOrders;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import model.Orders;
 import model.Users;
@@ -100,5 +95,8 @@ public class ListOrdersServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
+    public static void main(String[] args) throws Exception {
+        DAOOrders dao = new DAOOrders();
+        System.out.println(dao.getOrderByID(4));
+    }
 }

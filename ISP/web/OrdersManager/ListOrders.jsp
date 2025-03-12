@@ -84,12 +84,6 @@
               
                                   <div class="addorder__btn">
                                 <a href="addorder" class="add-product-button">Thêm đơn</a>
-                                <div class="dropdown">
-                                    <div class="dropdown-content">
-                                        <a href="addimportorder">Nhập Kho</a>
-                                        <a href="addexportorder">Xuất Kho</a>
-                                    </div>
-                                </div>
                             </div>
 
                         </div>
@@ -119,11 +113,11 @@
                                     <td class="table-cell"><%= order.getID()%></td>
                                     <td class="table-cell"><%= order.getCustomerID()%></td>
                                     <td class="table-cell"><%= dao1.getCustomersByID(order.getCustomerID()).getName()%></td>
-                                    <td class="table-cell"><%= order.getTotalAmount()%></td>
-                                    <td class="table-cell"><% if (order.getStatus() == -1) { %>
+                                    <td class="table-cell"><%= currencyFormat.format(order.getTotalAmount()) +" VND"%></td>
+                                    <td class="table-cell"><% if (order.getStatus() == 1) { %>
                                         Nhập hàng
                                         <% }
-                                            if (order.getStatus() == 1) { %>
+                                            if (order.getStatus() == -1) { %>
                                         Bán hàng
                                         <% }%>
                                     </td>

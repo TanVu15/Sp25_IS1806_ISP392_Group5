@@ -18,7 +18,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản Lý Khách Hàng</title>
-        <link rel="stylesheet" href="css/product.css">
+        <link rel="stylesheet" href="css/detail.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
 
@@ -63,77 +63,52 @@
                 <div class="homepage-body">
                     <div class="body-head">
                         <h3 class="body__head-title">Thông tin khách hàng</h3>
-                        <div class="search-container">
-                            <form action="listcustomers" method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm khách hàng..." class="search-input">
-                                <button type="submit" class="search-button">Search</button>
-                            </form>
-                            <% String message = (String) request.getAttribute("message"); %>
-                            <% if (message != null && !message.isEmpty()) { %>
-                            <div id="toast-message" class="toast-message"><%= message %></div>
-                            <% } %>
-
-                            <script>
-                                window.onload = function () {
-                                    var toast = document.getElementById("toast-message");
-                                    if (toast) {
-                                        toast.style.display = "block"; // Hiển thị thông báo
-                                        setTimeout(function () {
-                                            toast.style.opacity = "0";
-                                            setTimeout(() => toast.style.display = "none", 500);
-                                        }, 3000);
-                                    }
-                                };
-                            </script>
-                            <a href="addcustomer" class="add-product-button">Thêm khách hàng</a>
+                    </div>
+                    <div class="user-info-container">
+                        <% 
+                            if(customer.getShopID() == u.getShopID()){
+                        %>
+                        <div class="user-info-item">
+                            <span class="user-info-label">ID</span>
+                            <span class="user-info-value"><%= customer.getID() %></span>
                         </div>
-                    </div>
-                    <div class="table-container">
-                        <table class="product-table">
-                            <thead>
-                                <tr class="table-header">
-                                    <th class="table-header-item">ID</th>
-                                    <th class="table-header-item">Tên</th>
-                                    <th class="table-header-item">Ví</th>
-                                    <th class="table-header-item">Điện thoại</th>
-                                    <th class="table-header-item">Địa chỉ</th>
-                                    <th class="table-header-item">Ngày tạo</th>
-                                    <th class="table-header-item">Ngày cập nhật</th>
-                                    <th class="table-header-item">Người tạo</th>
-                                    <th class="table-header-item">Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% 
-                                    if(customer.getShopID() == u.getShopID()){
-                                %>
-                                <tr class="table-row">
-                                    <td class="table-cell"><%= customer.getID() %></td>
-                                    <td class="table-cell"><%= customer.getName() %></td>
-                                    <td class="table-cell"><%= currencyFormat.format(customer.getWallet()) + " VND"%></td>
-                                    <td class="table-cell"><%= customer.getPhone() %></td>
-                                    <td class="table-cell"><%= customer.getAddress() %></td>
-                                    <td class="table-cell"><%= customer.getCreateAt() %></td>
-                                    <td class="table-cell"><%= customer.getUpdateAt() %></td>
-                                    <td class="table-cell"><%= dao.getUserByID(customer.getCreateBy()).getFullName() %></td>
-                                    <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'updatecustomer?id=<%= customer.getID() %>'">Chỉnh sửa</button>
-                                        <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= customer.getID() %>'">Công nợ</button>
-                                    </td>
-                                </tr>
-                                <%  
+                        <div class="user-info-item">
+                            <span class="user-info-label">Tên</span>
+                            <span class="user-info-value"><%= customer.getName() %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Ví</span>
+                            <span class="user-info-value"><%= currencyFormat.format(customer.getWallet()) + " VND"%></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Điện thoại</span>
+                            <span class="user-info-value"><%= customer.getPhone() %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Địa chỉ</span>
+                            <span class="user-info-value"><%= customer.getAddress() %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Ngày tạo</span>
+                            <span class="user-info-value"><%= customer.getCreateAt() %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Ngày cập nhật:</span>
+                            <span class="user-info-value"><%= customer.getUpdateAt() %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Người tạo</span>
+                            <span class="user-info-value"><%= dao.getUserByID(customer.getCreateBy()).getFullName() %></span>
+                        </div>
+                        <button class="action-button" onclick="window.location.href = 'updatecustomer?id=<%= customer.getID() %>'">Chỉnh sửa</button>
+                        <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= customer.getID() %>'">Công nợ</button>
+                        <%  
                                 } 
-                                %>
-                            </tbody>
-                        </table>
+                        %>
                     </div>
-
                 </div>
             </div>
         </div>
-
-
-
         <div class="footer">
             <div class="container">
                 <p>&copy; 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>

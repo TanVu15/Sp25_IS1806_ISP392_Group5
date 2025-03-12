@@ -54,7 +54,7 @@ public class DAOCustomers {
                 cs.setDeletedAt(rs.getDate("DeletedAt"));
                 cs.setDeleteBy(rs.getInt("DeleteBy"));
                 customers.add(cs);
-                
+
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Handle SQL exceptions
@@ -115,7 +115,7 @@ public class DAOCustomers {
         }
         return null;
     }
-    
+
     public void AddCustomer(Customers customer, int userid) throws Exception {
         String sql = "INSERT INTO Customers (Name, Phone, Address, CreateAt, CreateBy, isDelete, Wallet, shopid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
@@ -132,7 +132,6 @@ public class DAOCustomers {
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
-        DAODebtRecords.INSTANCE.updateCustomerWallet();
     }
 
     public ArrayList<Customers> getCustomersBySearch(String information) throws Exception {
@@ -175,7 +174,7 @@ public class DAOCustomers {
                     customerData += ("xóa" + cs.getIsDelete() + " "
                             + cs.getDeletedAt() + " "
                             + userDelete.getFullName().toLowerCase());
-                }else{
+                } else {
                     customerData += "Hoạt Động";
                 }
 
@@ -190,7 +189,68 @@ public class DAOCustomers {
         return customers;
     }
 
+    public int getTotalCustomersByShopId(int shopId) {
+        String sql = "SELECT COUNT(*) FROM Customers WHERE isDelete = 0 AND ShopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public ArrayList<Customers> getCustomersByPage(int page, int productsPerPage, int shopId) {
+        ArrayList<Customers> customers = new ArrayList<>();
+        String sql = "SELECT * FROM Customers WHERE isDelete = 0 AND ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ps.setInt(2, (page - 1) * productsPerPage);
+            ps.setInt(3, productsPerPage);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Customers cs = new Customers();
+                cs.setID(rs.getInt("ID"));
+                cs.setWallet(rs.getInt("Wallet"));
+                cs.setName(rs.getString("Name"));
+                cs.setPhone(rs.getString("Phone"));
+                cs.setAddress(rs.getString("Address"));
+                cs.setShopID(rs.getInt("ShopID"));
+                cs.setCreateAt(rs.getDate("CreateAt"));
+                cs.setUpdateAt(rs.getDate("UpdateAt"));
+                cs.setCreateBy(rs.getInt("CreateBy"));
+                cs.setIsDelete(rs.getInt("isDelete"));
+                cs.setDeletedAt(rs.getDate("DeletedAt"));
+                cs.setDeleteBy(rs.getInt("DeleteBy"));
+                customers.add(cs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
     
+    public int getCustomerIdByNameAndShop(String name, int shopId) {
+    String sql = "SELECT ID FROM Customers WHERE Name = ? AND ShopID = ? AND isDelete = 0";
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setString(1, name);
+        ps.setInt(2, shopId);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("ID"); // Trả về ID
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return -1; // Không tìm thấy thì trả về -1
+}
+
+
     public static void main(String[] args) throws Exception {
         DAOCustomers dao = new DAOCustomers();
         dao.getAllCustomers();

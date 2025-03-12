@@ -12,6 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -111,89 +115,8 @@ public class DAODebtRecords {
             System.out.println("Error: " + e.getMessage());
         }
         
-        updateCustomerWallet();
-        
     }
-
-    public void updateCustomerWallet() throws Exception {
-
-        ArrayList<DebtRecords> debtRecordses = getDebtRecordsActive();
-
-        for (DebtRecords debtrecords : debtRecordses) {
-            Customers customer = DAOCustomers.INSTANCE.getCustomersByID(debtrecords.getCustomerID());
-            int currentWallet = customer.getWallet();
-
-            // Tính toán số dư mới
-            int newWallet = currentWallet;
-            if (debtrecords.getPaymentStatus() == 1 || debtrecords.getPaymentStatus() == 2) {
-                newWallet += debtrecords.getAmountOwed();
-            }
-            if (debtrecords.getPaymentStatus() == -1 || debtrecords.getPaymentStatus() == -2) {
-                newWallet -= debtrecords.getAmountOwed();
-            }
-
-            // Cập nhật Wallet (chỉ tiếp tục nếu giá trị chưa bị thay đổi bởi máy khác)
-            String updateSQL = "UPDATE Customers SET Wallet = ? WHERE ID = ? AND Wallet = ?";
-
-            try (PreparedStatement ps = connect.prepareStatement(updateSQL)) {
-                ps.setInt(1, newWallet);
-                ps.setInt(2, debtrecords.getCustomerID());
-                ps.setInt(3, currentWallet); // Điều kiện kiểm tra xung đột
-                int updatedRows = ps.executeUpdate();
-                if (updatedRows > 0) {
-                    updateDebtRecordActive(debtrecords);
-                }
-            } catch (SQLException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }
-
-    }
-
-    public ArrayList<DebtRecords> getDebtRecordsActive() {
-        ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
-        String sql = "SELECT * FROM DebtRecords WHERE Active = ?";
-
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, 0);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    DebtRecords debt = new DebtRecords();
-                    debt.setID(rs.getInt("ID"));
-                    debt.setCustomerID(rs.getInt("customerID"));
-                    debt.setAmountOwed(rs.getInt("AmountOwed"));
-                    debt.setPaymentStatus(rs.getInt("PaymentStatus"));
-                    debt.setInvoiceDate(rs.getDate("InvoiceDate"));
-                    debt.setImagePath(rs.getString("ImagePath"));
-                    debt.setShopID(rs.getInt("ShopID"));
-                    debt.setActive(rs.getInt("Active"));
-                    debt.setCreateAt(rs.getDate("CreateAt"));
-                    debt.setUpdateAt(rs.getDate("UpdateAt"));
-                    debt.setCreateBy(rs.getInt("CreateBy"));
-                    debt.setIsDelete(rs.getInt("isDelete"));
-                    debt.setDeletedAt(rs.getDate("DeletedAt"));
-                    debt.setDeleteBy(rs.getInt("DeleteBy"));
-                    debt.setNote(rs.getString("Note"));
-                    debtRecordses.add(debt);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // Xử lý lỗi SQL
-        }
-        return debtRecordses;
-    }
-
-    public void updateDebtRecordActive(DebtRecords debtRecords) {
-        String sql = "UPDATE DebtRecords SET Active = ? WHERE id = ?";
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, 1);
-            ps.setInt(2, debtRecords.getID());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
+    
     public void deleteDebtRecords(int deleteid, int userid) {
         String sql = "UPDATE DebtRecords SET isDelete = ?, DeleteBy = ?, DeletedAt = ? WHERE id = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
@@ -344,6 +267,104 @@ public class DAODebtRecords {
             return debt;
         }
         return null;
+    }
+    
+    //chay auto 3s update wallet
+    public class AutoTaskRunnerEvery3s {
+    public static void main(String[] args) {
+        Timer timer = new Timer();
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    DAODebtRecords.INSTANCE.updateCustomerWallet();
+                } catch (Exception ex) {
+                }
+            }
+        };
+
+        timer.scheduleAtFixedRate(task, 0, 3000);
+    }
+}
+
+    public void updateCustomerWallet() throws Exception {
+
+        ArrayList<DebtRecords> debtRecordses = getDebtRecordsActive();
+
+        for (DebtRecords debtrecords : debtRecordses) {
+            Customers customer = DAOCustomers.INSTANCE.getCustomersByID(debtrecords.getCustomerID());
+            int currentWallet = customer.getWallet();
+
+            // Tính toán số dư mới
+            int newWallet = currentWallet;
+            if (debtrecords.getPaymentStatus() == 1 || debtrecords.getPaymentStatus() == 2) {
+                newWallet += debtrecords.getAmountOwed();
+            }
+            if (debtrecords.getPaymentStatus() == -1 || debtrecords.getPaymentStatus() == -2) {
+                newWallet -= debtrecords.getAmountOwed();
+            }
+
+            // Cập nhật Wallet (chỉ tiếp tục nếu giá trị chưa bị thay đổi bởi máy khác)
+            String updateSQL = "UPDATE Customers SET Wallet = ? WHERE ID = ? AND Wallet = ?";
+
+            try (PreparedStatement ps = connect.prepareStatement(updateSQL)) {
+                ps.setInt(1, newWallet);
+                ps.setInt(2, debtrecords.getCustomerID());
+                ps.setInt(3, currentWallet); // Điều kiện kiểm tra xung đột
+                int updatedRows = ps.executeUpdate();
+                if (updatedRows > 0) {
+                    updateDebtRecordActive(debtrecords);
+                }
+            } catch (SQLException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+
+    }
+
+    public ArrayList<DebtRecords> getDebtRecordsActive() {
+        ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
+        String sql = "SELECT * FROM DebtRecords WHERE Active = ?";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, 0);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    DebtRecords debt = new DebtRecords();
+                    debt.setID(rs.getInt("ID"));
+                    debt.setCustomerID(rs.getInt("customerID"));
+                    debt.setAmountOwed(rs.getInt("AmountOwed"));
+                    debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                    debt.setInvoiceDate(rs.getDate("InvoiceDate"));
+                    debt.setImagePath(rs.getString("ImagePath"));
+                    debt.setShopID(rs.getInt("ShopID"));
+                    debt.setActive(rs.getInt("Active"));
+                    debt.setCreateAt(rs.getDate("CreateAt"));
+                    debt.setUpdateAt(rs.getDate("UpdateAt"));
+                    debt.setCreateBy(rs.getInt("CreateBy"));
+                    debt.setIsDelete(rs.getInt("isDelete"));
+                    debt.setDeletedAt(rs.getDate("DeletedAt"));
+                    debt.setDeleteBy(rs.getInt("DeleteBy"));
+                    debt.setNote(rs.getString("Note"));
+                    debtRecordses.add(debt);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý lỗi SQL
+        }
+        return debtRecordses;
+    }
+
+    public void updateDebtRecordActive(DebtRecords debtRecords) {
+        String sql = "UPDATE DebtRecords SET Active = ? WHERE id = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, 1);
+            ps.setInt(2, debtRecords.getID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) throws Exception {

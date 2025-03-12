@@ -1,6 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page import="model.Zones" %>
 <%@ page import="java.util.List" %>
+<%@ page import="model.Users" %>
+<%@ page import="dal.DAOUser" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,6 +42,13 @@
     </script>
 </head>
 <body>
+    
+        <%      DAOShops daoShop = new DAOShops();
+                Shops shop = (Shops) session.getAttribute("shop");
+                DAOUser dao = new DAOUser();
+                Users u = (Users) request.getAttribute("user");
+        %>
+        
     <div class="container">
         <h2>Thêm Sản Phẩm Mới</h2>
         
@@ -73,9 +84,11 @@
                         List<Zones> zones = (List<Zones>) request.getAttribute("zones"); // Lấy danh sách khu vực từ request
                         if (zones != null) {
                             for (Zones zone : zones) {
+                            if(zone.getShopID() == shop.getID()){
                     %>
                         <option value="<%= zone.getID() %>"><%= zone.getZoneName() %></option>
                     <%
+                            }
                             }
                         }
                     %>
