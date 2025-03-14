@@ -86,7 +86,8 @@
                             </script>
               
                                   <div class="addorder__btn">
-                                <a href="addorder" class="add-product-button">Thêm đơn</a>
+                                <a href="addimportorder" class="add-product-button">Nhập đơn hàng</a>
+                                <a href="addexportorder" class="add-product-button">Xuất đơn hàng</a>
                             </div>
 
                         </div>
