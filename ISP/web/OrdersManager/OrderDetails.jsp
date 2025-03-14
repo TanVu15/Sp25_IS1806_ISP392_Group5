@@ -3,7 +3,6 @@
     Created on : Mar 14, 2025, 2:37:10 PM
     Author     : DELL
 --%>
-
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.Orders" %>
 <%@ page import="model.Users" %>
@@ -11,6 +10,8 @@
 <%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOOrders" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -24,13 +25,13 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-        <%
-            Users u = (Users) request.getAttribute("user");
-            DAOUser dao2 = new DAOUser();
-            DAOOrders dao = new DAOOrders();
+        <% 
+            DAOUser dao = new DAOUser();
             DAOCustomers dao1 = new DAOCustomers();
+            Shops shop = (Shops) session.getAttribute("shop");
+            Users u = (Users) request.getAttribute("user");
             Orders o = (Orders) request.getAttribute("order");
-            NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
+            NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));  
         %>
 
         <div class="header">
@@ -94,7 +95,7 @@
                                         <% }%>
                                     </td>
                                     <td class="table-cell"><%= o.getCreateAt()%></td>
-                                    <td class="table-cell"><%= dao2.getUserByID(o.getCreateBy()).getFullName()%></td>
+                                    <td class="table-cell"><%= dao.getUserByID(o.getCreateBy()).getFullName()%></td>
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại danh sách</button>
                                     </td>
