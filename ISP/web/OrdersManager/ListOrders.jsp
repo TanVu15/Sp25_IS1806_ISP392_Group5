@@ -96,12 +96,8 @@
                             <thead>
                                 <tr class="table-header">
                                     <th class="table-header-item">Mã đơn hàng</th>
-                                    <th class="table-header-item">Id khách hàng</th>
-                                    <th class="table-header-item">Tên khách hàng</th>
                                     <th class="table-header-item">Số tiền</th>
                                     <th class="table-header-item">Trạng thái</th>
-                                    <th class="table-header-item">Ngày tạo</th>
-                                    <th class="table-header-item">Người tạo</th>
                                     <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
@@ -114,8 +110,6 @@
                                 <tr class="table-row">
 
                                     <td class="table-cell"><%= order.getID()%></td>
-                                    <td class="table-cell"><%= order.getCustomerID()%></td>
-                                    <td class="table-cell"><%= dao1.getCustomersByID(order.getCustomerID()).getName()%></td>
                                     <td class="table-cell"><%= currencyFormat.format(order.getTotalAmount()) +" VND"%></td>
                                     <td class="table-cell"><% if (order.getStatus() == 1) { %>
                                         Nhập hàng
@@ -124,10 +118,8 @@
                                         Bán hàng
                                         <% }%>
                                     </td>
-                                    <td class="table-cell"><%= order.getCreateAt()%></td>
-                                    <td class="table-cell"><%= dao.getUserByID(order.getCreateBy()).getFullName()%></td>
                                     <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = ''">Chi tiết</button>
+                                        <button class="action-button" onclick="window.location.href = 'orderdetail?id=<%= order.getID()%>'">Chi tiết</button>
                                     </td>
                                 </tr>
                                 <%      }
