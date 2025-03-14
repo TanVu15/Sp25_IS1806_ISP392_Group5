@@ -322,6 +322,16 @@ public class DAOProducts {
         }
         return products;
     }
+    
+//    update quantity after importing
+    public void updateProductQuantity(int productId, int quantity) throws SQLException {
+    String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE ID = ?";
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setInt(1, quantity);
+        ps.setInt(2, productId);
+        ps.executeUpdate();
+    }
+}
 
     public static void main(String[] args) throws Exception {
         DAOProducts dao = DAOProducts.INSTANCE;
