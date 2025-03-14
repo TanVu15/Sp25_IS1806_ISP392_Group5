@@ -95,7 +95,7 @@
                         <table class="product-table">
                             <thead>
                                 <tr class="table-header">
-                                    <th class="table-header-item">Mã đơn hàng</th>
+                                    <th class="table-header-item">Tên khách hàng</th>
                                     <th class="table-header-item">Số tiền</th>
                                     <th class="table-header-item">Trạng thái</th>
                                     <th class="table-header-item">Hành động</th>
@@ -109,7 +109,7 @@
 
                                 <tr class="table-row">
 
-                                    <td class="table-cell"><%= order.getID()%></td>
+                                    <td class="table-cell"><%= dao1.getCustomersByID(order.getCustomerID()).getName() %></td>
                                     <td class="table-cell"><%= currencyFormat.format(order.getTotalAmount()) +" VND"%></td>
                                     <td class="table-cell"><% if (order.getStatus() == 1) { %>
                                         Nhập hàng
@@ -120,6 +120,7 @@
                                     </td>
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'orderdetail?id=<%= order.getID()%>'">Chi tiết</button>
+                                        <button class="action-button" onclick="window.location.href = ''">Orderitem</button>
                                     </td>
                                 </tr>
                                 <%      }

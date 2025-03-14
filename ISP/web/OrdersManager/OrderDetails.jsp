@@ -11,6 +11,8 @@
 <%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOOrders" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,15 +20,17 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thông tin đơn hàng</title>
-        <link rel="stylesheet" href="css/detail.css">
+        <link rel="stylesheet" href="css/product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-        <% 
+        <%
+            Users u = (Users) request.getAttribute("user");
             DAOUser dao2 = new DAOUser();
             DAOOrders dao = new DAOOrders();
             DAOCustomers dao1 = new DAOCustomers();
-            Orders o = (Users) request.getAttribute("orders");   
+            Orders o = (Orders) request.getAttribute("order");
+            NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
 
         <div class="header">
@@ -34,10 +38,10 @@
                 <img src="Image/logo.png" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
-                <span class="navbar__user--name"> <%= u.getFullName() %></span>
+                <span class="navbar__user--name"> <%= u.getFullName()%></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="userdetail?id=<%= u.getID() %>" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u.getID()%>" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
@@ -64,33 +68,39 @@
                     <div class="body-head">
                         <h3 class="body__head-title">Thông tin đơn hàng</h3>
                     </div>
-                    <div class="order-info-container">
-                        <div class="order-info-item">
-                            <span class="order-info-label">Mã khách hàng: </span>
-                            <span class="order-info-value"><%= o.getCustomerID() %></span>
-                        </div>
-                        <div class="order-info-item">
-                            <span class="order-info-label">Tên khách hàng: </span>
-                            <span class="order-info-value"><%= dao1.getCustomersByID(o.getCustomerID()).getName()%></span>
-                        </div>
-                        <div class="order-info-item">
-                            <span class="order-info-label">Tình trạng: </span>
-                            <span class="order-info-value"><% if (o.getStatus() == 1) { %>
+                    <div class="table-container">
+                        <table class="product-table">
+                            <thead>
+                                <tr class="table-header">
+                                    <th class="table-header-item">Mã khách hàng</th>
+                                    <th class="table-header-item">Tên khách hàng</th>
+                                    <th class="table-header-item">Số tiền</th>
+                                    <th class="table-header-item">Tình trạng</th>
+                                    <th class="table-header-item">Ngày tạo</th>
+                                    <th class="table-header-item">Người tạo</th>
+                                    <th class="table-header-item">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-row">
+                                    <td class="table-cell"><%= o.getCustomerID()%></td>
+                                    <td class="table-cell"><%= dao1.getCustomersByID(o.getCustomerID()).getName()%></td>
+                                    <td class="table-cell"><%= currencyFormat.format(o.getTotalAmount()) +" VND"%></td>
+                                    <td class="table-cell">
+                                        <% if (o.getStatus() == 1) { %>
                                         Nhập hàng
-                                        <% }
-                                            if (o.getStatus() == -1) { %>
+                                        <% } else if (o.getStatus() == -1) { %>
                                         Bán hàng
-                                        <% }%></span>
-                        </div>
-                        <div class="order-info-item">
-                            <span class="order-info-label">Ngày tạo:</span>
-                            <span class="order-info-value"><%= o.getCreateAt() %></span>
-                        </div>
-                        <div class="order-info-item">
-                            <span class="order-info-label">Người tạo:</span>
-                            <span class="order-info-value"><%= dao2.getUserByID(o.getCreateBy()).getFullName()%></span>
-                        </div>
-                        <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại danh sách</button>
+                                        <% }%>
+                                    </td>
+                                    <td class="table-cell"><%= o.getCreateAt()%></td>
+                                    <td class="table-cell"><%= dao2.getUserByID(o.getCreateBy()).getFullName()%></td>
+                                    <td class="table-cell">
+                                        <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại danh sách</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

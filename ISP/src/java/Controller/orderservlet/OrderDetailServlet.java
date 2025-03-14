@@ -65,6 +65,8 @@ public class OrderDetailServlet extends HttpServlet {
         HttpSession session = request.getSession();
         request.setAttribute("message", "");
         int orderid = Integer.parseInt(request.getParameter("id"));
+        Users user = (Users) session.getAttribute("user");
+        request.setAttribute("user", user);
         Orders orders = new Orders();
         try {
             orders = dao.getOrderByID(orderid);
