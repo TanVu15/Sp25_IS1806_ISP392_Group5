@@ -149,3 +149,30 @@ textarea:focus {
     margin-left: 5px;
     color: #721c24; /* Red color for remove icon */
 }
+
+.form-group select {
+    width: 100%; /* Đảm bảo chiều ngang bằng với input */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box; /* Đảm bảo tính padding vào width */
+}
+
+.form-group input[type="date"] {
+    width: 100%; /* Đồng bộ chiều ngang cho input date */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.form-group input[type="file"] {
+    width: 100%; /* Đồng bộ chiều ngang cho input file */
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}

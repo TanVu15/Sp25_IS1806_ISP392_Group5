@@ -132,6 +132,10 @@
         <servlet-name>AddOrderServlet</servlet-name>
         <servlet-class>Controller.orderservlet.AddOrderServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OrderDetailServlet</servlet-name>
+        <servlet-class>Controller.orderservlet.OrderDetailServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -263,6 +267,10 @@
     <servlet-mapping>
         <servlet-name>AddOrderServlet</servlet-name>
         <url-pattern>/addorder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderDetailServlet</servlet-name>
+        <url-pattern>/orderdetail</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Login/login.jsp</welcome-file>

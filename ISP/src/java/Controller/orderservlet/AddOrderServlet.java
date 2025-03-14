@@ -176,8 +176,9 @@ public class AddOrderServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         DAOProducts dao = new DAOProducts();
+        DAOCustomers dao1 = new DAOCustomers();
         // Lấy trang hiện tại từ tham số URL, mặc định là 1
         int currentPage = 1;
         int productsPerPage = 5; // Số sản phẩm trên mỗi trang
@@ -189,6 +190,8 @@ public class AddOrderServlet extends HttpServlet {
         // Lấy danh sách sản phẩm cho trang hiện tại
         ArrayList<Products> products = dao.getProductsByPage(currentPage, productsPerPage, 2);
         System.out.println(products);
+        
+        System.out.println(dao1.getCustomersByID(2).getName());
        
     }
 }

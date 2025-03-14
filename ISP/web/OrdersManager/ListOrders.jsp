@@ -5,6 +5,8 @@
 <%@ page import="dal.DAOCustomers" %>
 <%@ page import="dal.DAOOrders" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -21,13 +23,14 @@
         <%
             DAOUser dao = new DAOUser();
             DAOCustomers dao1 = new DAOCustomers();
+            Shops shop = (Shops) session.getAttribute("shop");
             Users u = (Users) request.getAttribute("user");
             ArrayList<Orders> orders = (ArrayList<Orders>) request.getAttribute("orders");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
         <div class="header">
             <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
+                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName()%></span>
@@ -93,12 +96,8 @@
                             <thead>
                                 <tr class="table-header">
                                     <th class="table-header-item">Mã đơn hàng</th>
-                                    <th class="table-header-item">Id khách hàng</th>
-                                    <th class="table-header-item">Tên khách hàng</th>
                                     <th class="table-header-item">Số tiền</th>
                                     <th class="table-header-item">Trạng thái</th>
-                                    <th class="table-header-item">Ngày tạo</th>
-                                    <th class="table-header-item">Người tạo</th>
                                     <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
@@ -111,8 +110,6 @@
                                 <tr class="table-row">
 
                                     <td class="table-cell"><%= order.getID()%></td>
-                                    <td class="table-cell"><%= order.getCustomerID()%></td>
-                                    <td class="table-cell"><%= dao1.getCustomersByID(order.getCustomerID()).getName()%></td>
                                     <td class="table-cell"><%= currencyFormat.format(order.getTotalAmount()) +" VND"%></td>
                                     <td class="table-cell"><% if (order.getStatus() == 1) { %>
                                         Nhập hàng
@@ -121,10 +118,8 @@
                                         Bán hàng
                                         <% }%>
                                     </td>
-                                    <td class="table-cell"><%= order.getCreateAt()%></td>
-                                    <td class="table-cell"><%= dao.getUserByID(order.getCreateBy()).getFullName()%></td>
                                     <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = ''">Chi tiết</button>
+                                        <button class="action-button" onclick="window.location.href = 'orderdetail?id=<%= order.getID()%>'">Chi tiết</button>
                                     </td>
                                 </tr>
                                 <%      }
