@@ -116,7 +116,14 @@ public class AddDebtRecordsServlet extends HttpServlet {
         }
 
         // 🔹 Các tham số khác vẫn lấy bằng request.getParameter() bình thường
-        int amountOwed = Integer.parseInt(request.getParameter("amountowed"));
+        String amountOwedStr = request.getParameter("amountowed");
+        if(amountOwedStr.endsWith("")){
+            request.setAttribute("message", "Invalid format.");
+            request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
+            return;
+        }
+        int amountOwed = Integer.parseInt(amountOwedStr);
+        
         int paymentStatus = Integer.parseInt(request.getParameter("paymentstatus"));
         String note = request.getParameter("note");
         String invoiceDateStr = request.getParameter("invoicedate");

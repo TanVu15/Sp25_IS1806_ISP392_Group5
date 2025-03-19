@@ -116,6 +116,15 @@ public class UpdateShopServlet extends HttpServlet {
         Part filePart = request.getPart("logo");
         String email = request.getParameter("email");
         String location = request.getParameter("location");
+        String phone = request.getParameter("phone");
+        String bankacc = request.getParameter("bankacc");
+
+        if ("".equals(shopname) || "".equals(email) || "".equals(location)) {
+            request.setAttribute("message", "Hãy kiểm tra lại!");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("ShopsManager/CreateShop.jsp");
+            requestDispatcher.forward(request, response);
+            return;
+        }
 
         DAOShops daoShops = new DAOShops();
         Shops shop = new Shops(shopname, email, location, user.getID());
@@ -141,15 +150,16 @@ public class UpdateShopServlet extends HttpServlet {
             }
 
             shop.setOwnerID(user.getID());
+            shop.setPhone(phone);
+            shop.setBankAcc(bankacc);
             daoShops.updateShopbyOwnerid(shop);
-            
+
             //cap nhat shop trong session
             Shops updatedShop = daoShops.getShopByOwnerID(user.getID());
             session.removeAttribute("shop");
             session.setAttribute("shop", updatedShop);
 
             // Cập nhật shopID trong session
-            
             try {
                 if (updatedShop != null) {
                     user.setShopID(updatedShop.getID());

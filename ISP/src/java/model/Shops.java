@@ -16,6 +16,8 @@ public class Shops {
     private int OwnerID;
     private String ShopName;
     private String LogoShop;
+    private String Phone;
+    private String BankAcc;
     private String Location;
     private String Email;
     private Date CreatedAt;
@@ -58,6 +60,39 @@ public class Shops {
         this.Email = email;
     }
 
+    public String getPhone() {
+        return Phone;
+    }
+
+    public void setPhone(String Phone) {
+        this.Phone = Phone;
+    }
+
+    public String getBankAcc() {
+        return BankAcc;
+    }
+
+    public void setBankAcc(String BankAcc) {
+        this.BankAcc = BankAcc;
+    }
+
+    public Shops(int ID, int OwnerID, String ShopName, String LogoShop, String Phone, String BankAcc, String Location, String Email, Date CreatedAt, Date UpdatedAt, int CreatedBy, int IsDelete, Date DeletedAt, int DeleteBy) {
+        this.ID = ID;
+        this.OwnerID = OwnerID;
+        this.ShopName = ShopName;
+        this.LogoShop = LogoShop;
+        this.Phone = Phone;
+        this.BankAcc = BankAcc;
+        this.Location = Location;
+        this.Email = Email;
+        this.CreatedAt = CreatedAt;
+        this.UpdatedAt = UpdatedAt;
+        this.CreatedBy = CreatedBy;
+        this.IsDelete = IsDelete;
+        this.DeletedAt = DeletedAt;
+        this.DeleteBy = DeleteBy;
+    }
+    
     public int getID() {
         return ID;
     }
