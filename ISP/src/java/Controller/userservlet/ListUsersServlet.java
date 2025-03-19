@@ -64,6 +64,7 @@ public class ListUsersServlet extends HttpServlet {
             if (user.getRoleid() == 1) {
                 RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsers.jsp");
                 requestDispatcher.forward(request, response);
+                return;
             } else if (user.getRoleid() == 2) {
                 if (user.getShopID() == 0) {
                     RequestDispatcher requestDispatcher = request.getRequestDispatcher("ShopsManager/CreateShop.jsp");
@@ -72,8 +73,13 @@ public class ListUsersServlet extends HttpServlet {
                 } else {
                     RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsersForOwner.jsp");
                     requestDispatcher.forward(request, response);
+                    return;
                 }
-            } 
+            } else {
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("userdetail?id=" + user.getID());
+                requestDispatcher.forward(request, response);
+                return;
+            }
         }
     }
 

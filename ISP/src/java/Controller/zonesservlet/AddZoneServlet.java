@@ -69,7 +69,6 @@ public class AddZoneServlet extends HttpServlet {
         
         response.setContentType("text/html;charset=UTF-8");
         String zone = request.getParameter("zone");
-        int shop = Integer.parseInt(request.getParameter("shop"));
 
         DAOZones dao = new DAOZones();
         Zones z = new Zones();
@@ -82,7 +81,7 @@ public class AddZoneServlet extends HttpServlet {
                 Zones addzone = new Zones();
 
                 addzone.setZoneName(zone);
-                addzone.setShopID(shop);
+                addzone.setShopID(user.getShopID());
 
                 dao.addZone(addzone, user.getID());
                 response.sendRedirect("listzones");

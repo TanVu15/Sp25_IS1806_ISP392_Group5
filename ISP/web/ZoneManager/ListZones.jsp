@@ -9,6 +9,8 @@
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOZones" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
@@ -27,18 +29,20 @@
     <body>
         <% 
             DAOUser dao = new DAOUser();
+            DAOShops daoShop = new DAOShops();
+            Shops shop = (Shops) session.getAttribute("shop");
             Users u = (Users) request.getAttribute("user");
             ArrayList<Zones> zones = (ArrayList<Zones>) request.getAttribute("zones");
         %>
         <div class="header">
             <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
+                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo" >
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u.getID() %>" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>

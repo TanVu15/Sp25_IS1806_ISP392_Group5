@@ -174,4 +174,7 @@ th {
     background-color: #bab5b5; /* Darker black on hover */
     color: #000000;
 }
+.hidden {
+    display: none;
+}
 

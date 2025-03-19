@@ -3,29 +3,28 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package Controller.zonesservlet;
+package Controller.productsservlet;
 
-import dal.DAOShops;
-import dal.DAOZones;
-import model.Zones;
-import model.Users;
+import dal.DAOCustomers;
+import dal.DAOOrders;
+import dal.DAOProducts;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import model.Products;
+import model.Users;
 
 /**
  *
- * @author ASUS
+ * @author ADMIN
  */
-public class ListZonesServlet extends HttpServlet {
+public class GetProductInfoServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -42,10 +41,10 @@ public class ListZonesServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet ListZones</title>");  
+            out.println("<title>Servlet GetProductInfoServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet ListZones at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet GetProductInfoServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,21 +61,23 @@ public class ListZonesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        DAOZones dao = new DAOZones();
+        
+        response.setContentType("application/json");
+        DAOOrders dao = new DAOOrders();
+        DAOCustomers dao1 = new DAOCustomers();
+        DAOProducts dao2 = new  DAOProducts();
         HttpSession session = request.getSession();
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
-        DAOShops daoShop = new DAOShops();
-        if (user.getShopID() == 0 && user.getRoleid() == 2) {
+        if(user.getShopID()==0&&user.getRoleid()==2){
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
             requestDispatcher.forward(request, response);
             return;
         }
-        ArrayList<Zones> zones = dao.getAllZones();
-        request.setAttribute("zones", zones);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("ZoneManager/ListZones.jsp");
-        requestDispatcher.forward(request, response);
+        String productName = request.getParameter("name");
+        
+    
     } 
 
     /** 
@@ -89,30 +90,7 @@ public class ListZonesServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        String information = request.getParameter("information");
-
-        DAOZones dao = new DAOZones();
-        HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
-        request.setAttribute("user", user);
-        
-        ArrayList<Zones> zones;
-        try {
-            zones = dao.getZonesBySearch(information);
-            if (zones == null || zones.isEmpty()) {
-            request.setAttribute("message", "Không tìm thấy kết quả nào.");
-            zones = dao.getAllZones();
-            request.setAttribute("zones", zones);
-        } else {
-            request.setAttribute("zones", zones);
-        }
-
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("ZoneManager/ListZones.jsp");
-        requestDispatcher.forward(request, response);
-        } catch (Exception ex) {
-            Logger.getLogger(ListZonesServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }    
+        processRequest(request, response);
     }
 
     /** 

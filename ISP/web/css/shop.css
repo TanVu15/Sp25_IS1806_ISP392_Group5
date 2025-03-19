@@ -26,8 +26,7 @@
     justify-content: space-around;
 }
 
-.container {
-}
+.container {}
 
 .home-logo {
     height: auto;
@@ -101,8 +100,7 @@
     right: 8px;
 }
 
-.navbar__info--wrapper {
-}
+.navbar__info--wrapper {}
 
 .navbar__info--wrapper a:hover {
     color: #00c414;
@@ -213,7 +211,7 @@ a {
     border-bottom-right-radius: 4px;
     padding-bottom: 60px;
     flex: 1;
-    min-height: calc(90vh - 150px);
+    min-height: calc(86vh - 150px);
 }
 
 .body-container {
@@ -245,7 +243,7 @@ a {
 .search-container {
     display: flex;
     align-items: center;
-    margin: 10px;
+    margin: 10px; 
 }
 
 .search-input {
@@ -287,7 +285,7 @@ a {
     position: fixed;
     top: 20px; /* Đưa thông báo lên góc trên */
     right: 20px; /* Căn lề phải */
-    background: #28a745; /* Màu xanh lá */
+    background: #dc3545; /* Màu xanh lá */
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
@@ -312,7 +310,7 @@ a {
 }
 
 .add-product-button:hover {
-    background-color: #66c32c;
+    background-color: #66c32c; 
 }
 
 /* Table */
@@ -371,16 +369,16 @@ a {
 }
 
 .action-button:hover {
-    background-color: #66c32c;
+    background-color: #66c32c; 
 }
 
 /* Page */
 .pagination {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; 
     align-items: center;
     margin: 20px 0;
-    padding: 0 20px;
+    padding: 0 20px; 
 }
 
 .pagination-button {
@@ -388,18 +386,18 @@ a {
     color: var(--white-color);
     border: none;
     border-radius: 4px;
-    width: 100px;
-    padding: 8px 0;
+    width: 100px; 
+    padding: 8px 0; 
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .pagination-button:hover {
-    background-color: #66c32c;
+    background-color: #66c32c; 
 }
 
 .pagination-info {
-    font-size: 15px;
+    font-size: 15px; 
     margin: 0 10px;
     padding: 5px 10px;
     background-color: 1px solid #ccc;
@@ -505,53 +503,145 @@ a {
     margin-top: 20px;
 }
 
-/* User Info Container */
-.user-info-container {
-    padding: 80px;
+
+/* Shop detail card styling */
+.shop-detail-card {
     background-color: var(--white-color);
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    max-width: 600px; /* Giới hạn chiều rộng tối đa */
-    margin: 0 auto; /* Căn giữa container */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin: 20px;
 }
 
-/* User Info Item */
-.user-info-item {
+.shop-header {
+    background: linear-gradient(to right, var(--primary-color), #66c32c);
+    color: var(--white-color);
+    padding: 20px;
+    text-align: center;
+}
+
+.shop-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* Main content container */
+.shop-main-content {
     display: flex;
-    flex-direction: row; /* Sắp xếp nhãn và giá trị theo hàng ngang */
+    justify-content: space-between;
+    padding: 70px;
+    gap: 30px;
+}
+
+/* Shop information section */
+.shop-info-section {
+    flex: 1;
+    max-width: 50%;
+}
+
+.shop-info {
+    margin-top: 20px;
+}
+
+.info-group {
+    display: flex;
+    margin-bottom: 20px;
     align-items: center;
-    margin-bottom: 15px; /* Khoảng cách giữa các mục */
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border-color); /* Đường viền nhẹ giữa các mục */
 }
 
-/* User Info Label */
-.user-info-label {
-    font-weight: bold;
+.info-label {
+    font-weight: 600;
+    width: 120px;
+    color: #555;
+    font-size: 15px;
+}
+
+.info-value {
+    flex: 1;
+    font-size: 16px;
     color: var(--text-color);
-    min-width: 150px; /* Đảm bảo nhãn có chiều rộng cố định để căn chỉnh đều */
-    font-size: 15px;
+    padding-left: 20px;
 }
 
-/* User Info Value */
-.user-info-value {
-    color: var(--black-color);
-    font-size: 15px;
-    flex: 1; /* Giá trị chiếm phần còn lại của không gian */
-    word-break: break-word; /* Đảm bảo giá trị dài sẽ xuống dòng nếu cần */
+/* Logo section */
+.shop-logo-section {
+    flex: 1;
+    max-width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
-/* Remove border for the last item */
-.user-info-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
+.shop-logo {
+    width: 400%;
+    max-width: 400px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Style for the Edit button */
-.user-info-container .action-button {
-    margin-top: 30px;
-    width: 100%; /* Nút chiếm toàn bộ chiều rộng */
-    padding: 10px;
-    font-size: 15px;
+/* Button section */
+.shop-actions {
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+    border-top: 1px solid var(--border-color);
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
+.shop-actions .table-cell {
+    border: none;
+    padding: 0;
+    text-align: center;
+    display: block;
+    width: 100%;
+}
+
+.shop-actions .action-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.shop-actions .action-button:hover {
+    background-color: #66c32c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .shop-main-content {
+        flex-direction: column-reverse;
+    }
+    
+    .shop-info-section,
+    .shop-logo-section {
+        max-width: 100%;
+    }
+    
+    .info-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .info-label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .info-value {
+        padding-left: 0;
+    }
+}

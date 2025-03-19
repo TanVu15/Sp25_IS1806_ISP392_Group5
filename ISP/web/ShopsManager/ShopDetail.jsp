@@ -19,7 +19,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản Lý cửa hàng</title>
-        <link rel="stylesheet" href="css/product.css">
+        <link rel="stylesheet" href="css/shop.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
 
@@ -38,7 +38,7 @@
         %>
         <div class="header">
             <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
+                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo" >
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
@@ -58,7 +58,7 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href="ListZones.jsp"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
                         <li class="mainmenu__list-item"><a href="listorders"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
@@ -68,53 +68,55 @@
                 </div>
 
                 <div class="homepage-body">
-                    <div class="table-container">
-                        <table class="product-table">
-                            <thead>
-                                <tr class="table-header">
-                                    <th class="table-header-item">Tên cửa hàng</th>
-                                    <th class="table-header-item">Logo</th>
-                                    <th class="table-header-item">Địa chỉ</th>
-                                    <th class="table-header-item">Email</th>
-                                    <th class="table-header-item">Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    <div class="shop-detail-card">
+                        <div class="shop-header">
+                            <h2>Thông tin cửa hàng</h2>
+                        </div>
 
-                                <tr class="table-row">
-                                    <td class="table-cell"><%= shop.getShopName() %></td>
-                                    <td class="table-cell"><img src="<%= shop.getLogoShop() %>"  class="product-image"></td>
-                                    <td class="table-cell"><%= shop.getLocation() %></td>
-                                    <td class="table-cell"><%= shop.getEmail() %></td>
-                                    <td class="table-cell">
-                                        <%
-                                        if(user.getRoleid()!=3){
-                                    
-                                        %>
-                                        <button class="action-button" onclick="window.location.href = 'updateshop'">Chỉnh sửa cửa hàng</button>
-                                        <%
-                                            }
-                                        %>
-                                    </td>
-                                </tr>
-                                <% 
-                                                }
-                                %>
+                        <div class="shop-main-content">
+                            <!-- Phần thông tin bên trái -->
+                            <div class="shop-info-section">
+                                <div class="shop-info">
+                                    <div class="info-group">
+                                        <div class="info-label">Tên cửa hàng:</div>
+                                        <div class="info-value"><%= shop.getShopName() %></div>
+                                    </div>
 
-                            </tbody>
-                        </table>
+                                    <div class="info-group">
+                                        <div class="info-label">Địa chỉ:</div>
+                                        <div class="info-value"><%= shop.getLocation() %></div>
+                                    </div>
+
+                                    <div class="info-group">
+                                        <div class="info-label">Email:</div>
+                                        <div class="info-value"><%= shop.getEmail() %></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Phần logo bên phải -->
+                            <div class="shop-logo-section">
+                                <img src="<%= shop.getLogoShop() %>" alt="Logo cửa hàng" class="shop-logo">
+                            </div>
+                        </div>
+
+                        <div class="shop-actions">
+                            <% if(user.getRoleid() != 3) { %>
+                                <button class="action-button" onclick="window.location.href = 'updateshop'">
+                                    <i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa cửa hàng
+                                </button>
+                            <% } %>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div>
-
-
 
         <div class="footer">
             <div class="container">
                 <p>&copy; 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
             </div>
         </div>
+        <% } %>
     </body>
 </html>

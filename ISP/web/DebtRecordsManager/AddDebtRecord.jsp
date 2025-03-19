@@ -81,7 +81,7 @@
                 </div>
                 <div class="button-container">
                     <input type="submit" class="btn add-button" value="Thêm Công Nợ">
-                    <a href="listcustomerdebtrecords?customerid=<%= customer.getID() %>" class="btn cancel-button">Hủy</a>
+                    <a class="btn cancel-button" href="listcustomerdebtrecords?customerid=<%= customer.getID() %>" class="btn cancel-button">Hủy</a>
                 </div>
             </form>
         </div>

@@ -31,6 +31,7 @@ public class DAOZones {
                 Zones z = new Zones();
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
+                z.setShopID(rs.getInt("shopid"));
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
                 z.setCreateBy(rs.getInt("CreateBy"));
@@ -80,6 +81,7 @@ public class DAOZones {
                 z = new Zones();
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
+                z.setShopID(rs.getInt("shopid"));
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
                 z.setCreateBy(rs.getInt("CreateBy"));
@@ -94,12 +96,13 @@ public class DAOZones {
     }
 
     public void addZone(Zones zone, int userid) {
-        String sql = "INSERT INTO Zones (ZoneName, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Zones (ZoneName,shopid, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, zone.getZoneName());
-            ps.setDate(2, today);
-            ps.setInt(3, userid);
-            ps.setInt(4, 0);
+            ps.setInt(2, zone.getShopID());
+            ps.setDate(3, today);
+            ps.setInt(4, userid);
+            ps.setInt(5, 0);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error adding zone: " + e.getMessage());

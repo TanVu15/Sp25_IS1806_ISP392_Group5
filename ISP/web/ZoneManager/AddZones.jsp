@@ -9,6 +9,8 @@
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOZones" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
@@ -22,8 +24,14 @@
 </head>
 <body>
     <div class="container">
-        <h2>Thêm Kho Mới</h2>
-        
+        <h2>Thêm khu vực mới</h2>
+                            <% 
+                            DAOUser dao = new DAOUser();
+                            DAOShops daoShop = new DAOShops();
+                            Shops shop = (Shops) session.getAttribute("shop");
+                            Users u = (Users) request.getAttribute("user");
+                            ArrayList<Zones> zones = (ArrayList<Zones>) request.getAttribute("zones");
+                            %>
         <%
             String errorMessage = (String) request.getAttribute("errorMessage");
             if (errorMessage != null) {
@@ -40,8 +48,8 @@
                 <label for="zone">Kho:</label>
                 <input type="text" id="zone" name="zone" required>
                 
-                <label for="zone">Shop:</label>
-                <input type="text" id="shop" name="shop" required>
+                <label for="zone">Shop Name:</label>
+                <input type="text" id="shop" name="shop" value="<%= shop.getShopName() %>" required>
             </div>
             
             <div class="button-container">
