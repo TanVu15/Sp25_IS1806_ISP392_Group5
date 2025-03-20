@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import static java.lang.System.out;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -97,8 +98,6 @@ public class AddImportOrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
 
         DAOOrders dao = new DAOOrders();
         DAOCustomers dao1 = new DAOCustomers();
@@ -133,9 +132,9 @@ public class AddImportOrderServlet extends HttpServlet {
 
             // Thêm Order vào CSDL
             dao.addOrders(order, user.getID());
+            
 
             response.sendRedirect("listorders");
-
         } catch (Exception e) {
             // In ra giao diện HTML thông báo lỗi
             e.printStackTrace(); // In ra console

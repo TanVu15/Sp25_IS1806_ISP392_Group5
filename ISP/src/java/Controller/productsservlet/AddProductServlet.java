@@ -29,18 +29,20 @@ public class AddProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DAOOrders dao = new DAOOrders();
-        DAOCustomers dao1 = new DAOCustomers();
-        DAOProducts dao2 = new  DAOProducts();
+        DAOOrders daoOrders = new DAOOrders();
+        DAOCustomers daoCustomers = new DAOCustomers();
+        DAOProducts daoProducts = new DAOProducts();
         HttpSession session = request.getSession();
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
-        if(user.getShopID()==0&&user.getRoleid()==2){
+        
+        if (user.getShopID() == 0 && user.getRoleid() == 2) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
             requestDispatcher.forward(request, response);
             return;
         }
+        
         // Get the list of zones
         DAOZones zoneDAO = new DAOZones();
         ArrayList<Zones> zones = zoneDAO.getAllZones();
@@ -103,18 +105,17 @@ public class AddProductServlet extends HttpServlet {
                 product.setQuantity(quantity);
                 product.setCreateAt(new Date(System.currentTimeMillis()));
                 product.setCreateBy(user.getID());
+                product.setShopID(user.getShopID()); // Set ShopID
                 
-                  // Lấy ShopID từ đối tượng user và thiết lập cho sản phẩm
-            product.setShopID(user.getShopID()); // Đảm bảo rằng ShopID được thiết lập
-
                 // Add product to the database
                 int newProductId = dao.addProducts(product, user.getID());
 
-                // Add all zones to the linking table using the method in DAOProducts
+                // Update Zones for the new product
                 if (zoneIDs != null) {
                     for (String zoneID : zoneIDs) {
                         int zoneIdInt = Integer.parseInt(zoneID);
-                        dao.addProductZones(newProductId, new Zones(zoneIdInt)); // Create a new Zones object
+                        // Set the ProductID in the Zones table directly
+                        dao.updateZoneWithProduct(zoneIdInt, newProductId);
                     }
                 }
 

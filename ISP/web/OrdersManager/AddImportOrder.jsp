@@ -29,6 +29,12 @@
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        
+        <script>
+    function openNewInvoiceTab() {
+        window.open('addimportorder', '_blank'); // Opens the add order page in a new tab
+    }
+</script>
 
     </head>
     <body>
@@ -96,7 +102,7 @@
                                            for (Products product : products) { 
                                                 if(product.getShopID() == u.getShopID()) {
                                         %>
-                                        <option value="<%= product.getID() %>"><%= product.getProductName() %></option>
+                                        <option  value="<%= product.getID() %>"><%= product.getProductName() %></option>
                                         <% } }%>
                                     </select>
                                 </td>
@@ -148,33 +154,38 @@
             ];
             
                     function calculateTotal() {
-                    let grandTotal = 0;
+    let grandTotal = 0;
 
-                    $('#productList tr').each(function () {
-                        // Lấy giá trị các input
-                        let quantityVal = $(this).find('input[name="quantity"]').val();
-                        let priceVal = $(this).find('input[name="price"]').val();
-                        let discountVal = $(this).find('input[name="discount"]').val();
+    $('#productList tr').each(function () {
+        // Get the product ID from the select
+        const productId = $(this).find('select[name="productName"]').val();
+        
+        // Get other input values
+        let quantityVal = $(this).find('input[name="quantity"]').val();
+        let priceVal = $(this).find('input[name="price"]').val();
+        let discountVal = $(this).find('input[name="discount"]').val();
 
-                        // Chuyển đổi về số, nếu rỗng thì thành 0
-                        const quantity = quantityVal.trim() === "" ? 0 : parseInt(quantityVal);
-                        const price = priceVal.trim() === "" ? 0 : parseFloat(priceVal);
-                        const discount = discountVal.trim() === "" ? 0 : parseFloat(discountVal);
+        const quantity = quantityVal.trim() === "" ? 0 : parseInt(quantityVal);
+        const price = priceVal.trim() === "" ? 0 : parseFloat(priceVal);
+        const discount = discountVal.trim() === "" ? 0 : parseFloat(discountVal);
 
-                        // Tính thành tiền
-                        let totalPrice = (price * quantity) - discount;
-                        totalPrice = totalPrice < 0 ? 0 : totalPrice; // Không cho âm tiền
+        // Calculate total price
+        let totalPrice = (price * quantity) - discount;
+        totalPrice = totalPrice < 0 ? 0 : totalPrice;
 
-                        // Cập nhật ô thành tiền, định dạng kiểu số Việt Nam
-                        $(this).find('input[name="total"]').val(totalPrice.toLocaleString('vi-VN'));
+        // Update total input field
+        $(this).find('input[name="total"]').val(totalPrice.toLocaleString('vi-VN'));
 
-                        // Cộng vào tổng tiền
-                        grandTotal += totalPrice;
-                    });
+        // Add to grand total
+        grandTotal += totalPrice;
 
-                    // Hiển thị tổng chi phí
-                    $('#totalCost').val(grandTotal.toLocaleString('vi-VN'));
-                }
+        // Here you can also save the product ID and quantity to update later
+        console.log(`Product ID: ${productId}, Quantity: ${quantity}`);
+    });
+
+    // Display grand total
+    $('#totalCost').val(grandTotal.toLocaleString('vi-VN'));
+}
 
 
             function addProductRow() {
@@ -229,6 +240,7 @@
                 <div class="action-buttons">
                     <button id="createButton" type="submit">Tạo</button>
                     <button id="createButton" onclick="window.location.href = 'listorders'">Hủy</button>
+                    <button id="createButton" type="button" onclick="openNewInvoiceTab()">Thêm Hóa Đơn Mới</button>
                 </div>
             </div>
         </form>
