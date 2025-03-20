@@ -20,7 +20,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý Công Nợ</title>
-        <link rel="stylesheet" href="css/product.css">
+        <link rel="stylesheet" href="css/detail.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
@@ -65,60 +65,66 @@
                         <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-user list-item-icon"></i>Cửa Hàng</a></li>
                     </ul>
                 </div>
-
+                
                 <div class="homepage-body">
                     <div class="body-head">
                         <h3 class="body__head-title">Chi tiết công nợ</h3>
                     </div>
-                    <div class="table-container">
-                        <table class="product-table">
-                            <thead>
-                                <tr class="table-header">
-                                    
-                                    <th class="table-header-item">ID</th>
-                                    <th class="table-header-item">Tên Khách Hàng</th>
-                                    <th class="table-header-item">Số tiền</th>
-                                    <th class="table-header-item">Trạng Thái</th>
-                                    <th class="table-header-item">Ngày Tạo Phiếu</th>
-                                    <th class="table-header-item">Ngày tạo</th>
-                                    <th class="table-header-item">Người tạo</th>
-                                    <th class="table-header-item">Hình ảnh</th>
-                                    <th class="table-header-item">Ghi Chú</th>
-                                    <th class="table-header-item">Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% 
-                                    if(debtrecords.getShopID() == u.getShopID()){
-                                %>
-                                <tr class="table-row">
-                                    <td class="table-cell"><%= debtrecords.getID() %></td>
-                                    <td class="table-cell"><%= dao1.getCustomersByID(debtrecords.getCustomerID()).getName() %></td>
-                                    <td class="table-cell"><%= currencyFormat.format(debtrecords.getAmountOwed()) +" VND" %></td>
-                                    <td class="table-cell"><% if (debtrecords.getPaymentStatus() == 1) { %>
-                                        Trả Nợ
+                    <div class="user-info-container">
+                        <% 
+                            if(debtrecords.getShopID() == u.getShopID()){
+                        %>
+                        <div class="user-info-item">
+                            <span class="user-info-label">ID</span>
+                            <span class="user-info-value"><%= debtrecords.getID() %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Tên khách hàng</span>
+                            <span class="user-info-value"><%= dao1.getCustomersByID(debtrecords.getCustomerID()).getName() %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Số tiền</span>
+                            <span class="user-info-value"><%= currencyFormat.format(debtrecords.getAmountOwed()) +" VND" %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Trạng thái</span>
+                            <span class="user-info-value"><% if (debtrecords.getPaymentStatus() == 1) { %>
+                                        Khách trả
                                         <% } if (debtrecords.getPaymentStatus() == -1) { %>
-                                        Vay Nợ
+                                        Khách vay
                                         <% } %>
                                         <% if (debtrecords.getPaymentStatus() == 2) { %>
-                                        Đi Vay
+                                        Cửa hàng vay
                                         <% } %>
                                         <%if (debtrecords.getPaymentStatus() == -2) { %>
-                                        Đi Trả
-                                    <% } %></td>
-                                    <td class="table-cell"><%= debtrecords.getInvoiceDate() %></td>
-                                    <td class="table-cell"><%= debtrecords.getCreateAt() %></td>
-                                    <td class="table-cell"><%= dao.getUserByID(debtrecords.getCreateBy()).getFullName() %></td>
-                                    <td class="table-cell"><img src="<%= debtrecords.getImagePath() %>"
-                                                                class="product-image"></td>
-                                    <td class="table-cell"><%= debtrecords.getNote() %></td>
-                                    <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'listdebtrecords'">quay lại danh sách công nợ</button>
-                                    </td>
-                                </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
+                                        Cửa hàng trả
+                                        <% } %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Ngày tạo phiếu</span>
+                            <span class="user-info-value"><%= debtrecords.getInvoiceDate() %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Ngày tạo</span>
+                            <span class="user-info-value"><%= debtrecords.getCreateAt() %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Người tạo</span>
+                            <span class="user-info-value"><%= dao.getUserByID(debtrecords.getCreateBy()).getFullName() %></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Hình ảnh</span>
+                            <span class="user-info-value"><img src="<%= debtrecords.getImagePath() %>"
+                                                                class="product-image"></span>
+                        </div>
+                        <div class="user-info-item">
+                            <span class="user-info-label">Ghi chú</span>
+                            <span class="user-info-value"><%= debtrecords.getNote() %></span>
+                        </div>      
+                        <button class="action-button" onclick="window.location.href = 'listdebtrecords'">quay lại danh sách công nợ</button>
+                        <%  
+                                } 
+                        %>
                     </div>
                 </div>
             </div>

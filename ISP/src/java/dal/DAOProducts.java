@@ -354,7 +354,20 @@ public void updateProducts(Products product) {
 }
 
     public void updateProductQuantity(String productName, int quantityToAdd, int shopid) {
-        String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE productName = ? shopID = ?";
+        String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE productName = ? And shopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, quantityToAdd);
+            ps.setString(2, productName);
+            ps.setInt(3, shopid);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    public void updateProductQuantitydecre(String productName, int quantityToAdd, int shopid) {
+        String sql = "UPDATE Products SET Quantity = Quantity - ? WHERE productName = ? And shopID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, quantityToAdd);
             ps.setString(2, productName);

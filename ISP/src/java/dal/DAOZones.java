@@ -141,20 +141,25 @@ public class DAOZones {
     }
 
     public static void main(String[] args) {
-        // Testing methods
+        // Khởi tạo DAOZones
         DAOZones daoZones = new DAOZones();
 
-        // Example: Print all zones
+        // Tạo một zone mới để thêm vào database
+        Zones newZone = new Zones();
+        newZone.setZoneName("Test Zone");
+        newZone.setShopID(4); // Giả sử ShopID là 1
+        newZone.setProductID(3); // Giả sử ProductID là 101
+
+        int userId = 4; // Giả sử user ID của người tạo là 1
+
+        // Gọi hàm addZone để thêm zone mới
+        daoZones.addZone(newZone, userId);
+        System.out.println("Zone mới đã được thêm!");
+
+        // Kiểm tra lại bằng cách lấy danh sách zones từ database
         ArrayList<Zones> zonesList = daoZones.getAllZones();
         for (Zones z : zonesList) {
             System.out.println("ID: " + z.getID() + ", Zone Name: " + z.getZoneName() + ", Product ID: " + z.getProductID());
-        }
-
-        // Example: Search for a zone
-        String searchKeyword = "Zone B";
-        ArrayList<Zones> searchResults = daoZones.getZonesBySearch(searchKeyword);
-        for (Zones z : searchResults) {
-            System.out.println("Search Result - ID: " + z.getID() + ", Zone Name: " + z.getZoneName() + ", Product ID: " + z.getProductID());
         }
     }
 }

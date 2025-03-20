@@ -171,14 +171,14 @@ public class AddImportOrderServlet extends HttpServlet {
             // Xử lý thanh toán nếu có ghi nợ
             if ("partial".equals(paymentStatus) || "none".equals(paymentStatus)) {
                 int amountOwed;
-                String note = "Ghi nợ từ hóa đơn nhập kho ";
+                String note = "Ghi nợ từ hóa đơn chủ cửa hàng nhập kho ";
                 java.sql.Date invoiceDate = new java.sql.Date(System.currentTimeMillis());
 
                 if ("partial".equals(paymentStatus)) {
                     String partialPaymentStr = request.getParameter("partialPayment");
                     int partialPayment = Integer.parseInt(partialPaymentStr);
                     amountOwed = totalCost - partialPayment;
-                    note = "Thanh toán một phần từ hóa đơn nhập kho ";
+                    note = "Chủ cửa hàng thanh toán một phần từ hóa đơn nhập kho ";
                 } else {
                     amountOwed = totalCost;
                 }
@@ -187,7 +187,7 @@ public class AddImportOrderServlet extends HttpServlet {
                     DebtRecords debtRecord = new DebtRecords();
                     debtRecord.setCustomerID(customerID);
                     debtRecord.setAmountOwed(amountOwed);
-                    debtRecord.setPaymentStatus(-1);
+                    debtRecord.setPaymentStatus(2);
                     debtRecord.setNote(note);
                     debtRecord.setInvoiceDate(invoiceDate);
                     debtRecord.setShopID(shopID);
@@ -210,7 +210,7 @@ public class AddImportOrderServlet extends HttpServlet {
                     return;
                 }
 
-                for (int i = 0; i < productNames.length; i++) {
+                for (int i = 0; i <= productNames.length; i++) {
                     // Kiểm tra từng phần tử không được null hoặc rỗng
                     if (productNames[i].trim().isEmpty()
                             || quantities[i].trim().isEmpty() || prices[i].trim().isEmpty() || discounts[i].trim().isEmpty() || spec[i].trim().isEmpty()) {
@@ -244,7 +244,7 @@ public class AddImportOrderServlet extends HttpServlet {
                         dao3.AddOrderItems(orderItem, user.getID());
 
                         // Cập nhật số lượng sản phẩm trong kho
-                        //dao2.updateProductQuantity(productName, quantity, user.getShopID());
+                        dao2.updateProductQuantity(productName, quantity, user.getShopID());
 
                     } catch (NumberFormatException e) {
                         out.println("<h3 style='color:red;'>Lỗi định dạng số ở sản phẩm thứ " + (i + 1) + ": " + e.getMessage() + "</h3>");

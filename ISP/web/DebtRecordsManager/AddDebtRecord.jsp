@@ -61,7 +61,7 @@
                     <label for="paymentstatus">Trạng Thái:</label>
                     <select name="paymentstatus" required>
                         <option value="1">Khách trả</option>
-                        <option value="-1">Khách Vay </option>
+                        <option value="-1">Khách vay </option>
                         <option value="2">Cửa hàng vay</option>
                         <option value="-2">Cửa hàng trả</option>
                     </select>

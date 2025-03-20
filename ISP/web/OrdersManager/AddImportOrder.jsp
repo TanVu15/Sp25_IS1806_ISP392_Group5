@@ -140,7 +140,7 @@
                     <% if (products != null) { 
                         for (Products product : products) { 
                             if(product.getShopID() == u.getShopID()) { %>
-                        {id: '<%= product.getID() %>', text: '<%= product.getProductName() %>'},
+                        {id: '<%= product.getProductName() %>', text: '<%= product.getProductName() %>'},
                     <%    } 
                       } 
                    } %>

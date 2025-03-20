@@ -50,8 +50,24 @@ public class ListDebtRecordsServlet extends HttpServlet {
             requestDispatcher.forward(request, response);
             return;
         }
-        ArrayList<DebtRecords> debtrecords = dao.getDebtRecords();
+        
+        // Lấy trang hiện tại từ tham số URL, mặc định là 1
+        int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+        int debtsPerPage = 10; // Số sản phẩm trên mỗi trang
+
+       // Lấy tổng số sản phẩm cho shop hiện tại
+        int totalCustomer = dao.getTotalDebtRecordByShopId(user.getShopID());
+        int totalPages = (int) Math.ceil((double) totalCustomer / debtsPerPage);
+        
+        // Lấy danh sách sản phẩm cho trang hiện tại
+        ArrayList<DebtRecords> debtrecords = dao.getDebtrecordsByPage(currentPage, debtsPerPage, user.getShopID());
+        
+        // Thiết lập các thuộc tính cho JSP
         request.setAttribute("debtrecords", debtrecords);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        //ArrayList<DebtRecords> debtrecords = dao.getDebtRecords();
+        //request.setAttribute("debtrecords", debtrecords);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListDebtRecords.jsp");
         requestDispatcher.forward(request, response);
     }
@@ -86,6 +102,15 @@ public class ListDebtRecordsServlet extends HttpServlet {
             } else {
                 request.setAttribute("debtrecords", debtrecords);
             }
+            
+            // Cập nhật currentPage và totalPages
+            int totalProducts = debtrecords.size(); // Tổng sản phẩm tìm được
+            int totalPages = (int) Math.ceil(totalProducts / 10); // Cập nhật với số sản phẩm mỗi trang
+            
+            // Thiết lập các thuộc tính cho JSP
+            request.setAttribute("debtrecords", debtrecords);
+            request.setAttribute("currentPage", 1); // Đặt lại về trang đầu tiên
+            request.setAttribute("totalPages", totalPages); // Cập nhật tổng trang
 
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListDebtRecords.jsp");
             requestDispatcher.forward(request, response);

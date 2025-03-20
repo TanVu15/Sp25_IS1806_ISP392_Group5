@@ -42,7 +42,8 @@
                 <input type="text" id="zone" name="zone" value="<%= z.getZoneName() %>" required>
                 
                 <label for="zone">Shop:</label>  
-                <input type="text" id="shop" name="shop" value="<%= z.getShopID() %>" required>
+                <input type="hidden" id="shop" name="shop" value="<%= z.getShopID() %>" required>
+                <span class="input-info"><%= z.getShopName() %></span>
             </div>  
 
             <input type="hidden" name="id" value="<%= z.getID() %>">  

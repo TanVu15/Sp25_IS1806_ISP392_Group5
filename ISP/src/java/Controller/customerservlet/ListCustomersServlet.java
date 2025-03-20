@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Products;
 
 /**
  *
@@ -41,13 +42,30 @@ public class ListCustomersServlet extends HttpServlet {
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
+        
         if (user.getShopID() == 0 && user.getRoleid() == 2) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
             requestDispatcher.forward(request, response);
             return;
         }
-        ArrayList<Customers> customers = dao.getAllCustomers();
+        
+        // Lấy trang hiện tại từ tham số URL, mặc định là 1
+        int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+        int customersPerPage = 10; // Số sản phẩm trên mỗi trang
+
+       // Lấy tổng số sản phẩm cho shop hiện tại
+        int totalCustomer = dao.getTotalCustomersByShopId(user.getShopID());
+        int totalPages = (int) Math.ceil((double) totalCustomer / customersPerPage);
+        
+        // Lấy danh sách sản phẩm cho trang hiện tại
+        ArrayList<Customers> customers = dao.getCustomersByPage(currentPage, customersPerPage, user.getShopID());
+        
+        // Thiết lập các thuộc tính cho JSP
         request.setAttribute("customers", customers);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+//        ArrayList<Customers> customers = dao.getAllCustomers();
+//        request.setAttribute("customers", customers);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("CustomersManager/ListCustomers.jsp");
         requestDispatcher.forward(request, response);
     }
@@ -76,12 +94,21 @@ public class ListCustomersServlet extends HttpServlet {
             customers = dao.getCustomersBySearch(information);
             if (customers == null || customers.isEmpty()) {
                 request.setAttribute("message", "Không tìm thấy kết quả nào.");
-                customers = dao.getAllCustomers();
-                request.setAttribute("customers", customers);
+//                
+                
+//                customers = dao.getAllCustomers();
+//                request.setAttribute("customers", customers);
             } else {
                 request.setAttribute("customers", customers);
             }
-
+            // Cập nhật currentPage và totalPages
+            int totalProducts = customers.size(); // Tổng sản phẩm tìm được
+            int totalPages = (int) Math.ceil(totalProducts / 10); // Cập nhật với số sản phẩm mỗi trang
+            
+            // Thiết lập các thuộc tính cho JSP
+            request.setAttribute("customers", customers);
+            request.setAttribute("currentPage", 1); // Đặt lại về trang đầu tiên
+            request.setAttribute("totalPages", totalPages); // Cập nhật tổng trang
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("CustomersManager/ListCustomers.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception ex) {
