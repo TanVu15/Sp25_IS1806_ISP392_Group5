@@ -81,6 +81,16 @@
                                         <div class="info-label">Tên cửa hàng:</div>
                                         <div class="info-value"><%= shop.getShopName() %></div>
                                     </div>
+                                    
+                                    <div class="info-group">
+                                        <div class="info-label">Số điện thoại:</div>
+                                        <div class="info-value"><%= shop.getPhone() %></div>
+                                    </div>
+                                    
+                                    <div class="info-group">
+                                        <div class="info-label">Tài khoản ngân hàng:</div>
+                                        <div class="info-value"><%= shop.getBankAcc() %></div>
+                                    </div>
 
                                     <div class="info-group">
                                         <div class="info-label">Địa chỉ:</div>

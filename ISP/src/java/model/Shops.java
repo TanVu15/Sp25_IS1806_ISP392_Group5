@@ -45,11 +45,13 @@ public class Shops {
         this.DeleteBy = DeleteBy;
     }
 
-    public Shops(String shopname, String imageLink, String email, String location, int OwnerID) {
+    public Shops(String shopname, String imageLink, String email, String location,String Phone,String BankAcc, int OwnerID) {
         this.OwnerID = OwnerID;
         this.ShopName = shopname;
         this.LogoShop = imageLink;
         this.Location = location;
+        this.Phone = Phone;
+        this.BankAcc = BankAcc;
         this.Email = email;
     }
 

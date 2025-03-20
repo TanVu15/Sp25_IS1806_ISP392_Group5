@@ -135,9 +135,7 @@ public class CreateShopServlet extends HttpServlet {
         }
 
         DAOShops daoShops = new DAOShops();
-        Shops shop = new Shops(shopname, imageLink, email, location, user.getID());
-        shop.setPhone(phone);
-        shop.setBankAcc(bankacc);
+        Shops shop = new Shops(shopname, imageLink, email, location,phone,bankacc, user.getID());
         try {
             daoShops.createShop(shop, user.getID());
         } catch (Exception ex) {
