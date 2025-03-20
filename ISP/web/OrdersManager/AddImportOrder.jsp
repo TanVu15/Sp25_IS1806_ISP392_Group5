@@ -29,6 +29,12 @@
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        
+        <script>
+    function openNewInvoiceTab() {
+        window.open('addimportorder', '_blank'); // Opens the add order page in a new tab
+    }
+</script>
 
     </head>
     <body>
@@ -306,6 +312,7 @@
                 <div class="action-buttons">
                     <button id="createButton" type="submit">Tạo</button>
                     <button id="createButton" onclick="window.location.href = 'listorders'">Hủy</button>
+                    <button id="createButton" type="button" onclick="openNewInvoiceTab()">Thêm Hóa Đơn Mới</button>
                 </div>
             </div>
         </form>

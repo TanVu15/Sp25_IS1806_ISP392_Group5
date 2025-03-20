@@ -51,11 +51,9 @@ public class DAOProducts {
         return products;
     }
 
-    public ArrayList<Zones> getZonesByProductId(int productId) {
+       public ArrayList<Zones> getZonesByProductId(int productId) {
         ArrayList<Zones> zones = new ArrayList<>();
-        String sql = "SELECT z.ID, z.ZoneName FROM Zones z "
-                + "JOIN ProductZones pz ON z.ID = pz.ZoneID "
-                + "WHERE pz.ProductID = ?";
+        String sql = "SELECT z.ID, z.ZoneName FROM Zones z WHERE z.ProductID = ?";
 
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, productId);
@@ -85,24 +83,23 @@ public class DAOProducts {
         }
     }
 
-    public void updateProducts(Products product) {
-        String sql = "UPDATE Products SET ProductName = ?, Description = ?, Price = ?, Quantity = ?, UpdateAt = ?, ImageLink = ?, ShopID = ? WHERE ID = ?";
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setString(1, product.getProductName());
-            ps.setString(2, product.getDescription());
-            ps.setInt(3, product.getPrice());
-            ps.setInt(4, product.getQuantity());
-            ps.setDate(5, today);
-            ps.setString(6, product.getImageLink());
-            ps.setInt(6, product.getShopID());
-            ps.setInt(7, product.getID());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+public void updateProducts(Products product) {
+    String sql = "UPDATE Products SET ProductName = ?, Description = ?, Price = ?, Quantity = ?, UpdateAt = ?, ImageLink = ? WHERE ID = ?";
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setString(1, product.getProductName());
+        ps.setString(2, product.getDescription());
+        ps.setInt(3, product.getPrice());
+        ps.setInt(4, product.getQuantity());
+        ps.setDate(5, today);
+        ps.setString(6, product.getImageLink());
+        ps.setInt(7, product.getID());
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
 
-    public int addProducts(Products product, int userid) {
+ public int addProducts(Products product, int userid) {
         String sql = "INSERT INTO Products (ImageLink, ProductName, Description, Price, Quantity, CreateAt, CreateBy, UpdateAt, isDelete, ShopID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, product.getImageLink());
@@ -112,50 +109,49 @@ public class DAOProducts {
             ps.setInt(5, product.getQuantity());
             ps.setDate(6, today);
             ps.setInt(7, userid);
-            ps.setDate(8, today); // Cập nhật thời gian
-            ps.setInt(9, 0); // Đánh dấu là chưa bị xóa
-            ps.setInt(10, product.getShopID()); // Thêm ShopID vào
+            ps.setDate(8, today);
+            ps.setInt(9, 0);
+            ps.setInt(10, product.getShopID());
             ps.executeUpdate();
 
-            // Lấy ID của sản phẩm vừa thêm
             ResultSet generatedKeys = ps.getGeneratedKeys();
             if (generatedKeys.next()) {
-                int newProductId = generatedKeys.getInt(1); // Lưu ID sản phẩm mới thêm
-
-                // Thêm thông tin vào bảng ProductZones
-                addProductZones(newProductId, product.getProductZone());
-
-                return newProductId; // Trả về ID sản phẩm mới thêm
+                return generatedKeys.getInt(1); // Return new product ID
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1; // Trả về -1 nếu có lỗi
+        return -1; // Return -1 if error occurs
     }
-
-    public void addProductZones(int productId, Zones zone) {
-        if (zone != null) {
-            String zoneSql = "INSERT INTO ProductZones (ProductID, ZoneID) VALUES (?, ?)";
-            try (PreparedStatement zonePs = connect.prepareStatement(zoneSql)) {
-                zonePs.setInt(1, productId);
-                zonePs.setInt(2, zone.getID()); // Lưu ID khu vực
-                zonePs.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+ public void updateZoneWithProduct(int zoneId, int productId) {
+    String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setInt(1, productId);
+        ps.setInt(2, zoneId);
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
+ 
+ public void updateProductZones(int productId, String[] zoneIDs) {
+    // Here you can implement logic to update the zones directly associated with the product
+    // For example, you can set the ProductID in the Zones table for the selected zone IDs
 
-    public void clearProductZones(int productId) {
-        // Thực hiện xóa tất cả các khu vực liên kết với sản phẩm này
-        String sql = "DELETE FROM ProductZones WHERE ProductID = ?"; // Sửa tên cột cho đúng
-        try (PreparedStatement stmt = connect.prepareStatement(sql)) {
-            stmt.setInt(1, productId);
-            stmt.executeUpdate(); // Thực hiện câu lệnh xóa
+    for (String zoneID : zoneIDs) {
+        int zoneIdInt = Integer.parseInt(zoneID);
+        // Update the zone with the new product ID
+        String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, zoneIdInt);
+            ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(); // In ra lỗi nếu có
+            e.printStackTrace();
         }
     }
+}
+ 
 
     public Products getProductByID(int ID) throws Exception {
         String query = "SELECT * FROM Products WHERE ID=?";
@@ -269,37 +265,60 @@ public class DAOProducts {
         }
         return products;
     }
-
-//    search product by name for order
-    public ArrayList<Products> searchProductsByName(String productName) {
+    
+    // Method to get products by shop ID
+    public ArrayList<Products> getProductsByShopId(int shopID) throws SQLException {
         ArrayList<Products> products = new ArrayList<>();
-        String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ProductName LIKE ?";
-
+        String sql = "SELECT * FROM Products WHERE ShopID = ?";
+        
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setString(1, "%" + productName + "%"); // Use LIKE for partial matching
+            ps.setInt(1, shopID);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 Products product = new Products();
                 product.setID(rs.getInt("ID"));
                 product.setProductName(rs.getString("ProductName"));
-                product.setDescription(rs.getString("Description"));
-                product.setPrice(rs.getInt("Price"));
-                product.setQuantity(rs.getInt("Quantity"));
-                product.setImageLink(rs.getString("ImageLink"));
                 product.setShopID(rs.getInt("ShopID"));
-                product.setCreateAt(rs.getDate("CreateAt"));
-                product.setUpdateAt(rs.getDate("UpdateAt"));
-                product.setCreateBy(rs.getInt("CreateBy"));
-                product.setIsDelete(rs.getInt("isDelete"));
+                product.setQuantity(rs.getInt("Quantity"));
+                // Set other product properties as needed
 
                 products.add(product);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return products;
     }
+    
+//    search product by name for order
+    public ArrayList<Products> searchProductsByName(String productName) {
+    ArrayList<Products> products = new ArrayList<>();
+    String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ProductName LIKE ?";
+
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setString(1, "%" + productName + "%"); // Use LIKE for partial matching
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Products product = new Products();
+            product.setID(rs.getInt("ID"));
+            product.setProductName(rs.getString("ProductName"));
+            product.setDescription(rs.getString("Description"));
+            product.setPrice(rs.getInt("Price"));
+            product.setQuantity(rs.getInt("Quantity"));
+            product.setImageLink(rs.getString("ImageLink"));
+            product.setShopID(rs.getInt("ShopID"));
+            product.setCreateAt(rs.getDate("CreateAt"));
+            product.setUpdateAt(rs.getDate("UpdateAt"));
+            product.setCreateBy(rs.getInt("CreateBy"));
+            product.setIsDelete(rs.getInt("isDelete"));
+
+            products.add(product);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return products;
+}
 
     public ArrayList<Products> searchProductsByNameAndShop(String name, int shopId) {
         ArrayList<Products> products = new ArrayList<>();
@@ -323,6 +342,16 @@ public class DAOProducts {
         }
         return products;
     }
+    
+//    update quantity after importing
+    public void updateProductQuantity(int productId, int quantity) throws SQLException {
+    String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE ID = ?";
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setInt(1, quantity);
+        ps.setInt(2, productId);
+        ps.executeUpdate();
+    }
+}
 
     public void updateProductQuantity(String productName, int quantityToAdd, int shopid) {
         String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE productName = ? shopID = ?";
@@ -368,46 +397,12 @@ public class DAOProducts {
     public static void main(String[] args) throws Exception {
         DAOProducts dao = DAOProducts.INSTANCE;
 
-        // Test getAllProducts
-        ArrayList<Products> productList = dao.getAllProducts();
-
-        // Test addProducts
-        int userId = 1; // Giả sử đây là ID của người dùng đang thêm sản phẩm
-        int shopId = 1; // Giả sử đây là ID của shop
-
-        // Tạo sản phẩm mới
-        Products newProduct = new Products();
-        newProduct.setProductName("Sản phẩm mới");
-        newProduct.setDescription("Mô tả sản phẩm mới");
-        newProduct.setPrice(100000); // Giá sản phẩm
-        newProduct.setQuantity(10); // Số lượng sản phẩm
-        newProduct.setImageLink("link-to-image.jpg"); // Đường dẫn hình ảnh
-        // Nếu có thuộc tính Zone, bạn có thể thêm ở đây, ví dụ:
-        // newProduct.setProductZone(new Zones(1, "Khu vực 1"));
-
-        // Thêm sản phẩm mới vào cơ sở dữ liệu
-//    int newProductId = dao.addProducts(newProduct, userId);
-//    if (newProductId != -1) {
-//        System.out.println("Thêm sản phẩm thành công! ID sản phẩm mới: " + newProductId);
-//    } else {
-//        System.out.println("Thêm sản phẩm không thành công.");
-//    }
-        // Kiểm tra danh sách sản phẩm
-        int currentPage = 3; // Bạn có thể thay đổi giá trị này để kiểm tra các trang khác
-        int productsPerPage = 5; // Số sản phẩm trên mỗi trang
-
-        ArrayList<Products> products = dao.getProductsByPage(currentPage, productsPerPage, 1);
-
-        // Kiểm tra danh sách sản phẩm
-        if (products != null && !products.isEmpty()) {
-            System.out.println("Danh sách sản phẩm trên trang " + currentPage + ":");
-            for (Products product : products) {
-                System.out.println("ID: " + product.getID() + ", Tên: " + product.getProductName() + ", Giá: "
-                        + product.getPrice() + " VND, Số lượng: " + product.getQuantity() + " shop: " + product.getShopID());
-            }
-        } else {
-            System.out.println("Không có sản phẩm nào để hiển thị trên trang " + currentPage);
-        }
+         // Test update product with ID = 3
+    int productIdToUpdate = 3; // ID của sản phẩm cần cập nhật
+    Products productToUpdate = dao.getProductByID(productIdToUpdate);
+    int quantity = 400;
+    dao.updateProductQuantity(productIdToUpdate, quantity);
+   
     }
     
 }

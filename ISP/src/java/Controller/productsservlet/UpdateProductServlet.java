@@ -89,14 +89,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         // Cập nhật khu vực
         if (zoneIDs != null) {
             // Xóa các khu vực cũ (nếu cần)
-            DAOProducts.INSTANCE.clearProductZones(productId); // Phương thức để xóa các khu vực cũ
-
-            // Thêm các khu vực mới
-            for (String zoneID : zoneIDs) {
-                int id = Integer.parseInt(zoneID);
-                Zones zone = new Zones(id); // Tạo đối tượng Zones từ ID
-                DAOProducts.INSTANCE.addProductZones(productId, zone); // Phương thức để thêm khu vực mới
-            }
+            DAOProducts.INSTANCE.updateProductZones(productId, zoneIDs);             
         }
 
         response.sendRedirect("listproducts");

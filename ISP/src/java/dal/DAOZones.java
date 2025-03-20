@@ -6,9 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 import java.util.ArrayList;
-
 import model.Zones;
-import model.Users;
 
 public class DAOZones {
 
@@ -24,7 +22,7 @@ public class DAOZones {
 
     public ArrayList<Zones> getAllZones() {
         ArrayList<Zones> zones = new ArrayList<>();
-        String sql = "SELECT * FROM Zones WHERE isDelete = 0"; // Chỉ lấy những khu vực chưa bị xóa
+        String sql = "SELECT * FROM Zones WHERE isDelete = 0"; // Only retrieve active zones
 
         try (PreparedStatement statement = connect.prepareStatement(sql); ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
@@ -32,6 +30,7 @@ public class DAOZones {
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
                 z.setShopID(rs.getInt("shopid"));
+                z.setProductID(rs.getInt("ProductID")); // Set ProductID
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
                 z.setCreateBy(rs.getInt("CreateBy"));
@@ -60,11 +59,12 @@ public class DAOZones {
     }
 
     public void updateZones(Zones zones) {
-        String sql = "UPDATE Zones SET ZoneName = ?, UpdateAt = ? WHERE ID = ?";
+        String sql = "UPDATE Zones SET ZoneName = ?, ProductID = ?, UpdateAt = ? WHERE ID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, zones.getZoneName());
-            ps.setDate(2, today);
-            ps.setInt(3, zones.getID());
+            ps.setInt(2, zones.getProductID()); // Update ProductID
+            ps.setDate(3, today);
+            ps.setInt(4, zones.getID());
             ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error updating zone: " + e.getMessage());
@@ -82,6 +82,7 @@ public class DAOZones {
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
                 z.setShopID(rs.getInt("shopid"));
+                z.setProductID(rs.getInt("ProductID")); // Set ProductID
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
                 z.setCreateBy(rs.getInt("CreateBy"));
@@ -96,13 +97,14 @@ public class DAOZones {
     }
 
     public void addZone(Zones zone, int userid) {
-        String sql = "INSERT INTO Zones (ZoneName,shopid, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Zones (ZoneName, shopid, ProductID, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, zone.getZoneName());
             ps.setInt(2, zone.getShopID());
-            ps.setDate(3, today);
-            ps.setInt(4, userid);
-            ps.setInt(5, 0);
+            ps.setInt(3, zone.getProductID()); // Include ProductID
+            ps.setDate(4, today);
+            ps.setInt(5, userid);
+            ps.setInt(6, 0);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error adding zone: " + e.getMessage());
@@ -111,8 +113,8 @@ public class DAOZones {
 
     public ArrayList<Zones> getZonesBySearch(String information) {
         ArrayList<Zones> zones = new ArrayList<>();
-        String sql = "SELECT * FROM Zones WHERE LOWER(ZoneName) LIKE ? AND isDelete = 0"; // Tìm kiếm theo tên khu vực
-        information = "%" + information.toLowerCase() + "%"; // Thêm dấu % để tìm kiếm
+        String sql = "SELECT * FROM Zones WHERE LOWER(ZoneName) LIKE ? AND isDelete = 0"; // Search by zone name
+        information = "%" + information.toLowerCase() + "%"; // Prepare search pattern
 
         try (PreparedStatement statement = connect.prepareStatement(sql)) {
             statement.setString(1, information);
@@ -123,6 +125,7 @@ public class DAOZones {
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
                 z.setShopID(rs.getInt("ShopID"));
+                z.setProductID(rs.getInt("ProductID")); // Set ProductID
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
                 z.setCreateBy(rs.getInt("CreateBy"));
@@ -144,14 +147,14 @@ public class DAOZones {
         // Example: Print all zones
         ArrayList<Zones> zonesList = daoZones.getAllZones();
         for (Zones z : zonesList) {
-            System.out.println("ID: " + z.getID() + ", Zone Name: " + z.getZoneName());
+            System.out.println("ID: " + z.getID() + ", Zone Name: " + z.getZoneName() + ", Product ID: " + z.getProductID());
         }
 
         // Example: Search for a zone
         String searchKeyword = "Zone B";
         ArrayList<Zones> searchResults = daoZones.getZonesBySearch(searchKeyword);
         for (Zones z : searchResults) {
-            System.out.println("Search Result - ID: " + z.getID() + ", Zone Name: " + z.getZoneName());
+            System.out.println("Search Result - ID: " + z.getID() + ", Zone Name: " + z.getZoneName() + ", Product ID: " + z.getProductID());
         }
     }
 }
