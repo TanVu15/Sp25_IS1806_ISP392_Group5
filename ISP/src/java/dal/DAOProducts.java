@@ -1,5 +1,6 @@
 package dal;
 
+import jakarta.servlet.http.HttpServletRequest;
 import model.Products;
 import model.Zones; // Nhập lớp Zones
 import java.sql.Connection;
@@ -268,37 +269,37 @@ public class DAOProducts {
         }
         return products;
     }
-    
+
 //    search product by name for order
     public ArrayList<Products> searchProductsByName(String productName) {
-    ArrayList<Products> products = new ArrayList<>();
-    String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ProductName LIKE ?";
+        ArrayList<Products> products = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ProductName LIKE ?";
 
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setString(1, "%" + productName + "%"); // Use LIKE for partial matching
-        ResultSet rs = ps.executeQuery();
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, "%" + productName + "%"); // Use LIKE for partial matching
+            ResultSet rs = ps.executeQuery();
 
-        while (rs.next()) {
-            Products product = new Products();
-            product.setID(rs.getInt("ID"));
-            product.setProductName(rs.getString("ProductName"));
-            product.setDescription(rs.getString("Description"));
-            product.setPrice(rs.getInt("Price"));
-            product.setQuantity(rs.getInt("Quantity"));
-            product.setImageLink(rs.getString("ImageLink"));
-            product.setShopID(rs.getInt("ShopID"));
-            product.setCreateAt(rs.getDate("CreateAt"));
-            product.setUpdateAt(rs.getDate("UpdateAt"));
-            product.setCreateBy(rs.getInt("CreateBy"));
-            product.setIsDelete(rs.getInt("isDelete"));
+            while (rs.next()) {
+                Products product = new Products();
+                product.setID(rs.getInt("ID"));
+                product.setProductName(rs.getString("ProductName"));
+                product.setDescription(rs.getString("Description"));
+                product.setPrice(rs.getInt("Price"));
+                product.setQuantity(rs.getInt("Quantity"));
+                product.setImageLink(rs.getString("ImageLink"));
+                product.setShopID(rs.getInt("ShopID"));
+                product.setCreateAt(rs.getDate("CreateAt"));
+                product.setUpdateAt(rs.getDate("UpdateAt"));
+                product.setCreateBy(rs.getInt("CreateBy"));
+                product.setIsDelete(rs.getInt("isDelete"));
 
-            products.add(product);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return products;
     }
-    return products;
-}
 
     public ArrayList<Products> searchProductsByNameAndShop(String name, int shopId) {
         ArrayList<Products> products = new ArrayList<>();
@@ -321,6 +322,47 @@ public class DAOProducts {
             e.printStackTrace();
         }
         return products;
+    }
+
+    public void updateProductQuantity(String productName, int quantityToAdd, int shopid) {
+        String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE productName = ? shopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, quantityToAdd);
+            ps.setString(2, productName);
+            ps.setInt(3, shopid);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Products> getProductListFromRequest(HttpServletRequest request) {
+        ArrayList<Products> productList = new ArrayList<>();
+
+        // Lấy danh sách productId và quantity gửi từ form
+        String[] productIds = request.getParameterValues("productId");
+        String[] quantities = request.getParameterValues("quantity");
+
+        // Kiểm tra nếu có dữ liệu
+        if (productIds != null && quantities != null && productIds.length == quantities.length) {
+            for (int i = 0; i < productIds.length; i++) {
+                try {
+                    int productId = Integer.parseInt(productIds[i]);
+                    int quantity = Integer.parseInt(quantities[i]);
+
+                    // Tạo đối tượng sản phẩm và thêm vào danh sách
+                    Products product = new Products();
+                    product.setID(productId);
+                    product.setQuantity(quantity);
+                    productList.add(product);
+                } catch (NumberFormatException e) {
+                    // Có thể ghi log hoặc xử lý lỗi nếu dữ liệu không hợp lệ
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return productList;
     }
 
     public static void main(String[] args) throws Exception {
@@ -367,4 +409,5 @@ public class DAOProducts {
             System.out.println("Không có sản phẩm nào để hiển thị trên trang " + currentPage);
         }
     }
+    
 }

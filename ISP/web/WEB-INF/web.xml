@@ -136,6 +136,10 @@
         <servlet-name>OrderDetailServlet</servlet-name>
         <servlet-class>Controller.orderservlet.OrderDetailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ListOrderItemsServlet</servlet-name>
+        <servlet-class>Controller.orderitemservlet.ListOrderItemsServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -271,6 +275,10 @@
     <servlet-mapping>
         <servlet-name>OrderDetailServlet</servlet-name>
         <url-pattern>/orderdetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListOrderItemsServlet</servlet-name>
+        <url-pattern>/listorderitems</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Login/login.jsp</welcome-file>

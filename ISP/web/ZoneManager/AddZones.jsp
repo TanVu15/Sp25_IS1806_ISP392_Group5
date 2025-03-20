@@ -49,7 +49,8 @@
                 <input type="text" id="zone" name="zone" required>
                 
                 <label for="zone">Shop Name:</label>
-                <input type="text" id="shop" name="shop" value="<%= shop.getShopName() %>" required>
+                <input type="hidden" id="shop" name="shop" value="<%= shop.getShopName() %>" required>
+                <span class="input-info"><%= shop.getShopName() %></span>
             </div>
             
             <div class="button-container">
