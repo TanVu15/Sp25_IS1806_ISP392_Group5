@@ -19,7 +19,7 @@ import model.Users;
  */
 public class DAOOrderItem {
 
-    public static final DAOProducts INSTANCE = new DAOProducts();
+    public static final DAOOrderItem INSTANCE = new DAOOrderItem();
     protected Connection connect;
 
     public DAOOrderItem() {
@@ -37,7 +37,6 @@ public class DAOOrderItem {
                 OrderItems oi = new OrderItems();
                 oi.setID(rs.getInt("ID"));
                 oi.setOrderID(rs.getInt("OrderID"));
-                oi.setProductID(rs.getInt("ProductID"));
                 oi.setProductName(rs.getString("ProductName"));
                 oi.setDescription(rs.getString("Description"));
                 oi.setPrice(rs.getInt("Price"));
@@ -69,7 +68,6 @@ public class DAOOrderItem {
             OrderItems oi = new OrderItems();
             oi.setID(rs.getInt("ID"));
             oi.setOrderID(rs.getInt("OrderID"));
-            oi.setProductID(rs.getInt("ProductID"));
             oi.setProductName(rs.getString("ProductName"));
             oi.setDescription(rs.getString("Description"));
             oi.setPrice(rs.getInt("Price"));
@@ -117,18 +115,17 @@ public class DAOOrderItem {
 //        }
 //    }
     public void AddOrderItems(OrderItems orderitems, int userid) {
-        String sql = "INSERT INTO OrderItems (OrderID, ProductID, ProductName, Description, Price, Quantity, UnitPrice, shopID, CreateAt, CreateBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO OrderItems (OrderID, ProductName, Description, Price, Quantity, UnitPrice, shopID, CreateAt, CreateBy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, orderitems.getOrderID());
-            ps.setInt(2, orderitems.getProductID());
-            ps.setString(3, orderitems.getProductName());
-            ps.setString(4, orderitems.getDescription());
-            ps.setInt(5, orderitems.getPrice());
-            ps.setInt(6, orderitems.getQuantity());
-            ps.setInt(7, orderitems.getUnitPrice());
-            ps.setInt(8, orderitems.getShopID());
-            ps.setDate(9, today);
-            ps.setInt(10, userid);
+            ps.setString(2, orderitems.getProductName());
+            ps.setString(3, orderitems.getDescription());
+            ps.setInt(4, orderitems.getPrice());
+            ps.setInt(5, orderitems.getQuantity());
+            ps.setInt(6, orderitems.getUnitPrice());
+            ps.setInt(7, orderitems.getShopID());
+            ps.setDate(8, today);
+            ps.setInt(9, userid);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -144,7 +141,6 @@ public class DAOOrderItem {
             OrderItems oi = new OrderItems();
             oi.setID(rs.getInt("ID"));
             oi.setOrderID(rs.getInt("OrderID"));
-            oi.setProductID(rs.getInt("ProductID"));
             oi.setProductName(rs.getString("ProductName"));
             oi.setDescription(rs.getString("Description"));
             oi.setPrice(rs.getInt("Price"));
@@ -172,7 +168,6 @@ public class DAOOrderItem {
                 OrderItems oi = new OrderItems();
                 oi.setID(rs.getInt("ID"));
                 oi.setOrderID(rs.getInt("OrderID"));
-                oi.setProductID(rs.getInt("ProductID"));
                 oi.setProductName(rs.getString("ProductName"));
                 oi.setDescription(rs.getString("Description"));
                 oi.setPrice(rs.getInt("Price"));
@@ -221,14 +216,50 @@ public class DAOOrderItem {
         }
         return orderItemses;
     }
+    
+    public ArrayList<OrderItems> searchProductByOrderID(int orderId, String productName) {
+        ArrayList<OrderItems> orderItemsList = new ArrayList<>();
+        String query = "SELECT * FROM OrderItems WHERE OrderID = ? AND LOWER(ProductName) LIKE ?";
+
+        try (PreparedStatement ps = connect.prepareStatement(query)) {
+            ps.setInt(1, orderId);
+            ps.setString(2, "%" + productName.toLowerCase() + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderItems oi = new OrderItems();
+                oi.setID(rs.getInt("ID"));
+                oi.setOrderID(rs.getInt("OrderID"));
+                oi.setProductName(rs.getString("ProductName"));
+                oi.setDescription(rs.getString("Description"));
+                oi.setPrice(rs.getInt("Price"));
+                oi.setQuantity(rs.getInt("Quantity"));
+                oi.setUnitPrice(rs.getInt("UnitPrice"));
+                oi.setShopID(rs.getInt("ShopID"));
+                oi.setCreateAt(rs.getDate("CreateAt"));
+                oi.setUpdateAt(rs.getDate("UpdateAt"));
+                oi.setCreateBy(rs.getInt("CreateBy"));
+                oi.setIsDelete(rs.getInt("isDelete"));
+                oi.setDeletedAt(rs.getDate("DeletedAt"));
+                oi.setDeleteBy(rs.getInt("DeleteBy"));
+
+                orderItemsList.add(oi);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orderItemsList;
+    }
+
 
     public static void main(String[] args) throws Exception {
         DAOOrderItem dao = new DAOOrderItem();
         System.out.println(dao.getAllOrderItem());
-        OrderItems information = new OrderItems(0, 2, 2, "gao ST", "thom1", 30000, 12, 29500, 1, today, today, 2, 0, today, 0);
+        OrderItems information = new OrderItems(3, 2, "rice", "kg", 0, 0, 0, 0, today, today, 2, 0, today, 0);
         System.out.println(dao.getOrderItemBySearch("gao BC"));
         dao.getOrderItemByID(1);
         //dao.AddOrderItems(information, 2);
         System.out.println(dao.getAllOrderItemsByOrderID(2));
+        dao.AddOrderItems(information, 2);
     }
 }

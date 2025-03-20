@@ -14,7 +14,6 @@ public class OrderItems {
 
     private int ID;
     private int OrderID;
-    private int ProductID;
     private String ProductName;
     private String Description;
     private int Price;
@@ -31,10 +30,9 @@ public class OrderItems {
     public OrderItems() {
     }
 
-    public OrderItems(int ID, int OrderID, int ProductID, String ProductName, String Description, int Price, int Quantity, int UnitPrice, int ShopID, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
+    public OrderItems(int ID, int OrderID, String ProductName, String Description, int Price, int Quantity, int UnitPrice, int ShopID, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
         this.ID = ID;
         this.OrderID = OrderID;
-        this.ProductID = ProductID;
         this.ProductName = ProductName;
         this.Description = Description;
         this.Price = Price;
@@ -65,13 +63,6 @@ public class OrderItems {
         this.OrderID = OrderID;
     }
 
-    public int getProductID() {
-        return ProductID;
-    }
-
-    public void setProductID(int ProductID) {
-        this.ProductID = ProductID;
-    }
 
     public String getProductName() {
         return ProductName;

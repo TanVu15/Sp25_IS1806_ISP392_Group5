@@ -121,7 +121,7 @@
                                     </td>
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'orderdetail?id=<%= order.getID()%>'">Chi tiết</button>
-                                        <button class="action-button" onclick="window.location.href = ''">Orderitem</button>
+                                        <button class="action-button" onclick="window.location.href = 'listorderitems?id=<%= order.getID() %>'">Chi tiết các sản phẩm hóa đơn</button>
                                     </td>
                                 </tr>
                                 <%      }
