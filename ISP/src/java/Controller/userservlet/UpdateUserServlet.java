@@ -28,7 +28,6 @@ public class UpdateUserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOUser dao = new DAOUser();
-        
 
         request.setAttribute("message", "");
         request.setAttribute("username", "");
@@ -39,20 +38,26 @@ public class UpdateUserServlet extends HttpServlet {
         //authen
         HttpSession session = request.getSession();
         Users userSession = (Users) session.getAttribute("user");
+
         try {
-            int shopid = dao.getUserByID(userid).getShopID();
-            int shopid2 = userSession.getShopID();
-            if(shopid != shopid2 && userSession.getRoleid() != 1){
+            Users user = dao.getUserByID(userid);
+            try {
+
+                int shopid = dao.getUserByID(userid).getShopID();
+                int shopid2 = userSession.getShopID();
+                if (user.getRoleid() >= userSession.getRoleid()) {
+                    request.getRequestDispatcher("logout").forward(request, response);
+                    return;
+                }
+                if (shopid != shopid2 && userSession.getRoleid() != 1) {
+                    request.getRequestDispatcher("logout").forward(request, response);
+                    return;
+                }
+
+            } catch (Exception ex) {
                 request.getRequestDispatcher("logout").forward(request, response);
                 return;
             }
-            
-        } catch (Exception ex) {
-            request.getRequestDispatcher("logout").forward(request, response);
-            return;
-        }
-        try {
-            Users user = dao.getUserByID(userid);
             request.setAttribute("user", user);
             request.getRequestDispatcher("UsersManager/UpdateUser.jsp").forward(request, response);
         } catch (Exception ex) {
@@ -73,7 +78,6 @@ public class UpdateUserServlet extends HttpServlet {
             String oldpassword = request.getParameter("oldpassword");
             String password = request.getParameter("password");
             String password2 = request.getParameter("password2");
-            
 
             String fullname = request.getParameter("fullname");
             request.setAttribute("user", user);
@@ -82,8 +86,8 @@ public class UpdateUserServlet extends HttpServlet {
             user.setPasswordHash(password2);
             user.setFullName(fullname);
 
-            if (!password.endsWith(password2) || password == null || DAOUser.INSTANCE.authenticateUser(username, oldpassword) == false) {
-                request.setAttribute("message", "Hãy kiểm tra lại mật khẩu!");
+            if (!password.endsWith(password2) || "".equals(username) || password == null || DAOUser.INSTANCE.authenticateUser(username, oldpassword) == false) {
+                request.setAttribute("message", "Hãy kiểm tra lại!");
                 request.setAttribute("username", username);
                 request.setAttribute("password", password);
                 request.setAttribute("password2", password2);
@@ -103,8 +107,8 @@ public class UpdateUserServlet extends HttpServlet {
             response.sendRedirect("listusers");
         } catch (Exception ex) {
             request.setAttribute("message", "Hãy kiểm tra lại mật khẩu!");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/UpdateUser.jsp");
-                dispatcher.forward(request, response);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/UpdateUser.jsp");
+            dispatcher.forward(request, response);
         }
 
     }

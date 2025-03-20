@@ -283,4 +283,7 @@
     <welcome-file-list>
         <welcome-file>Login/login.jsp</welcome-file>
     </welcome-file-list>
+    <listener>
+        <listener-class>filter.WebAppListener</listener-class>
+    </listener>
 </web-app>

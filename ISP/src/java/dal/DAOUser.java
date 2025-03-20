@@ -24,7 +24,7 @@ public class DAOUser {
 
     public static long millis = System.currentTimeMillis();
     public static Date today = new Date(millis);
-    
+
     public boolean authenticateUser(String username, String password) throws Exception {
         Users user = getUserByName(username);
         if (user != null) {
@@ -104,13 +104,13 @@ public class DAOUser {
             e.printStackTrace();
         }
     }
-    
+
     public void updateUserShopId(Users user) {
         String sql = "UPDATE Users SET ShopId = ? WHERE id = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, user.getShopID());
             ps.setInt(2, user.getID());
-            
+
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -206,36 +206,35 @@ public class DAOUser {
                 u.setIsDelete(rs.getInt("isDelete"));
                 u.setDeleteBy(rs.getInt("DeleteBy"));
                 u.setDeletedAt(rs.getDate("DeletedAt"));
-                
+
                 // Lấy thông tin người tạo 
-                Users userCreate = DAO.INSTANCE.getUserByID(u.getCreateBy()); 
+                Users userCreate = DAO.INSTANCE.getUserByID(u.getCreateBy());
 
                 // Chuyển thông tin của user thành một chuỗi
                 String userData = (u.getUsername() + " "
                         + u.getPasswordHash() + " "
                         + u.getFullName() + " "
                         + u.getCreateAt() + " "
-                        + userCreate.getFullName().toLowerCase()+ " ") ;
-                
-                
+                        + userCreate.getFullName().toLowerCase() + " ");
+
                 //Lấy role 
-                if(u.getRoleid()==1){
-                    userData+="admin ";
+                if (u.getRoleid() == 1) {
+                    userData += "admin ";
                 }
-                if(u.getRoleid()==2){
-                    userData+="owner ";
+                if (u.getRoleid() == 2) {
+                    userData += "owner ";
                 }
-                if(u.getRoleid()==3){
-                    userData+="staff ";
+                if (u.getRoleid() == 3) {
+                    userData += "staff ";
                 }
-                
+
                 //Lấy thông tin người xóa nếu có
                 if (u.getIsDelete() != 0) {
                     Users userDelete = DAO.INSTANCE.getUserByID(u.getDeleteBy());
                     userData += ("xóa" + u.getIsDelete() + " "
                             + u.getDeletedAt() + " "
                             + userDelete.getFullName().toLowerCase());
-                }else{
+                } else {
                     userData += "Hoạt Động";
                 }
 
@@ -249,7 +248,7 @@ public class DAOUser {
         }
         return users;
     }
-    
+
     public void resetPasswordUser(int userid) {
         String sql = "UPDATE Users SET passwordhash = ?, UpdateAt = ? WHERE id = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
@@ -261,20 +260,129 @@ public class DAOUser {
             e.printStackTrace();
         }
     }
+    
+    public int getTotalUsersById() {
+        String sql = "SELECT COUNT(*) FROM Users WHERE isDelete = 0 ";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    public ArrayList<Users> getUsersByPageID(int page, int usersPerPage) {
+        ArrayList<Users> users = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE isDelete = 0 ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, (page - 1) * usersPerPage);
+            ps.setInt(2, usersPerPage);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Users u = new Users();
+                u.setID(rs.getInt("ID"));
+                u.setUsername(rs.getString("username"));
+                u.setPasswordHash(rs.getString("passwordhash"));
+                u.setRoleid(rs.getInt("roleid"));
+                u.setFullName(rs.getString("FullName"));
+                u.setShopID(rs.getInt("ShopID"));
+                u.setCreateAt(rs.getDate("CreateAt"));
+                u.setUpdateAt(rs.getDate("UpdateAt"));
+                u.setCreateBy(rs.getInt("CreateBy"));
+                u.setIsDelete(rs.getInt("isDelete"));
+                u.setDeleteBy(rs.getInt("DeleteBy"));
+                u.setDeletedAt(rs.getDate("DeletedAt"));
+
+                users.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+    
+    public int getTotalUsersByShopId(int shopId) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE isDelete = 0 AND ShopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public ArrayList<Users> getUsersByPage(int page, int usersPerPage, int shopId) {
+        ArrayList<Users> users = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE isDelete = 0 AND ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ps.setInt(2, (page - 1) * usersPerPage);
+            ps.setInt(3, usersPerPage);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Users u = new Users();
+                u.setID(rs.getInt("ID"));
+                u.setUsername(rs.getString("username"));
+                u.setPasswordHash(rs.getString("passwordhash"));
+                u.setRoleid(rs.getInt("roleid"));
+                u.setFullName(rs.getString("FullName"));
+                u.setShopID(rs.getInt("ShopID"));
+                u.setCreateAt(rs.getDate("CreateAt"));
+                u.setUpdateAt(rs.getDate("UpdateAt"));
+                u.setCreateBy(rs.getInt("CreateBy"));
+                u.setIsDelete(rs.getInt("isDelete"));
+                u.setDeleteBy(rs.getInt("DeleteBy"));
+                u.setDeletedAt(rs.getDate("DeletedAt"));
+
+                users.add(u);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+    
+    
+    public ArrayList<Users> sortUserByNewTime(ArrayList<Users> listOld) {
+        int n = listOld.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                // So sánh ngày tạo (mới hơn đứng trước)
+                if (listOld.get(j).getCreateAt().before(listOld.get(j + 1).getCreateAt())) {
+                    // Hoán đổi vị trí
+                    Users temp = listOld.get(j);
+                    listOld.set(j, listOld.get(j + 1));
+                    listOld.set(j + 1, temp);
+                }
+            }
+        }
+        return listOld;
+    }
 
     public static void main(String[] args) throws Exception {
         DAOUser dao = new DAOUser();
 //        Users admin = new Users(0, "Admin2", "1234", 1, "Hoangvanviet2", today, today, 0, 0, today, 0);
 //        dao.Register(admin, 0);
-        System.out.println(dao.getUsersBySearch("viet"));
+        //System.out.println(dao.getUsersBySearch("viet"));
         //Users user = new Users(3, "Admin", "admin", 1, "Hoangvanviet123", today, today, 0, 0, today, 0);
 //        dao.updateUser(user);
 //        System.out.println(dao.getUserByName("Admin2"));
         //dao.updateUser(user);
-        dao.deleteUser(4, 2);
-        Users newU = new Users();
-        newU.setID(4);
-        newU.setShopID(4);
-        dao.updateUserShopId(newU);
+//        dao.deleteUser(4, 2);
+//        Users newU = new Users();
+//        newU.setID(4);
+//        newU.setShopID(4);
+//        dao.updateUserShopId(newU);
     }
 }

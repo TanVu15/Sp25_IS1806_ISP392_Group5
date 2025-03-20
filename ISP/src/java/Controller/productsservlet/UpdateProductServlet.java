@@ -29,12 +29,14 @@ public class UpdateProductServlet extends HttpServlet {
 
         try {
             Products product = dao.getProductByID(productId);
+            
             int shopid = product.getShopID();
             int shopid2 = ((Users)session.getAttribute("user")).getShopID();
             if(shopid != shopid2 && ((Users)session.getAttribute("user")).getRoleid() != 1){
                 request.getRequestDispatcher("logout").forward(request, response);
                 return;
             }
+            
             request.setAttribute("product", product);
             request.getRequestDispatcher("ProductsManager/UpdateProduct.jsp").forward(request, response);
         } catch (Exception ex) {

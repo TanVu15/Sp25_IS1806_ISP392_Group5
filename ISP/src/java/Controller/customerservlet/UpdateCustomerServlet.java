@@ -48,6 +48,7 @@ public class UpdateCustomerServlet extends HttpServlet {
         ArrayList<Customers> customers = dao.getAllCustomers();
         request.setAttribute("customers", customers);
         int customerid = Integer.parseInt(request.getParameter("id"));
+        
 
         //authen
         try {
@@ -81,6 +82,14 @@ public class UpdateCustomerServlet extends HttpServlet {
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
+        
+        if ( "".equals(name)) {
+            request.setAttribute("message", "Hãy xem lại!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("CustomersManager/UpdateCustomer.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
         // Cập nhật người dùng trong database
         Customers cus = new Customers();
         cus.setID(userid);

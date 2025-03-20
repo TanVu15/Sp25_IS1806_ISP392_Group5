@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.StringWriter;
 import model.Shops;
 
 /**
@@ -66,13 +67,13 @@ public class LoginServlet extends HttpServlet {
                         if (user.getShopID() != 0) {
                             Shops shop = daoShop.getShopByID(user.getShopID());
                             session.setAttribute("shop", shop);
-                             response.sendRedirect("listproducts");
+                            response.sendRedirect("listproducts");
                             return;
                         } else {
                             response.sendRedirect("createshop");
                             return;
                         }
-                       
+
                     }
                 } else {
                     request.setAttribute("message", "Hãy xem lại tài khoản và mật khẩu!");

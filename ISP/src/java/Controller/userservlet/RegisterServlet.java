@@ -56,8 +56,8 @@ public class RegisterServlet extends HttpServlet {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String password2 = request.getParameter("password2");
-        if (!password.endsWith(password2) || password == null) {
-            request.setAttribute("message", "Hãy xem lại mật khẩu của bạn!");
+        if (!password.endsWith(password2) || password == null || "".equals(name)) {
+            request.setAttribute("message", "Hãy xem lại tài khoản và mật khẩu của bạn!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
             dispatcher.forward(request, response);
             return;

@@ -64,6 +64,13 @@ public class AddCustomerServlet extends HttpServlet {
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
+        
+        if ( "".equals(name)) {
+            request.setAttribute("message", "Hãy xem lại!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("CustomersManager/AddCustomer.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
 
         DAOCustomers dao = new DAOCustomers();
         Customers cus = new Customers();
