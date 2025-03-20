@@ -130,7 +130,7 @@
                                         if (shop.getID() == product.getShopID()) {
                                             if (product.getIsDelete() == 0) {
                                                 // Lấy danh sách khu vực cho sản phẩm
-                                                String zoneDisplay = "Chưa xác định"; // Giá trị mặc định
+                                                String zoneDisplay = "Trống"; // Giá trị mặc định
                                                 ArrayList<Zones> zonesList = dao1.getZonesByProductId(product.getID());
                                                 if (zonesList != null && !zonesList.isEmpty()) {
                                                     StringBuilder zonesNames = new StringBuilder();

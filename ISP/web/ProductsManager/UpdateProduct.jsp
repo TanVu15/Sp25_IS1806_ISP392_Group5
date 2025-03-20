@@ -5,6 +5,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="dal.DAOProducts" %>
 <%@ page import="dal.DAOZones" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,11 +48,13 @@
 
 <div class="container">
     <h2>Cập Nhập Sản Phẩm</h2>
-
+        
     <div id="error-message" class="alert alert-danger">
         <%= request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : "" %>
     </div>
-
+    <%      DAOShops daoShop = new DAOShops();
+                Shops shop = (Shops) session.getAttribute("shop");
+        %>
     <form action="updateproduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
         <input type="hidden" name="id" value="${product.ID}"/>
         <input type="hidden" name="currentImageLink" value="${product.imageLink}"/> <!-- Giữ ảnh cũ -->
@@ -92,11 +96,12 @@
                     ArrayList<Zones> zonesList = daoZone.getAllZones(); // Lấy tất cả khu vực
                     ArrayList<Zones> productZones = (ArrayList<Zones>) request.getAttribute("productZones"); // Khu vực của sản phẩm hiện tại
                     for (Zones zone : zonesList) {
+                    if(zone.getShopID() == shop.getID()){
                 %>
                     <option value="<%= zone.getID() %>" <%= productZones != null && productZones.contains(zone) ? "selected" : "" %>> 
                         <%= zone.getZoneName() %>
                     </option>
-                <% } %>
+                <% } } %>
             </select>
         </div>
 
