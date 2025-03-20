@@ -3,18 +3,10 @@
     Created on : Mar 19, 2025, 11:27:00 PM
     Author     : ADMIN
 --%>
-
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="model.Orders" %>
 <%@ page import="model.Users" %>
-<%@ page import="dal.DAOOrders" %>
-<%@ page import="dal.DAOUser" %>
 <%@ page import="model.Shops" %>
-<%@ page import="dal.DAOShops" %>
-<%@ page import="dal.DAOOrderItem" %>
-<%@ page import="dal.DAOProducts" %>
 <%@ page import="model.OrderItems" %>
-<%@ page import="model.Products" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -26,23 +18,32 @@
         <title>Thông tin đơn hàng</title>
         <link rel="stylesheet" href="css/product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <style>
+            .error {
+                color: red;
+            }
+        </style>
     </head>
     <body>
         <% 
-            DAOUser dao = new DAOUser();
-            DAOProducts dao1 = new DAOProducts();
             Shops shop = (Shops) session.getAttribute("shop");
             Users u = (Users) request.getAttribute("user");
             ArrayList<OrderItems> orderitems = (ArrayList<OrderItems>) request.getAttribute("orderitems");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
+            String message = (String) request.getAttribute("message");
         %>
 
         <div class="header">
             <div class="container">
+                <% if (shop != null) { %>
                 <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
+                <% } else { %>
+                <p>Chưa có logo cửa hàng</p>
+                <% } %>
             </div>
             <div class="header__navbar-item navbar__user">
-                <span class="navbar__user--name"> <%= u.getFullName()%></span>
+                <% if (u != null) { %>
+                <span class="navbar__user--name"><%= u.getFullName()%></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
                         <a href="userdetail?id=<%= u.getID()%>" class="navbar__info--item">Tài khoản của tôi</a>
@@ -51,6 +52,10 @@
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
                     </div>
                 </div>
+                <% } else { %>
+                <span class="navbar__user--name">Khách</span>
+                <a href="login">Đăng nhập</a>
+                <% } %>
             </div>
         </div>
 
@@ -71,7 +76,16 @@
                 <div class="homepage-body">
                     <div class="body-head">
                         <h3 class="body__head-title">Thông tin đơn hàng</h3>
+                        <form action="listorderitems" method="post">
+                        <input type="hidden" name="orderid" value="<%= request.getAttribute("orderId") != null ? request.getAttribute("orderId") : request.getParameter("id") != null ? request.getParameter("id") : "" %>">
+                        <input type="text" id="information" name="information" placeholder="Nhập tên sản phẩm..." class="search-input">
+                        <button type="submit" class="search-button">Tìm kiếm</button>
+                    </form>
                     </div>
+                    
+                    <% if (message != null) { %>
+                    <p class="error"><%= message %></p>
+                    <% } %>
                     <div class="table-container">
                         <table class="product-table">
                             <thead>
@@ -81,28 +95,28 @@
                                     <th class="table-header-item">Quy cách</th>
                                     <th class="table-header-item">Giá sản phẩm</th>
                                     <th class="table-header-item">Giảm giá</th>
-                                    <th class="table-header-item">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <%
-                                    for (OrderItems o : orderitems){ 
-                                        if (o.getShopID() == u.getShopID()) {
-                                %>
+                                <% if (orderitems != null && !orderitems.isEmpty()) { 
+                                    for (OrderItems o : orderitems) { 
+                                        if (u != null && o.getShopID() == u.getShopID()) { %>
                                 <tr class="table-row">
                                     <td class="table-cell"><%= o.getProductName()%></td>
                                     <td class="table-cell"><%= o.getQuantity() %></td>
                                     <td class="table-cell"><%= o.getDescription() +"Kg/Bao" %></td>
                                     <td class="table-cell"><%= currencyFormat.format(o.getPrice()) +" VND"%></td>
-                                    <td class="table-cell"><%= currencyFormat.format(o.getUnitPrice()) %> VND</td>
-                                    <td class="table-cell">
-                                        <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại</button>
-                                    </td>
+                                    <td class="table-cell"><%= currencyFormat.format(o.getUnitPrice()) +" VND"%></td>
                                 </tr>
-                                <% }  } %>
+                                <%      }
+                                    }
+                                } else { %>
+                                <tr><td colspan="5">Không có sản phẩm nào trong đơn hàng.</td></tr>
+                                <% } %>
                             </tbody>
                         </table>
                     </div>
+                    <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại</button>
                 </div>
             </div>
         </div>
@@ -114,4 +128,3 @@
         </div>            
     </body>
 </html>
-

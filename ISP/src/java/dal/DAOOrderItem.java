@@ -216,6 +216,41 @@ public class DAOOrderItem {
         }
         return orderItemses;
     }
+    
+    public ArrayList<OrderItems> searchProductByOrderID(int orderId, String productName) {
+        ArrayList<OrderItems> orderItemsList = new ArrayList<>();
+        String query = "SELECT * FROM OrderItems WHERE OrderID = ? AND LOWER(ProductName) LIKE ?";
+
+        try (PreparedStatement ps = connect.prepareStatement(query)) {
+            ps.setInt(1, orderId);
+            ps.setString(2, "%" + productName.toLowerCase() + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderItems oi = new OrderItems();
+                oi.setID(rs.getInt("ID"));
+                oi.setOrderID(rs.getInt("OrderID"));
+                oi.setProductName(rs.getString("ProductName"));
+                oi.setDescription(rs.getString("Description"));
+                oi.setPrice(rs.getInt("Price"));
+                oi.setQuantity(rs.getInt("Quantity"));
+                oi.setUnitPrice(rs.getInt("UnitPrice"));
+                oi.setShopID(rs.getInt("ShopID"));
+                oi.setCreateAt(rs.getDate("CreateAt"));
+                oi.setUpdateAt(rs.getDate("UpdateAt"));
+                oi.setCreateBy(rs.getInt("CreateBy"));
+                oi.setIsDelete(rs.getInt("isDelete"));
+                oi.setDeletedAt(rs.getDate("DeletedAt"));
+                oi.setDeleteBy(rs.getInt("DeleteBy"));
+
+                orderItemsList.add(oi);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orderItemsList;
+    }
+
 
     public static void main(String[] args) throws Exception {
         DAOOrderItem dao = new DAOOrderItem();

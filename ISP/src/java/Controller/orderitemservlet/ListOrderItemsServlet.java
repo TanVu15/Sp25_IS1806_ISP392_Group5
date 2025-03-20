@@ -68,25 +68,24 @@ public class ListOrderItemsServlet extends HttpServlet {
             throws ServletException, IOException {
         DAOOrderItem dao = new DAOOrderItem();
         HttpSession session = request.getSession();
-        request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
-        int orderid = Integer.parseInt(request.getParameter("id"));
-        ArrayList<OrderItems> orderitems = new ArrayList<>();
-        if (user.getShopID() == 0 && user.getRoleid() == 2) {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
-            requestDispatcher.forward(request, response);
-            return;
-        }
-        try {
-            orderitems = dao.getAllOrderItemsByOrderID(orderid);
-            request.setAttribute("orderitems", orderitems);
-        } catch (Exception ex) {
-            Logger.getLogger(UserDetailServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("OrderItemsManager/ListOrderItems.jsp");
-        requestDispatcher.forward(request, response);
 
+        String orderIdStr = request.getParameter("id");
+        int orderId;
+
+        try {
+            orderId = Integer.parseInt(orderIdStr);
+            request.setAttribute("orderId", orderId); // Gán orderId cho JSP
+            ArrayList<OrderItems> orderitems = dao.getAllOrderItemsByOrderID(orderId);
+            request.setAttribute("orderitems", orderitems);
+        } catch (Exception e) {
+            request.setAttribute("message", "Mã đơn hàng không hợp lệ hoặc lỗi khi lấy dữ liệu.");
+            request.setAttribute("orderitems", new ArrayList<OrderItems>());
+        }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("OrderItemsManager/ListOrderItems.jsp");
+        dispatcher.forward(request, response);
     }
 
     /**
@@ -101,29 +100,57 @@ public class ListOrderItemsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
         String information = request.getParameter("information");
+        String orderIdStr = request.getParameter("orderid");
+        int orderId;
+
+        // Kiểm tra và parse orderId
+        try {
+            if (orderIdStr == null || orderIdStr.trim().isEmpty() || "null".equals(orderIdStr)) {
+                throw new NumberFormatException("orderId không hợp lệ");
+            }
+            orderId = Integer.parseInt(orderIdStr);
+        } catch (NumberFormatException e) {
+            HttpSession session = request.getSession();
+            Users user = (Users) session.getAttribute("user");
+            request.setAttribute("user", user);
+            request.setAttribute("message", "Mã đơn hàng không hợp lệ.");
+            request.setAttribute("orderitems", new ArrayList<OrderItems>());
+            RequestDispatcher dispatcher = request.getRequestDispatcher("OrderItemsManager/ListOrderItems.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
 
         DAOOrderItem dao = new DAOOrderItem();
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
+        request.setAttribute("orderId", orderId); // Lưu orderId để JSP tái sử dụng
+        ArrayList<OrderItems> orderitems = new ArrayList<>();
 
-        ArrayList<OrderItems> orderitems;
         try {
-            orderitems = dao.getOrderItemBySearch(information);
-            if (orderitems == null || orderitems.isEmpty()) {
-                request.setAttribute("message", "Không tìm thấy kết quả nào.");
-                orderitems = dao.getAllOrderItem();
-                request.setAttribute("orderitems", orderitems);
+            if (information == null || information.trim().isEmpty()) {
+                orderitems = dao.getAllOrderItemsByOrderID(orderId);
+                request.setAttribute("message", ""); // Xóa thông báo lỗi nếu thành công
             } else {
-                request.setAttribute("orderitems", orderitems);
+                orderitems = dao.searchProductByOrderID(orderId, information);
+                if (orderitems == null || orderitems.isEmpty()) {
+                    request.setAttribute("message", "Không tìm thấy kết quả nào.");
+                    orderitems = dao.getAllOrderItemsByOrderID(orderId);
+                } else {
+                    request.setAttribute("message", ""); // Xóa thông báo lỗi nếu tìm thấy
+                }
             }
-
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("OrderItemsManager/ListOrderItems.jsp");
-            requestDispatcher.forward(request, response);
         } catch (Exception ex) {
+            request.setAttribute("message", "Đã xảy ra lỗi trong quá trình tìm kiếm.");
+            orderitems = new ArrayList<>(); // Gán danh sách rỗng nếu lỗi
+            ex.printStackTrace();
         }
 
+        request.setAttribute("orderitems", orderitems);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("OrderItemsManager/ListOrderItems.jsp");
+        requestDispatcher.forward(request, response);
     }
 
     /**
