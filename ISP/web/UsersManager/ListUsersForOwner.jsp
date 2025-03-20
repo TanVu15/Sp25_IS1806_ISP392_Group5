@@ -38,7 +38,9 @@
 
         <div class="header">
             <div class="container">
-                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo" >
+                <a href="shopdetail">
+                    <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
+                </a>
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
@@ -72,6 +74,13 @@
                         <h3 class="body__head-title">Thông tin tài khoản</h3>
                         <div class="search-container">
                             <form action="listusers" method="post">
+                                <div class="form-group">
+                                    <label for="sort">Sắp xếp:</label>
+                                    <select name="sort" required>
+                                        <option value="1">Cũ nhất</option>
+                                        <option value="-1">Mới nhất</option>
+                                    </select>
+                                </div>
                                 <input type="text" id="information" name="information" placeholder="Tìm kiếm người dùng..." class="search-input">
                                 <button type="submit" class="search-button">Search</button>
                             </form>
@@ -137,7 +146,7 @@
                                         <button class="action-button" onclick="if (confirm('Bạn có muốn đặt lại mật khẩu thành : 12345678 ?')) {
                                                     window.location.href = 'resetpassword?resetid=<%= user.getID() %>';
                                                 }">Đặt lại mật khẩu</button> 
-                                        
+
                                         <%
                                             }
                                         %>
@@ -151,8 +160,8 @@
                             </tbody>
                         </table>
                     </div>
-                            
-                            <!-- Pagination -->
+
+                    <!-- Pagination -->
 
                     <div class="pagination">
                         <div class="pagination-controls">
@@ -169,7 +178,7 @@
                                 onclick="window.location.href = 'listusers?page=<%= currentPage + 1%>'">Sau</button>
                         </div>
                     </div>
-                            
+
                 </div>
             </div>
         </div>

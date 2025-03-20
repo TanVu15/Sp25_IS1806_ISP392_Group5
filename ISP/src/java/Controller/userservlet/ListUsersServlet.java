@@ -60,25 +60,25 @@ public class ListUsersServlet extends HttpServlet {
         request.setAttribute("user", user);
         //ArrayList<Users> users = dao.getUsers();
         //.setAttribute("users", users);
-        
+
         if (session.getAttribute("user") != null) {
             if (user.getRoleid() == 1) {
-                
+
                 // Lấy trang hiện tại từ tham số URL, mặc định là 1
-                    int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-                    int productsPerPage = 5; // Số sản phẩm trên mỗi trang
+                int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+                int productsPerPage = 5; // Số sản phẩm trên mỗi trang
 
-                   // Lấy tổng số sản phẩm cho shop hiện tại
-                    int totalUser = dao.getTotalUsersById();
-                    int totalPages = (int) Math.ceil((double) totalUser / productsPerPage);
+                // Lấy tổng số sản phẩm cho shop hiện tại
+                int totalUser = dao.getTotalUsersById();
+                int totalPages = (int) Math.ceil((double) totalUser / productsPerPage);
 
-                    // Lấy danh sách sản phẩm cho trang hiện tại
-                    ArrayList<Users> users = dao.getUsersByPageID(currentPage, productsPerPage);
+                // Lấy danh sách sản phẩm cho trang hiện tại
+                ArrayList<Users> users = dao.getUsersByPageID(currentPage, productsPerPage);
 
-                    // Thiết lập các thuộc tính cho JSP
-                    request.setAttribute("users", users);
-                    request.setAttribute("currentPage", currentPage);
-                    request.setAttribute("totalPages", totalPages);
+                // Thiết lập các thuộc tính cho JSP
+                request.setAttribute("users", users);
+                request.setAttribute("currentPage", currentPage);
+                request.setAttribute("totalPages", totalPages);
 
                 RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsers.jsp");
                 requestDispatcher.forward(request, response);
@@ -129,24 +129,38 @@ public class ListUsersServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String information = request.getParameter("information");
+        int sort = Integer.parseInt(request.getParameter("sort"));
 
         DAOUser dao = new DAOUser();
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
-
-        ArrayList<Users> users;
-        try {
-            users = dao.getUsersBySearch(information);
-            if (users == null || users.isEmpty()) {
-                request.setAttribute("message", "Không tìm thấy kết quả nào.");
-                users = dao.getUsers();
-                request.setAttribute("users", users);
-            } else {
-                request.setAttribute("users", users);
+        if (information.endsWith("") && sort == 1) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("listusers");
+            requestDispatcher.forward(request, response);
+            return;
+        }
+        ArrayList<Users> users = DAOUser.INSTANCE.getUsers();
+        if (users == null) {
+            users = new ArrayList<>(); // Tránh lỗi null
+        }
+        if (!information.endsWith("") && sort == -1) {
+            try {
+                users = dao.getUsersBySearch(information);
+                if (users == null || users.isEmpty()) {
+                    request.setAttribute("message", "Không tìm thấy kết quả nào.");
+                    users = dao.getUsers();
+                    request.setAttribute("users", users);
+                } else {
+                    DAOUser.INSTANCE.sortUserByNewTime(users);
+                    request.setAttribute("users", users);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(ListUsersServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (Exception ex) {
-            Logger.getLogger(ListUsersServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (sort == -1) {
+            DAOUser.INSTANCE.sortUserByNewTime(users);
         }
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsers.jsp");

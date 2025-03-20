@@ -352,6 +352,23 @@ public class DAOUser {
         }
         return users;
     }
+    
+    
+    public ArrayList<Users> sortUserByNewTime(ArrayList<Users> listOld) {
+        int n = listOld.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                // So sánh ngày tạo (mới hơn đứng trước)
+                if (listOld.get(j).getCreateAt().before(listOld.get(j + 1).getCreateAt())) {
+                    // Hoán đổi vị trí
+                    Users temp = listOld.get(j);
+                    listOld.set(j, listOld.get(j + 1));
+                    listOld.set(j + 1, temp);
+                }
+            }
+        }
+        return listOld;
+    }
 
     public static void main(String[] args) throws Exception {
         DAOUser dao = new DAOUser();
