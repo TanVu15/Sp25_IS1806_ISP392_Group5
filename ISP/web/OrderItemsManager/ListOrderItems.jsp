@@ -35,11 +35,9 @@
 
         <div class="header">
             <div class="container">
-                <% if (shop != null) { %>
-                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
-                <% } else { %>
-                <p>Chưa có logo cửa hàng</p>
-                <% } %>
+                <a href="shopdetail">
+                    <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
+                </a>
             </div>
             <div class="header__navbar-item navbar__user">
                 <% if (u != null) { %>

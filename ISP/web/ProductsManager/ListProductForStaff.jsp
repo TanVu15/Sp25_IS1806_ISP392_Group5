@@ -4,6 +4,8 @@
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOProducts" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,6 +21,9 @@
 
     <body>
         <%
+            DAOShops daoShop = new DAOShops();
+                Shops shop = (Shops) session.getAttribute("shop");
+
             DAOUser dao = new DAOUser();
             Users u = (Users) request.getAttribute("user");
             ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
@@ -26,7 +31,9 @@
         <!-- Homepage Header -->
         <div class="header">
             <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
+                <a href="shopdetail">
+                    <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
+                </a>
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name">

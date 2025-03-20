@@ -111,12 +111,5 @@ public class AddCustomerServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-//    public static long millis = System.currentTimeMillis();
-//    public static Date today = new Date(millis);
-//    public static void main(String[] args) {
-//        DAOCustomers dao = new DAOCustomers();
-//        Customers customer = new Customers(0, 0, "Dong", "12323213", "hai duong", today, today, 0, 0, today, 0);
-//        dao.AddCustomer(customer, 1);
-//    }
 
 }

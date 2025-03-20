@@ -69,6 +69,13 @@ public class AddZoneServlet extends HttpServlet {
         
         response.setContentType("text/html;charset=UTF-8");
         String zone = request.getParameter("zone");
+        
+        if ( "".equals(zone)) {
+            request.setAttribute("message", "Hãy xem lại!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("ZoneManager/AddZones.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
 
         DAOZones dao = new DAOZones();
         Zones z = new Zones();

@@ -15,7 +15,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý Tài Khoản</title>
-        <link rel="stylesheet" href="css/home2.css">
+        <link rel="stylesheet" href="css/product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
@@ -24,7 +24,7 @@
                 DAOUser dao = new DAOUser();
                 Users u = (Users) request.getAttribute("user");
                 ArrayList<Users> users = (ArrayList<Users>) request.getAttribute("users");
-                
+                                
         %>
         <%
             Integer currentPage = (Integer) request.getAttribute("currentPage");
@@ -38,13 +38,15 @@
 
         <div class="header">
             <div class="container">
-                <img src="" alt="logo" class="home-logo">
+                <a href="shopdetail">
+                    <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
+                </a>
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="userdetail?id=<%= u.getID() %>" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u.getID() %>"class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
@@ -58,7 +60,7 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href="ListZones.jsp"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
                         <li class="mainmenu__list-item"><a href="listorders"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
@@ -72,7 +74,7 @@
                         <h3 class="body__head-title">Thông tin tài khoản</h3>
                         <div class="search-container">
                             <form action="listusers" method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm nguời dùng..." class="search-input">
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm người dùng..." class="search-input">
                                 <button type="submit" class="search-button">Search</button>
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>
@@ -101,7 +103,6 @@
                                 <tr class="table-header">
                                     <th class="table-header-item">ID</th>
                                     <th class="table-header-item">Tài khoản</th>
-                                    <th class="table-header-item">Mật khẩu</th>
                                     <th class="table-header-item">Vai trò</th>
                                     <th class="table-header-item">Tên</th>
                                     <th class="table-header-item">Hành động</th>
@@ -114,7 +115,6 @@
                                 <tr class="table-row">
                                     <td class="table-cell"><%= user.getID() %></td>
                                     <td class="table-cell"><%= user.getUsername() %></td>
-                                    <td class="table-cell"><%= user.getPasswordHash() %></td>
                                     <td class="table-cell"><% 
                                                                 if (user.getRoleid() == 1) {
                                                                     out.print("Admin");
@@ -123,9 +123,11 @@
                                                                 } else {
                                                                     out.print("Staff");
                                                                 }
+                                       
                                         %></td>
                                     <td class="table-cell"><%= user.getFullName() %></td>
                                     <td class="table-cell">
+                                        <button class="action-button" onclick="window.location.href = 'userdetail?id=<%= user.getID() %>'">Thông tin chi tiết</button>
                                         <button class="action-button" onclick="window.location.href = 'updateuser?id=<%= user.getID() %>'">Chỉnh sửa</button>
                                         <% if(u.getRoleid() < user.getRoleid()){ %>
                                         <button class="action-button" onclick="if (confirm('Bạn có chắc chắn muốn xóa?')) {
@@ -133,21 +135,23 @@
                                                 }">Xóa</button>  
                                         <button class="action-button" onclick="if (confirm('Bạn có muốn đặt lại mật khẩu thành : 12345678 ?')) {
                                                     window.location.href = 'resetpassword?resetid=<%= user.getID() %>';
-                                                }">Đặt lại mật khẩu</button>        
+                                                }">Đặt lại mật khẩu</button> 
+
                                         <%
                                             }
                                         %>
-                                        <button class="action-button" onclick="window.location.href = 'userdetail?id=<%= user.getID() %>'">Thông tin chi tiết</button>
+
                                     </td>
                                 </tr>
                                 <% 
+                                        
                                     }
                                 %>
                             </tbody>
                         </table>
                     </div>
-                            
-                                    <!-- Pagination -->
+
+                    <!-- Pagination -->
 
                     <div class="pagination">
                         <div class="pagination-controls">
@@ -164,7 +168,7 @@
                                 onclick="window.location.href = 'listusers?page=<%= currentPage + 1%>'">Sau</button>
                         </div>
                     </div>
-                        
+
                 </div>
             </div>
         </div>

@@ -74,13 +74,6 @@
                         <h3 class="body__head-title">Thông tin tài khoản</h3>
                         <div class="search-container">
                             <form action="listusers" method="post">
-                                <div class="form-group">
-                                    <label for="sort">Sắp xếp:</label>
-                                    <select name="sort" required>
-                                        <option value="1">Cũ nhất</option>
-                                        <option value="-1">Mới nhất</option>
-                                    </select>
-                                </div>
                                 <input type="text" id="information" name="information" placeholder="Tìm kiếm người dùng..." class="search-input">
                                 <button type="submit" class="search-button">Search</button>
                             </form>
@@ -110,7 +103,6 @@
                                 <tr class="table-header">
                                     <th class="table-header-item">ID</th>
                                     <th class="table-header-item">Tài khoản</th>
-                                    <th class="table-header-item">Mật khẩu</th>
                                     <th class="table-header-item">Vai trò</th>
                                     <th class="table-header-item">Tên</th>
                                     <th class="table-header-item">Hành động</th>
@@ -124,7 +116,6 @@
                                 <tr class="table-row">
                                     <td class="table-cell"><%= user.getID() %></td>
                                     <td class="table-cell"><%= user.getUsername() %></td>
-                                    <td class="table-cell"><%= user.getPasswordHash() %></td>
                                     <td class="table-cell"><% 
                                                                 if (user.getRoleid() == 1) {
                                                                     out.print("Admin");
