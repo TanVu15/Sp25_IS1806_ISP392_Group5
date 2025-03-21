@@ -118,13 +118,9 @@
     <div class="content-wrapper">
         <div class="header">
             <div class="container">
-                <% if (shop != null) { %>
-                    <a href="shopdetail">
-                        <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
-                    </a>
-                <% } else { %>
-                    <p>Chưa có logo cửa hàng</p>
-                <% } %>
+                <a href="shopdetail">
+                    <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
+                </a>
                 <div class="header__navbar-item navbar__user">
                     <% if (u != null) { %>
                         <span class="navbar__user--name"><%= u.getFullName()%></span>
@@ -167,6 +163,8 @@
                             <input type="text" id="information" name="information" placeholder="Nhập tên sản phẩm..." class="search-input">
                             <button type="submit" class="search-button">Tìm kiếm</button>
                         </form>
+                    <button class="invoice-button" onclick="showPopup()">Xem hóa đơn</button>
+                    <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại</button>
                     </div>
                     
                     <% if (message != null) { %>
@@ -227,8 +225,7 @@
                         </div>
                     </div>
 
-                    <button class="invoice-button" onclick="showPopup()">Xem hóa đơn</button>
-                    <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại</button>
+                    
                 </div>
             </div>
         </div>
