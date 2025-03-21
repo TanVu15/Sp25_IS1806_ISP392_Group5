@@ -97,14 +97,13 @@ public class DAOZones {
     }
 
     public void addZone(Zones zone, int userid) {
-        String sql = "INSERT INTO Zones (ZoneName, shopid, ProductID, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Zones (ZoneName, shopid, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, zone.getZoneName());
             ps.setInt(2, zone.getShopID());
-            ps.setInt(3, zone.getProductID()); // Include ProductID
-            ps.setDate(4, today);
-            ps.setInt(5, userid);
-            ps.setInt(6, 0);
+            ps.setDate(3, today);
+            ps.setInt(4, userid);
+            ps.setInt(5, 0);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error adding zone: " + e.getMessage());

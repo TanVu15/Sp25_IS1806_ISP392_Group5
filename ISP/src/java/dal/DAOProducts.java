@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import model.Users;
 
 public class DAOProducts {
@@ -265,7 +266,21 @@ public void updateProducts(Products product) {
         }
         return products;
     }
-    
+
+public int getProductIdByNameAndShop(String productName, int shopID) {
+        String sql = "SELECT ID FROM Products WHERE ProductName = ? AND ShopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, productName);
+            ps.setInt(2, shopID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("ID"); // Return the product ID if found
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Return -1 if the product is not found
+    }    
     // Method to get products by shop ID
     public ArrayList<Products> getProductsByShopId(int shopID) throws SQLException {
         ArrayList<Products> products = new ArrayList<>();
@@ -343,15 +358,6 @@ public void updateProducts(Products product) {
         return products;
     }
     
-//    update quantity after importing
-    public void updateProductQuantity(int productId, int quantity) throws SQLException {
-    String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE ID = ?";
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setInt(1, quantity);
-        ps.setInt(2, productId);
-        ps.executeUpdate();
-    }
-}
 
     public void updateProductQuantity(String productName, int quantityToAdd, int shopid) {
         String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE productName = ? shopID = ?";
@@ -364,6 +370,28 @@ public void updateProducts(Products product) {
             e.printStackTrace();
         }
     }
+    
+   public void updateProductZones2(int productId, ArrayList<String> zoneIDs) {
+    for (String zoneID : zoneIDs) {
+        int zoneIdInt;
+        try {
+            zoneIdInt = Integer.parseInt(zoneID);
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid zone ID: " + zoneID);
+            continue; // Skip to the next zoneID
+        }
+
+        // Update the zone with the new product ID
+        String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, zoneIdInt);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
 
     public ArrayList<Products> getProductListFromRequest(HttpServletRequest request) {
         ArrayList<Products> productList = new ArrayList<>();
@@ -401,7 +429,6 @@ public void updateProducts(Products product) {
     int productIdToUpdate = 3; // ID của sản phẩm cần cập nhật
     Products productToUpdate = dao.getProductByID(productIdToUpdate);
     int quantity = 400;
-    dao.updateProductQuantity(productIdToUpdate, quantity);
    
     }
     
