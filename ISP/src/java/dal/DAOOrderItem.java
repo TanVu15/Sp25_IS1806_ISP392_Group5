@@ -10,7 +10,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 import model.Users;
 
 /**
@@ -215,6 +217,86 @@ public class DAOOrderItem {
             e.printStackTrace();
         }
         return orderItemses;
+    }
+
+    private String removeDiacritics(String str) {
+        if (str == null) {
+            return "";
+        }
+        String normalized = Normalizer.normalize(str, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("");
+    }
+
+    public ArrayList<OrderItems> searchProductByOrderID(int orderId, String productName) {
+        ArrayList<OrderItems> orderItemsList = new ArrayList<>();
+        String normalizedProductName = removeDiacritics(productName).toLowerCase();
+        String query = "SELECT * FROM OrderItems WHERE OrderID = ?";
+
+        try (PreparedStatement ps = connect.prepareStatement(query)) {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderItems oi = new OrderItems();
+                oi.setID(rs.getInt("ID"));
+                oi.setOrderID(rs.getInt("OrderID"));
+                oi.setProductName(rs.getString("ProductName"));
+                oi.setDescription(rs.getString("Description"));
+                oi.setPrice(rs.getInt("Price"));
+                oi.setQuantity(rs.getInt("Quantity"));
+                oi.setUnitPrice(rs.getInt("UnitPrice"));
+                oi.setShopID(rs.getInt("ShopID"));
+                oi.setCreateAt(rs.getDate("CreateAt"));
+                oi.setUpdateAt(rs.getDate("UpdateAt"));
+                oi.setCreateBy(rs.getInt("CreateBy"));
+                oi.setIsDelete(rs.getInt("isDelete"));
+                oi.setDeletedAt(rs.getDate("DeletedAt"));
+                oi.setDeleteBy(rs.getInt("DeleteBy"));
+
+                // Chuẩn hóa ProductName từ cơ sở dữ liệu
+                String normalizedDbProductName = removeDiacritics(oi.getProductName()).toLowerCase();
+                if (normalizedDbProductName.contains(normalizedProductName)) {
+                    orderItemsList.add(oi);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return orderItemsList;
+    }
+
+    public ArrayList<OrderItems> getItemsByPage(int page, int itemsPerPage, int shopId) {
+        ArrayList<OrderItems> items = new ArrayList<>();
+        String sql = "SELECT * FROM OrderItems WHERE isDelete = 0 AND ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ps.setInt(2, (page - 1) * itemsPerPage);
+            ps.setInt(3, itemsPerPage);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderItems o = new OrderItems();
+                o.setID(rs.getInt("ID"));
+                o.setOrderID(rs.getInt("OrderID"));
+                o.setProductName(rs.getString("ProductName"));
+                o.setDescription(rs.getString("Description"));
+                o.setPrice(rs.getInt("Price"));
+                o.setQuantity(rs.getInt("Quanity"));
+                o.setUnitPrice(rs.getInt("UnitPrice"));
+                o.setShopID(rs.getInt("ShopID"));
+                o.setCreateAt(rs.getDate("CreateAt"));
+                o.setUpdateAt(rs.getDate("UpdateAt"));
+                o.setCreateBy(rs.getInt("CreateBy"));
+                o.setIsDelete(rs.getInt("isDelete"));
+                items.add(o);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return items;
     }
 
     public static void main(String[] args) throws Exception {

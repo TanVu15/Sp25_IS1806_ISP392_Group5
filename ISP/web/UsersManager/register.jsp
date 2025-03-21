@@ -28,11 +28,13 @@
         <h2>Thêm tài khoản</h2>
         <%      String name = (String) request.getAttribute("name"); 
                 String password = (String) request.getAttribute("password"); 
-                String password2 = (String) request.getAttribute("password2"); 
+                String password2 = (String) request.getAttribute("password2");
+                String fullname = (String) request.getAttribute("fullname");
                 if (name == null || password == null) {
                     name = "";
                     password = "";
                     password2 = "";
+                    fullname = "";
                 }
                 
             %>
@@ -66,6 +68,10 @@
             <div class="form-group">
                 <label for="password2">Nhập lại password:</label>
                 <input type="password" name="password2" value= "<%= password2 %>" required>
+            </div>
+            <div class="form-group">
+                <label for="password2">Họ và tên:</label>
+                <input type="fullname" name="fullname" value= "<%= fullname %>" >
             </div>
             <div class="button-container">
                 <input type="submit" class="btn add-button" value="Đăng Kí">

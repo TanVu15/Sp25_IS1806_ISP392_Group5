@@ -129,22 +129,19 @@ public class ListUsersServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String information = request.getParameter("information");
-        int sort = Integer.parseInt(request.getParameter("sort"));
 
         DAOUser dao = new DAOUser();
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
-        if (information.endsWith("") && sort == 1) {
+        if (information.equals("")) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("listusers");
             requestDispatcher.forward(request, response);
             return;
         }
-        ArrayList<Users> users = DAOUser.INSTANCE.getUsers();
-        if (users == null) {
-            users = new ArrayList<>(); // Tránh lỗi null
-        }
-        if (!information.endsWith("") && sort == -1) {
+        ArrayList<Users> users = new ArrayList<>(); // Tránh lỗi null
+        
+        if (!information.equals("")) {
             try {
                 users = dao.getUsersBySearch(information);
                 if (users == null || users.isEmpty()) {
@@ -152,15 +149,11 @@ public class ListUsersServlet extends HttpServlet {
                     users = dao.getUsers();
                     request.setAttribute("users", users);
                 } else {
-                    DAOUser.INSTANCE.sortUserByNewTime(users);
                     request.setAttribute("users", users);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(ListUsersServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-        if (sort == -1) {
-            DAOUser.INSTANCE.sortUserByNewTime(users);
         }
 
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsers.jsp");

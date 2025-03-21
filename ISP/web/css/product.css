@@ -553,3 +553,31 @@ a {
     padding: 2px;
     
 }
+
+.form-group {
+    margin-bottom: 15px;
+    margin-right: 22px;
+}
+
+.form-group {
+    margin-right: 18px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align labels to the left */
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #6b4423; /* Brown color for rice theme */
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%; /* Make all input fields the same length and centered */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}

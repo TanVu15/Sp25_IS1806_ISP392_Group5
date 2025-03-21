@@ -62,7 +62,14 @@ public class AddProductServlet extends HttpServlet {
         Part filePart = request.getPart("image");
         String priceParam = request.getParameter("price");
         String[] zoneIDs = request.getParameterValues("zoneIDs"); // Get all zoneIDs
-
+        
+        if ( "".equals(productName) || "".equals(description) || "".equals(priceParam) || filePart == null || zoneIDs == null) {
+            request.setAttribute("message", "Hãy xem lại!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/AddProduct.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
+        
         int price = 0;
 
         // Validate price

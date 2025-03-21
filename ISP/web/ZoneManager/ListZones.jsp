@@ -16,8 +16,8 @@
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-    
-    
+
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +33,15 @@
             Shops shop = (Shops) session.getAttribute("shop");
             Users u = (Users) request.getAttribute("user");
             ArrayList<Zones> zones = (ArrayList<Zones>) request.getAttribute("zones");
+        %>
+        <%
+           Integer currentPage = (Integer) request.getAttribute("currentPage");
+           Integer totalPages = (Integer) request.getAttribute("totalPages");
+
+           // Kiểm tra xem các biến có được nhận hay không
+           if (currentPage == null || totalPages == null) {
+               out.println("<script>alert('Không thể nhận được currentPage hoặc totalPages.');</script>");
+           }
         %>
         <div class="header">
             <div class="container">
@@ -67,11 +76,12 @@
 
                 <div class="homepage-body">
                     <div class="body-head">
-                        <h3 class="body__head-title">Thông tin kho</h3>
+                        <h3 class="body__head-title">Thông tin khu vực</h3>
                         <div class="search-container">
                             <form action="listzones" method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm kho..." class="search-input">
-                                <button type="submit" class="search-button">Search</button>
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm khu vực..." class="search-input">
+                                <input type="hidden" name="page" value="1">
+                                <button type="submit" class="search-button">Tìm kiếm</button>
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>
                             <% if (message != null && !message.isEmpty()) { %>
@@ -97,8 +107,7 @@
                         <table class="product-table">
                             <thead>
                                 <tr class="table-header">
-                                    
-                                    <th class="table-header-item">Shop</th>
+
                                     <th class="table-header-item">Khu vực</th>
                                     <th class="table-header-item">Ngày tạo</th>
                                     <th class="table-header-item">Ngày cập nhật</th>
@@ -115,29 +124,53 @@
                                     if(cus.getShopID() == u.getShopID()){
                                 %>
                                 <tr class="table-row">
-                                    
-                                    <td class="table-cell"><%= cus.getShopID() %></td>
+
                                     <td class="table-cell"><%= cus.getZoneName() %></td>
                                     <td class="table-cell"><%= cus.getCreateAt() %></td>
                                     <td class="table-cell"><%= cus.getUpdateAt() %></td>
                                     <td class="table-cell"><%= dao.getUserByID(cus.getCreateBy()).getFullName() %></td>
-                                    
+
                                     <td class="table-cell"><%= cus.getDeletedAt() %></td>
                                     <td class="table-cell"><%= (cus.getIsDelete() == 0) ? "Null" : dao.getUserByID(cus.getDeleteBy()).getFullName() %></td>
 
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'updatezone?id=<%= cus.getID() %>'">Sửa</button>
 
-                                        <button class="action-button" onclick="window.location.href = 'deletezone?deleteid=<%= cus.getID() %>&userid=<%= u.getID() %>'">Ban</button>
+                                        <button class="action-button" onclick="if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+                                                    window.location.href = 'deletezone?deleteid=<%= cus.getID() %>&userid=<%= u.getID() %>';
+                                                }">Xóa</button>
                                     </td>
                                     <td class="table-cell"><%= cus.getIsDelete() == 0 ? "Hoạt động" : "Khóa"%></td>
-                            
-                            </tr>
-                            <% } 
-                            } }
-                            %>
+
+                                </tr>
+                                <% } 
+                                } }
+                                %>
                             </tbody>
                         </table>
+                    </div>
+                    <!-- Pagination -->
+
+                    <div class="pagination">
+                        <div class="pagination-controls">
+                            <% 
+                                String searchTerm = (String) session.getAttribute("searchTerm");
+                                String pageUrl = searchTerm != null ? 
+                                    "listzones?information=" + searchTerm + "&page=" : 
+                                    "listzones?page=";
+                            %>
+                            <button 
+                                class="pagination-button" 
+                                <% if (currentPage <= 1) { %> disabled <% }%> 
+                                onclick="window.location.href = '<%= pageUrl %><%= currentPage - 1%>'">Trước</button>
+
+                            <span class="pagination-info">Trang <%= currentPage%> / <%= totalPages%></span>
+
+                            <button 
+                                class="pagination-button" 
+                                <% if (currentPage >= totalPages) { %> disabled <% }%> 
+                                onclick="window.location.href = '<%= pageUrl %><%= currentPage + 1%>'">Sau</button>
+                        </div>
                     </div>
 
                 </div>

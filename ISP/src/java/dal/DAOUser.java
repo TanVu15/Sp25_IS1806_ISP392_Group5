@@ -34,7 +34,7 @@ public class DAOUser {
     }
 
     public void Register(Users user, int userid) {
-        String sql = "INSERT INTO Users (Username, passwordhash, roleid, CreateAt, CreateBy, isDelete, shopid) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (Username, passwordhash, roleid, CreateAt, CreateBy, isDelete, shopid, FullName) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
 
             ps.setString(1, user.getUsername());
@@ -44,6 +44,7 @@ public class DAOUser {
             ps.setInt(5, userid);
             ps.setInt(6, 0);
             ps.setInt(7, user.getShopID());
+            ps.setString(8, user.getFullName());
             ps.executeUpdate();
 
         } catch (SQLException e) {

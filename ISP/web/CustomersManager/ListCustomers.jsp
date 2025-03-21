@@ -46,7 +46,9 @@
         %>
         <div class="header">
             <div class="container">
-                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
+                <a href="shopdetail">
+                    <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
+                </a>
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
