@@ -31,29 +31,7 @@
         }
         .error { color: red; }
         .homepage-body { position: relative; min-height: 400px; }
-        .action-button {
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .action-button:hover { background-color: #0056b3; }
-        .invoice-button {
-            position: absolute;
-            right: 150px;
-            bottom: 20px;
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+        
         .invoice-button:hover { background-color: #218838; }
         .popup {
             display: none;
@@ -121,21 +99,18 @@
                 <a href="shopdetail">
                     <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
                 </a>
-                <div class="header__navbar-item navbar__user">
-                    <% if (u != null) { %>
-                        <span class="navbar__user--name"><%= u.getFullName()%></span>
-                        <div class="navbar__user--info">
-                            <div class="navbar__info--wrapper">
-                                <a href="userdetail?id=<%= u.getID()%>" class="navbar__info--item">Tài khoản của tôi</a>
-                            </div>
-                            <div class="navbar__info--wrapper">
-                                <a href="logout" class="navbar__info--item">Đăng xuất</a>
-                            </div>
-                        </div>
-                    <% } else { %>
-                        <span class="navbar__user--name">Khách</span>
-                        <a href="login">Đăng nhập</a>
-                    <% } %>
+            </div>
+            <div class="header__navbar-item navbar__user">
+                <span class="navbar__user--name">
+                    <%= u.getFullName()%>
+                </span>
+                <div class="navbar__user--info">
+                    <div class="navbar__info--wrapper">
+                        <a href="userdetail" class="navbar__info--item">Tài khoản của tôi</a>
+                    </div>
+                    <div class="navbar__info--wrapper">
+                        <a href="logout" class="navbar__info--item">Đăng xuất</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -163,7 +138,7 @@
                             <input type="text" id="information" name="information" placeholder="Nhập tên sản phẩm..." class="search-input">
                             <button type="submit" class="search-button">Tìm kiếm</button>
                         </form>
-                    <button class="invoice-button" onclick="showPopup()">Xem hóa đơn</button>
+                    <button class="action-button" onclick="showPopup()">Xem hóa đơn</button>
                     <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại</button>
                     </div>
                     
