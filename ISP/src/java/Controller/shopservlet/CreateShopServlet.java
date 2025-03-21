@@ -79,6 +79,12 @@ public class CreateShopServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
+        request.setAttribute("message", "");
+        if (user.getShopID() != 0) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("logout");
+            requestDispatcher.forward(request, response);
+            return;
+        }
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("ShopsManager/CreateShop.jsp");
         requestDispatcher.forward(request, response);
     }
@@ -97,11 +103,20 @@ public class CreateShopServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
-        
+
         String shopname = request.getParameter("shopname");
         Part filePart = request.getPart("logo");
         String email = request.getParameter("email");
         String location = request.getParameter("location");
+        String phone = request.getParameter("phone");
+        String bankacc = request.getParameter("bankacc");
+
+        if ("".equals(shopname) || "".equals(email) || "".equals(location)) {
+            request.setAttribute("message", "Hãy kiểm tra lại!");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("ShopsManager/CreateShop.jsp");
+            requestDispatcher.forward(request, response);
+            return;
+        }
 
         String imageLink = "";
         String imageDirectory = getServletContext().getRealPath("/Image/");
@@ -115,14 +130,20 @@ public class CreateShopServlet extends HttpServlet {
             File file = new File(dir, fileName);
             filePart.write(file.getAbsolutePath());
             imageLink = "Image/" + fileName;
-        }else{
+        } else {
             imageLink = "Image/logo.png";
         }
 
         DAOShops daoShops = new DAOShops();
-        Shops shop = new Shops(shopname, imageLink, email, location, user.getID());
-        daoShops.createShop(shop, user.getID());
-        
+        Shops shop = new Shops(shopname, imageLink, email, location,phone,bankacc, user.getID());
+        try {
+            daoShops.createShop(shop, user.getID());
+        } catch (Exception ex) {
+            request.setAttribute("message", "Hãy kiểm tra lại email do đã tồn tại email này!");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("ShopsManager/CreateShop.jsp");
+            requestDispatcher.forward(request, response);
+        }
+
         try {
             shop = daoShops.getShopByOwnerID(user.getID());
             session.setAttribute("shop", shop);
@@ -140,7 +161,6 @@ public class CreateShopServlet extends HttpServlet {
 
         response.sendRedirect("shopdetail");
     }
-    
 
     /**
      * Returns a short description of the servlet.

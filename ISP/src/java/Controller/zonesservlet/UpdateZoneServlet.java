@@ -5,12 +5,16 @@
 package Controller.zonesservlet;
 
 import dal.DAOZones;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.Customers;
+import model.Shops;
 import model.Zones;
 
 /**
@@ -58,10 +62,18 @@ public class UpdateZoneServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOZones dao = new DAOZones();
+        
+        HttpSession session = request.getSession();
+        
         int zoneId = Integer.parseInt(request.getParameter("id"));
 
         try {
             Zones zone = dao.getZonesByID(zoneId);
+            Shops shop = (Shops) session.getAttribute("shop");
+            if (shop.getID() != zone.getShopID() || zone == null) {
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("z", zone);
             request.getRequestDispatcher("ZoneManager/UpdateZones.jsp").forward(request, response);
         } catch (Exception ex) {
@@ -79,10 +91,18 @@ public class UpdateZoneServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         int zoneId = Integer.parseInt(request.getParameter("id"));
         String zoneName = request.getParameter("zone");
-        int shop = Integer.parseInt(request.getParameter("shop"));
+        Shops shop1 = (Shops) session.getAttribute("shop");
+        int shop = shop1.getID();
         
+        if ( "".equals(zoneName)) {
+            request.setAttribute("message", "Hãy xem lại!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("ZoneManager/UpdateZones.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
         Zones zone = new Zones();
         zone.setID(zoneId);
         zone.setZoneName(zoneName);

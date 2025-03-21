@@ -42,6 +42,7 @@ public class RegisterServlet extends HttpServlet {
         request.setAttribute("name", "");
         request.setAttribute("password", "");
         request.setAttribute("password2", "");
+        request.setAttribute("fullname", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
 
@@ -56,8 +57,9 @@ public class RegisterServlet extends HttpServlet {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String password2 = request.getParameter("password2");
-        if (!password.endsWith(password2) || password == null) {
-            request.setAttribute("message", "Hãy xem lại mật khẩu của bạn!");
+        String fullname = request.getParameter("fullname");
+        if (!password.endsWith(password2) || password == null || "".equals(name)) {
+            request.setAttribute("message", "Hãy xem lại tài khoản và mật khẩu của bạn!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
             dispatcher.forward(request, response);
             return;
@@ -75,6 +77,7 @@ public class RegisterServlet extends HttpServlet {
                 request.setAttribute("name", name);
                 request.setAttribute("password", password);
                 request.setAttribute("password2", password2);
+                request.setAttribute("fullname", "");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
                 dispatcher.forward(request, response);
                 return;
@@ -85,6 +88,7 @@ public class RegisterServlet extends HttpServlet {
 
                 userRegister.setUsername(name);
                 userRegister.setPasswordHash(password);
+                userRegister.setFullName(fullname);
                 userRegister.setRoleid(user.getRoleid() + 1);
                 if (user.getRoleid() + 1 == 3) {
                     userRegister.setShopID(user.getShopID());
@@ -98,6 +102,7 @@ public class RegisterServlet extends HttpServlet {
                 request.setAttribute("name", name);
                 request.setAttribute("password", password);
                 request.setAttribute("password2", password2);
+                request.setAttribute("fullname", "");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
                 dispatcher.forward(request, response);
             }
@@ -106,6 +111,7 @@ public class RegisterServlet extends HttpServlet {
             request.setAttribute("name", name);
             request.setAttribute("password", password);
             request.setAttribute("password2", password2);
+            request.setAttribute("fullname", "");
             RequestDispatcher dispatcher = request.getRequestDispatcher("UsersManager/register.jsp");
             dispatcher.forward(request, response);
         }

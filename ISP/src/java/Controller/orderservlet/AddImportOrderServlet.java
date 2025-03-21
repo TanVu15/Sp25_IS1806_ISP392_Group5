@@ -252,7 +252,7 @@ public class AddImportOrderServlet extends HttpServlet {
                         String[] zoneNames = request.getParameterValues("area[" + i + "]");
                         if (zoneNames != null) {
                             for (String zoneName : zoneNames) {
-                                dao2.updateZoneImportOrder(zoneName.trim(), pId, shopID);
+                                dao4.updateZoneImportOrder(zoneName.trim(), pId, shopID);
                             }
                         }
                         

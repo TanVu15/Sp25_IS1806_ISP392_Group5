@@ -28,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import jakarta.servlet.annotation.MultipartConfig; // Thêm import này
 import model.Shops;
+import Controller.Queue.WebAppListener;
 
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024 * 2, // 2MB
@@ -59,22 +60,20 @@ public class AddDebtRecordsServlet extends HttpServlet {
         request.setAttribute("user", user);
         ArrayList<Customers> customers = dao.getAllCustomers();
         request.setAttribute("customers", customers);
-        
-        
 
         int customerID = Integer.parseInt(request.getParameter("customerid"));
         try {
-            
+
             Customers customer = dao.getCustomersByID(customerID);
             Shops shop = (Shops) session.getAttribute("shop");
-            if(shop.getID() != customer.getShopID() || customer == null){
+            if (shop.getID() != customer.getShopID() || customer == null) {
                 request.getRequestDispatcher("logout").forward(request, response);
                 return;
             }
             request.setAttribute("customer", customer);
         } catch (Exception ex) {
-             request.getRequestDispatcher("logout").forward(request, response);
-             return;
+            request.getRequestDispatcher("logout").forward(request, response);
+            return;
         }
         RequestDispatcher dispatcher = request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp");
         dispatcher.forward(request, response);
@@ -94,7 +93,7 @@ public class AddDebtRecordsServlet extends HttpServlet {
 
         DAOCustomers daoCus = new DAOCustomers();
         response.setContentType("text/html;charset=UTF-8");
-        
+
         HttpSession session = request.getSession();
         Shops shop = (Shops) session.getAttribute("shop");
 
@@ -106,7 +105,7 @@ public class AddDebtRecordsServlet extends HttpServlet {
 
         try {
             Customers customer = daoCus.getCustomersByID(customerID);
-            if(shop.getID() != customer.getShopID()){
+            if (shop.getID() != customer.getShopID()) {
                 request.getRequestDispatcher("logout").forward(request, response);
                 return;
             }
@@ -116,7 +115,14 @@ public class AddDebtRecordsServlet extends HttpServlet {
         }
 
         // 🔹 Các tham số khác vẫn lấy bằng request.getParameter() bình thường
-        int amountOwed = Integer.parseInt(request.getParameter("amountowed"));
+        String amountOwedStr = request.getParameter("amountowed");
+        if (amountOwedStr == null || amountOwedStr.trim().isEmpty()) {
+            request.setAttribute("message", "Invalid format: Amount owed cannot be empty.");
+            request.getRequestDispatcher("DebtRecordsManager/AddDebtRecord.jsp").forward(request, response);
+            return;
+        }
+        int amountOwed = Integer.parseInt(amountOwedStr);
+
         int paymentStatus = Integer.parseInt(request.getParameter("paymentstatus"));
         String note = request.getParameter("note");
         String invoiceDateStr = request.getParameter("invoicedate");
@@ -165,7 +171,14 @@ public class AddDebtRecordsServlet extends HttpServlet {
                 debtRecord.setInvoiceDate(invoiceDate);
                 debtRecord.setShopID(user.getShopID());
 
-                dao.AddDebtRecords(debtRecord, user.getID());
+                int debtID = dao.AddDebtRecords(debtRecord, user.getID());
+
+                // Cập nhật lại debtID trong đối tượng DebtRecord trước khi đẩy vào queue
+                debtRecord.setID(debtID);
+
+                // Đẩy vào hàng đợi để xử lý
+                WebAppListener.debtQueue.offer(debtRecord);
+
                 response.sendRedirect("listcustomerdebtrecords?customerid=" + customerID);
             } else {
                 request.setAttribute("message", "User not authenticated.");

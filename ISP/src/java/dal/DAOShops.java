@@ -30,17 +30,19 @@ public class DAOShops {
     
     
     public void createShop(Shops shop, int userid) {
-        String sql = "INSERT INTO Shops (OwnerID, ShopName, LogoShop, Location, Email, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Shops (OwnerID, ShopName, LogoShop, Location, Phone, BankAcc, Email, CreateAt, CreateBy, isDelete) VALUES (?,?,?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
 
             ps.setInt(1, userid);
             ps.setString(2, shop.getShopName());
             ps.setString(3, shop.getLogoShop());
             ps.setString(4, shop.getLocation());
-            ps.setString(5, shop.getEmail());
-            ps.setDate(6, today);
-            ps.setInt(7, userid);
-            ps.setInt(8, 0);
+            ps.setString(5, shop.getPhone());
+            ps.setString(6, shop.getBankAcc());
+            ps.setString(7, shop.getEmail());
+            ps.setDate(8, today);
+            ps.setInt(9, userid);
+            ps.setInt(10, 0);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error: " + e.getMessage());
@@ -71,6 +73,8 @@ public class DAOShops {
             shop.setShopName(rs.getString("ShopName"));
             shop.setLogoShop(rs.getString("LogoShop"));
             shop.setLocation(rs.getString("Location"));
+            shop.setPhone(rs.getString("Phone"));
+            shop.setBankAcc(rs.getString("BankAcc"));
             shop.setEmail(rs.getString("Email"));
             shop.setCreatedAt(rs.getDate("CreateAt"));
             shop.setCreatedBy(rs.getInt("CreateBy"));
@@ -96,6 +100,8 @@ public class DAOShops {
             shop.setShopName(rs.getString("ShopName"));
             shop.setLogoShop(rs.getString("LogoShop"));
             shop.setLocation(rs.getString("Location"));
+            shop.setPhone(rs.getString("Phone"));
+            shop.setBankAcc(rs.getString("BankAcc"));
             shop.setEmail(rs.getString("Email"));
             shop.setCreatedAt(rs.getDate("CreateAt"));
             shop.setCreatedBy(rs.getInt("CreateBy"));
@@ -109,14 +115,16 @@ public class DAOShops {
     }
     
     public void updateShopbyOwnerid(Shops shop) {
-        String sql = "UPDATE Shops SET ShopName = ?,LogoShop = ? ,Location = ?, Email = ? , UpdateAt = ? WHERE ownerid = ?";
+        String sql = "UPDATE Shops SET ShopName = ?,LogoShop = ? ,Location = ?,Phone = ?,BankAcc = ?, Email = ? , UpdateAt = ? WHERE ownerid = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, shop.getShopName());
             ps.setString(2, shop.getLogoShop());
             ps.setString(3, shop.getLocation());
-            ps.setString(4, shop.getEmail());
-            ps.setDate(5, today);
-            ps.setInt(6, shop.getOwnerID());
+            ps.setString(5, shop.getPhone());
+            ps.setString(6, shop.getBankAcc());
+            ps.setString(7, shop.getEmail());
+            ps.setDate(8, today);
+            ps.setInt(9, shop.getOwnerID());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -125,8 +133,7 @@ public class DAOShops {
     
     public static void main(String[] args) throws Exception {
         DAOUser dao = new DAOUser();
-        Shops shop = new Shops();
-        int id = DAOShops.INSTANCE.getShopByID(10).getOwnerID();
-        System.out.println(id);
+        Shops shop = new Shops("a", "", "", "","","", 1);
+        DAOShops.INSTANCE.createShop(shop, 1);
     }
 }

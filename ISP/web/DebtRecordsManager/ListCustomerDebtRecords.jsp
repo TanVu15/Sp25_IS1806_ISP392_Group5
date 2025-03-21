@@ -34,7 +34,9 @@
 
         <div class="header">
             <div class="container">
-                <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo" >
+                <a href="shopdetail">
+                    <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
+                </a>
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
@@ -114,15 +116,15 @@
                                     <td class="table-cell"><%= debt.getID() %></td>
                                     <td class="table-cell"><%= currencyFormat.format(debt.getAmountOwed()) +" VND" %></td>
                                     <td class="table-cell"><% if (debt.getPaymentStatus() == 1) { %>
-                                        Khách Trả Nợ
+                                        Khách trả
                                         <% } if (debt.getPaymentStatus() == -1) { %>
-                                        Khách Vay Nợ
+                                        Khách vay
                                         <% } %>
                                         <% if (debt.getPaymentStatus() == 2) { %>
-                                        Chủ Đi Vay
+                                        Cửa hàng vay
                                         <% } %>
                                         <%if (debt.getPaymentStatus() == -2) { %>
-                                        Chủ Đi Trả
+                                        Cửa hàng trả
                                         <% } %></td>
                                     <td class="table-cell"><%= debt.getInvoiceDate() %></td>
                                     <td class="table-cell"><%= debt.getCreateAt() %></td>

@@ -4,7 +4,6 @@
  */
 package dal;
 
-import model.Customers;
 import model.DebtRecords;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,10 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.Statement;
 
 /**
  *
@@ -24,7 +20,8 @@ import java.util.logging.Logger;
 public class DAODebtRecords {
 
     public static final DAODebtRecords INSTANCE = new DAODebtRecords();
-    protected Connection connect;
+
+    public Connection connect;
 
     public DAODebtRecords() {
         connect = new DBContext().connect;
@@ -96,27 +93,6 @@ public class DAODebtRecords {
         return debtRecordses;
     }
 
-    public void AddDebtRecords(DebtRecords debtrecords, int userid) throws Exception {
-        String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, InvoiceDate, CreateAt, CreateBy, isDelete, ImagePath, Note, shopid, Active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, debtrecords.getCustomerID());
-            ps.setInt(2, debtrecords.getAmountOwed());
-            ps.setInt(3, debtrecords.getPaymentStatus());
-            ps.setDate(4, debtrecords.getInvoiceDate());
-            ps.setDate(5, today);
-            ps.setInt(6, userid);
-            ps.setInt(7, 0);
-            ps.setString(8, debtrecords.getImagePath());
-            ps.setString(9, debtrecords.getNote());
-            ps.setInt(10, debtrecords.getShopID());
-            ps.setInt(11, 0);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-        
-    }
-    
     public void deleteDebtRecords(int deleteid, int userid) {
         String sql = "UPDATE DebtRecords SET isDelete = ?, DeleteBy = ?, DeletedAt = ? WHERE id = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
@@ -219,10 +195,15 @@ public class DAODebtRecords {
                     String name = DAOCustomers.INSTANCE.getCustomersByID(debt.getCustomerID()).getName();
                     String status = "";
                     if (debt.getPaymentStatus() == 1) {
-                        status += "Trả Nợ";
-                    } else {
-                        status += "Vay Nợ";
+                        status += "Khách trả";
+                    } if (debt.getPaymentStatus() == -1) {
+                        status += "Khách vay";
+                    }if (debt.getPaymentStatus() == 2) {
+                        status += "Cửa hàng vay";
+                    }if (debt.getPaymentStatus() == -2) {
+                        status += "Cửa hàng trả";
                     }
+                    
                     String debtSeach = debt.getID() + " "
                             + name + " "
                             + debt.getAmountOwed() + " "
@@ -241,7 +222,7 @@ public class DAODebtRecords {
         }
         return debtRecordses;
     }
-    
+
     public DebtRecords getDebtRecordByID(int ID) throws Exception {
         String query = "SELECT * FROM DebtRecords WHERE ID=? ";
         PreparedStatement ps = connect.prepareStatement(query);
@@ -249,78 +230,43 @@ public class DAODebtRecords {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-                DebtRecords debt = new DebtRecords();
-                debt.setID(rs.getInt("ID"));
-                debt.setCustomerID(rs.getInt("customerid"));
-                debt.setAmountOwed(rs.getInt("AmountOwed"));
-                debt.setPaymentStatus(rs.getInt("PaymentStatus"));
-                debt.setInvoiceDate(rs.getDate("InvoiceDate"));
-                debt.setImagePath(rs.getString("ImagePath"));
-                debt.setShopID(rs.getInt("ShopID"));
-                debt.setCreateAt(rs.getDate("CreateAt"));
-                debt.setUpdateAt(rs.getDate("UpdateAt"));
-                debt.setCreateBy(rs.getInt("CreateBy"));
-                debt.setIsDelete(rs.getInt("isDelete"));
-                debt.setDeletedAt(rs.getDate("DeletedAt"));
-                debt.setDeleteBy(rs.getInt("DeleteBy"));
-                debt.setNote(rs.getString("Note"));
+            DebtRecords debt = new DebtRecords();
+            debt.setID(rs.getInt("ID"));
+            debt.setCustomerID(rs.getInt("customerid"));
+            debt.setAmountOwed(rs.getInt("AmountOwed"));
+            debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+            debt.setInvoiceDate(rs.getDate("InvoiceDate"));
+            debt.setImagePath(rs.getString("ImagePath"));
+            debt.setShopID(rs.getInt("ShopID"));
+            debt.setCreateAt(rs.getDate("CreateAt"));
+            debt.setUpdateAt(rs.getDate("UpdateAt"));
+            debt.setCreateBy(rs.getInt("CreateBy"));
+            debt.setIsDelete(rs.getInt("isDelete"));
+            debt.setDeletedAt(rs.getDate("DeletedAt"));
+            debt.setDeleteBy(rs.getInt("DeleteBy"));
+            debt.setNote(rs.getString("Note"));
             return debt;
         }
         return null;
     }
-    
-    //chay auto 3s update wallet
-    public class AutoTaskRunnerEvery3s {
-    public static void main(String[] args) {
-        Timer timer = new Timer();
 
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    DAODebtRecords.INSTANCE.updateCustomerWallet();
-                } catch (Exception ex) {
-                }
-            }
+    public void updateCustomerDebt(int customerId, int paymentStatus, int amount) throws SQLException {
+        String operation = switch (paymentStatus) {
+            case 1, 2 ->
+                "+";
+            case -1, -2 ->
+                "-";
+            default ->
+                throw new IllegalArgumentException("Trạng thái thanh toán không hợp lệ.");
         };
 
-        timer.scheduleAtFixedRate(task, 0, 3000);
-    }
-}
-
-    public void updateCustomerWallet() throws Exception {
-
-        ArrayList<DebtRecords> debtRecordses = getDebtRecordsActive();
-
-        for (DebtRecords debtrecords : debtRecordses) {
-            Customers customer = DAOCustomers.INSTANCE.getCustomersByID(debtrecords.getCustomerID());
-            int currentWallet = customer.getWallet();
-
-            // Tính toán số dư mới
-            int newWallet = currentWallet;
-            if (debtrecords.getPaymentStatus() == 1 || debtrecords.getPaymentStatus() == 2) {
-                newWallet += debtrecords.getAmountOwed();
-            }
-            if (debtrecords.getPaymentStatus() == -1 || debtrecords.getPaymentStatus() == -2) {
-                newWallet -= debtrecords.getAmountOwed();
-            }
-
-            // Cập nhật Wallet (chỉ tiếp tục nếu giá trị chưa bị thay đổi bởi máy khác)
-            String updateSQL = "UPDATE Customers SET Wallet = ? WHERE ID = ? AND Wallet = ?";
-
-            try (PreparedStatement ps = connect.prepareStatement(updateSQL)) {
-                ps.setInt(1, newWallet);
-                ps.setInt(2, debtrecords.getCustomerID());
-                ps.setInt(3, currentWallet); // Điều kiện kiểm tra xung đột
-                int updatedRows = ps.executeUpdate();
-                if (updatedRows > 0) {
-                    updateDebtRecordActive(debtrecords);
-                }
-            } catch (SQLException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
+        String updateSQL = "UPDATE customers SET wallet = wallet " + operation + " ? WHERE ID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(updateSQL)) {
+            ps.setInt(1, amount);
+            ps.setInt(2, customerId);
+            ps.executeUpdate();
+//            ps.close();
         }
-
     }
 
     public ArrayList<DebtRecords> getDebtRecordsActive() {
@@ -366,10 +312,93 @@ public class DAODebtRecords {
             e.printStackTrace();
         }
     }
+    
+    public int getTotalDebtRecordByShopId(int shopId) {
+        String sql = "SELECT COUNT(*) FROM DebtRecords WHERE ShopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public ArrayList<DebtRecords> getDebtrecordsByPage(int page, int debtsPerPage, int shopId) {
+        ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
+        String sql = "SELECT * FROM DebtRecords WHERE ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ps.setInt(2, (page - 1) * debtsPerPage);
+            ps.setInt(3, debtsPerPage);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                DebtRecords debt = new DebtRecords();
+                    debt.setID(rs.getInt("ID"));
+                    debt.setCustomerID(rs.getInt("customerID"));
+                    debt.setAmountOwed(rs.getInt("AmountOwed"));
+                    debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                    debt.setInvoiceDate(rs.getDate("InvoiceDate"));
+                    debt.setImagePath(rs.getString("ImagePath"));
+                    debt.setShopID(rs.getInt("ShopID"));
+                    debt.setActive(rs.getInt("Active"));
+                    debt.setCreateAt(rs.getDate("CreateAt"));
+                    debt.setUpdateAt(rs.getDate("UpdateAt"));
+                    debt.setCreateBy(rs.getInt("CreateBy"));
+                    debt.setIsDelete(rs.getInt("isDelete"));
+                    debt.setDeletedAt(rs.getDate("DeletedAt"));
+                    debt.setDeleteBy(rs.getInt("DeleteBy"));
+                    debt.setNote(rs.getString("Note"));
+                    debtRecordses.add(debt);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return debtRecordses;
+    }
+
+    public int AddDebtRecords(DebtRecords debtrecords, int userid) throws Exception {
+        int generatedDebtID = -1; // Giá trị mặc định nếu lỗi xảy ra
+
+        String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, InvoiceDate, CreateAt, CreateBy, isDelete, ImagePath, Note, shopid, Active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) { // 🔥 THÊM RETURN_GENERATED_KEYS
+            ps.setInt(1, debtrecords.getCustomerID());
+            ps.setInt(2, debtrecords.getAmountOwed());
+            ps.setInt(3, debtrecords.getPaymentStatus());
+            ps.setDate(4, debtrecords.getInvoiceDate());
+            ps.setDate(5, today);
+            ps.setInt(6, userid);
+            ps.setInt(7, 0);
+            ps.setString(8, debtrecords.getImagePath());
+            ps.setString(9, debtrecords.getNote());
+            ps.setInt(10, debtrecords.getShopID());
+            ps.setInt(11, 0);
+
+            int affectedRows = ps.executeUpdate(); // 🔥 PHẢI CHẠY EXECUTEUPDATE() TRƯỚC
+            if (affectedRows == 0) {
+                throw new SQLException("Creating debt record failed, no rows affected.");
+            }
+
+            try (ResultSet rs = ps.getGeneratedKeys()) { // 🔥 LẤY GIÁ TRỊ SAU KHI CHẠY EXECUTEUPDATE()
+                if (rs.next()) {
+                    generatedDebtID = rs.getInt(1); // Lấy debtID vừa được tạo
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return generatedDebtID;
+    }
 
     public static void main(String[] args) throws Exception {
         DAODebtRecords dao = new DAODebtRecords();
-        dao.getDebtRecords();
+        dao.getDebtRecordsActive();
         System.out.println(dao.getDebtRecords());
         //DebtRecords debtRecords = new DebtRecords(0, 4, 500, -1, today, today, 0, 0, today, 0);
         //dao.AddDebtRecords(debtRecords, 0);

@@ -64,6 +64,13 @@ public class AddCustomerServlet extends HttpServlet {
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
+        
+        if ( "".equals(name)) {
+            request.setAttribute("message", "Hãy xem lại!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("CustomersManager/AddCustomer.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
 
         DAOCustomers dao = new DAOCustomers();
         Customers cus = new Customers();
@@ -104,12 +111,5 @@ public class AddCustomerServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-//    public static long millis = System.currentTimeMillis();
-//    public static Date today = new Date(millis);
-//    public static void main(String[] args) {
-//        DAOCustomers dao = new DAOCustomers();
-//        Customers customer = new Customers(0, 0, "Dong", "12323213", "hai duong", today, today, 0, 0, today, 0);
-//        dao.AddCustomer(customer, 1);
-//    }
 
 }

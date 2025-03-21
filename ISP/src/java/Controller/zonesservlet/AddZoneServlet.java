@@ -49,6 +49,11 @@ public class AddZoneServlet extends HttpServlet {
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
+        if (user.getShopID() == 0 && user.getRoleid() == 2) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
+            requestDispatcher.forward(request, response);
+            return;
+        }
         ArrayList<Zones> zones = dao.getAllZones();
         request.setAttribute("zones", zones);
         
@@ -69,6 +74,13 @@ public class AddZoneServlet extends HttpServlet {
         
         response.setContentType("text/html;charset=UTF-8");
         String zone = request.getParameter("zone");
+        
+        if ( "".equals(zone)) {
+            request.setAttribute("message", "Hãy xem lại!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("ZoneManager/AddZones.jsp");
+            dispatcher.forward(request, response);
+            return;
+        }
 
         DAOZones dao = new DAOZones();
         Zones z = new Zones();
@@ -82,7 +94,6 @@ public class AddZoneServlet extends HttpServlet {
 
                 addzone.setZoneName(zone);
                 addzone.setShopID(user.getShopID());
-
                 dao.addZone(addzone, user.getID());
                 response.sendRedirect("listzones");
 

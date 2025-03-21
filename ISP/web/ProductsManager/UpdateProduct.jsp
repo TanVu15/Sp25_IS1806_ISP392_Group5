@@ -67,7 +67,7 @@
 
         <div class="form-group">
             <label for="description">Mô tả:</label>
-            <textarea id="description" name="description" class="form-control" required>${product.description}</textarea>
+            <textarea id="description" name="description" class="form-control" >${product.description}</textarea>
         </div>
 
         <div class="form-group">

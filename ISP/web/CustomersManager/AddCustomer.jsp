@@ -52,7 +52,7 @@
                             %>
             <div class="form-group">
                 <label for="name">Tên:</label>
-                <input type="text" name="name" >
+                <input type="text" name="name" required="">
             </div>
             <div class="form-group">
                 <label for="phone">Số điện thoại:</label>

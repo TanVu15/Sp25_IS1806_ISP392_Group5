@@ -7,6 +7,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.Users" %>
 <%@ page import="dal.DAOUser" %>
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +22,8 @@
 
     <body>
         <% 
+            DAOShops daoShop = new DAOShops();
+                Shops shop = (Shops) session.getAttribute("shop");
             DAOUser dao = new DAOUser();
             Users u = (Users) request.getAttribute("user");
             Users users = (Users) request.getAttribute("users");
@@ -28,7 +32,9 @@
         
         <div class="header">
             <div class="container">
-                <img src="Image/logo.png" alt="logo" class="home-logo">
+                <a href="shopdetail">
+                    <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
+                </a>
             </div>
             <div class="header__navbar-item navbar__user">
                 <span class="navbar__user--name"> <%= u.getFullName() %></span>
@@ -65,10 +71,6 @@
                         <div class="user-info-item">
                             <span class="user-info-label">Tài khoản:</span>
                             <span class="user-info-value"><%= users.getUsername() %></span>
-                        </div>
-                        <div class="user-info-item">
-                            <span class="user-info-label">Mật khẩu:</span>
-                            <span class="user-info-value"><%= users.getPasswordHash() %></span>
                         </div>
                         <div class="user-info-item">
                             <span class="user-info-label">Vai trò:</span>

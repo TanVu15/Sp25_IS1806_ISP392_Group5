@@ -38,11 +38,11 @@
 
     </head>
     <body>
-        <% DAOUser dao = new DAOUser();
-            List<Zones> zones = (List<Zones>) request.getAttribute("zones");
-            ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
-            ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
-            Users u = (Users) request.getAttribute("user");
+        <% DAOUser dao = new DAOUser(); 
+        List<Zones> zones = (List<Zones>) request.getAttribute("zones");
+        ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
+        ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
+        Users u = (Users) request.getAttribute("user"); 
         %>
 
         <form action="addimportorder" method="post" id="invoiceForm">
@@ -61,14 +61,12 @@
                         <input class="input-info" type="text" id="customerName" name="customerName" list="customersList" placeholder="Tìm kiếm khách hàng..." required>
                         <datalist id="customersList">
                             <%
-                                if (customers != null && !customers.isEmpty()) {
-                                    for (Customers customer1 : customers) {
-                                        if (customer1.getShopID() == u.getShopID()) {
+                           if (customers != null && !customers.isEmpty()) {
+                           for (Customers customer1 : customers) { 
+                                if(customer1.getShopID() == u.getShopID()){
                             %>
-                            <option value="<%= customer1.getName()%>"></option>
-                            <% }
-                                    }
-                                }%>
+                            <option value="<%= customer1.getName() %>"></option>
+                            <% } } }%>
                         </datalist>
                     </div>
                     <div class="input-container">
@@ -78,8 +76,8 @@
 
                     <div class="input-container">
                         <label for="creater">Người tạo phiếu:</label>
-                        <input type="hidden" name="creater" value="<%= u.getFullName()%>"> <!-- Gửi giá trị 1 -->
-                        <span class="input-info"><%= u.getFullName()%></span>
+                        <input type="hidden" name="creater" value="<%= u.getFullName() %>"> <!-- Gửi giá trị 1 -->
+                        <span class="input-info"><%= u.getFullName() %></span>
                     </div>
                 </div>
 
@@ -92,7 +90,7 @@
                                 <th>Khu Vực</th>
                                 <th>Quy Cách</th>
                                 <th>Giá Gốc</th>
-                                <th>Giảm Giá</th>
+                                <th>Giảm giá</th>
                                 <th>Thành Tiền</th>
                                 <th>Xóa</th>
                             </tr>
@@ -101,27 +99,27 @@
                             <tr>
                                 <td>
                                     <select class="area-select" name="productName" multiple="multiple" required style="width: 100%;">
-                                        <%
-                                            for (Products product : products) {
-                                                if (product.getShopID() == u.getShopID()) {
+                                        <% 
+                                          for (Products product : products) { 
+                                               if(product.getShopID() == u.getShopID()) {
                                         %>
-                                        <option value="<%= product.getProductName()%>"><%= product.getProductName()%></option>
-                                        <% }
-                                            }%>
+                                        <option value="<%= product.getProductName() %>"><%= product.getProductName() %></option>
+                                        <% } }%>
                                     </select>
                                 </td>
                                 <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
                                 <td>
-                                    <select class="area-select zone-select" name="area_${rowIndex}[]" multiple="multiple" required style="width: 100%;">
-                                        <%
-                                            for (Zones zone : zones) {
-                                                if (zone.getShopID() == u.getShopID()) {
+                                    <select class="area-select" name="area[0]" multiple="multiple" required style="width: 100%;">
+                                        <% 
+                                           for (Zones zone : zones) { 
+                                                if(zone.getShopID() == u.getShopID()) { 
                                         %>
-                                        <option value="<%= zone.getID()%>"><%= zone.getZoneName()%></option>
-                                        <% }
-                                            } %>
+                                        <option value="<%= zone.getZoneName() %>"><%= zone.getZoneName() %></option>
+                                        <% } } %>
                                     </select>
                                 </td>
+                                <td><input type="number" class="zone-count-hidden" name="zoneCount[]" value="0"></td>
+
                                 <td><input type="text" name="spec" placeholder="Kg/bao"></td>
                                 <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
                                 <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
@@ -141,23 +139,21 @@
                     });
 
                     const productList = [
-                    <% if (products != null) {
-                            for (Products product : products) {
-                                if (product.getShopID() == u.getShopID()) {%>
-                        {id: '<%= product.getID()%>', text: '<%= product.getProductName()%>'},
-                    <%    }
-                            }
-                        } %>
+                    <% if (products != null) { 
+                        for (Products product : products) { 
+                            if(product.getShopID() == u.getShopID()) { %>
+                        {id: '<%= product.getProductName() %>', text: '<%= product.getProductName() %>'},
+                    <%    } 
+                      } 
+                   } %>
                     ];
 
                     const zoneList = [
                     <%  if (zones != null) {
-                            for (Zones zone : zones) {
-                                if (zone.getShopID() == u.getShopID()) {%>
-                        {id: '<%= zone.getID()%>', text: '<%= zone.getZoneName()%>'},
-                    <% }
-                            }
-                        }%>
+                        for (Zones zone : zones) { 
+                        if(zone.getShopID() == u.getShopID()) { %>
+                        {id: '<%= zone.getZoneName() %>', text: '<%= zone.getZoneName() %>'},
+                    <% } } } %>
                     ];
 
                     // Hiển thị/ẩn các ô khi chọn hình thức thanh toán
@@ -203,28 +199,32 @@
                         let grandTotal = 0;
 
                         $('#productList tr').each(function () {
-                            let quantity = parseFloat($(this).find('input[name="quantity"]').val()) || 0;
-                            let price = parseFloat($(this).find('input[name="price"]').val()) || 0;
-                            let discount = parseFloat($(this).find('input[name="discount"]').val()) || 0;
+                            // Lấy giá trị các input
+                            let quantityVal = $(this).find('input[name="quantity"]').val();
+                            let priceVal = $(this).find('input[name="price"]').val();
+                            let discountVal = $(this).find('input[name="discount"]').val();
+
+                            // Chuyển đổi về số, nếu rỗng thì thành 0
+                            const quantity = quantityVal.trim() === "" ? 0 : parseInt(quantityVal);
+                            const price = priceVal.trim() === "" ? 0 : parseFloat(priceVal);
+                            const discount = discountVal.trim() === "" ? 0 : parseFloat(discountVal);
 
                             // Tính thành tiền
                             let totalPrice = (price * quantity) - discount;
+                            totalPrice = totalPrice < 0 ? 0 : totalPrice; // Không cho âm tiền
 
-                            // Nếu tổng nhỏ hơn 0 thì đặt lại thành 0
-                            totalPrice = Math.max(totalPrice, 0);
-
-                            // Hiển thị thành tiền
+                            // Cập nhật ô thành tiền, định dạng kiểu số Việt Nam
                             $(this).find('input[name="total"]').val(totalPrice.toLocaleString('vi-VN'));
 
-                            // Cộng vào tổng tiền của hóa đơn
+                            // Cộng vào tổng tiền
                             grandTotal += totalPrice;
                         });
 
                         // Hiển thị tổng chi phí
                         $('#totalCost').val(grandTotal.toLocaleString('vi-VN'));
 
-                        // Nếu chọn thanh toán một phần, cập nhật số tiền còn lại
-                        if ($('input[name="paymentStatus"]:checked').val() === 'partial') {
+                        // Update remaining amount if partial payment is selected
+                        if (document.getElementById('paymentStatus').value === 'partial') {
                             calculateRemainingAmount();
                         }
                     }
@@ -243,52 +243,62 @@
 
 
                     function addProductRow() {
-    // Lấy số dòng hiện tại để tạo index động
-    const rowIndex = $('#productList tr').length;
+                        const rowCount = $('#productList tr').length; // Lấy số lượng dòng hiện tại để tạo index
+                        const newRow = `
+                        <tr>
+                            <td>
+                                <select class="area-select product-select" name="productName[${rowCount}]" multiple="multiple" required style="width: 100%;">
+                                </select>
+                            </td>
+                            
+                            <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
+                            <td>
+                                <select class="area-select zone-select" name="area[${rowCount}]" multiple="multiple" required style="width: 100%;">
+                                </select>
+                            </td>
+                            <td><input type="text" name="spec" placeholder="Kg/bao"></td>
+                            <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
+                            <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
+                            <td><input type="text" name="total" readonly></td>
+                            <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
+                        </tr>
+                        `;
 
-    const newRow = `
-    <tr>
-        <td>
-            <select class="area-select product-select" name="productName_${rowIndex}" required style="width: 100%;">
-            </select>
-        </td>
-        <td><input type="number" name="quantity_${rowIndex}" min="1" required onchange="calculateTotal()"></td>
-        <td>
-            <select class="area-select zone-select" name="area_${rowIndex}[]" multiple="multiple" required style="width: 100%;">
-            </select>
-        </td>
-        <td><input type="text" name="spec_${rowIndex}" placeholder="Kg/bao"></td>
-        <td><input type="number" name="price_${rowIndex}" min="0" value="0" required onchange="calculateTotal()"></td>
-        <td><input type="number" name="discount_${rowIndex}" min="0" value="0" onchange="calculateTotal()"></td>
-        <td><input type="text" name="total_${rowIndex}" readonly></td>
-        <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
-    </tr>
-    `;
+                        $('#productList').append(newRow);
 
-    $('#productList').append(newRow);
+                        // Khởi tạo select2 với dữ liệu cho dropdown vừa thêm
+                        const lastProductSelect = $('#productList').find('tr:last .product-select');
+                        const lastZoneSelect = $('#productList').find('tr:last .zone-select');
 
-    // Khởi tạo select2 với data cho dropdown vừa thêm
-    const lastProductSelect = $('#productList').find('tr:last .product-select');
-    const lastZoneSelect = $('#productList').find('tr:last .zone-select');
+                        lastProductSelect.select2({
+                            data: productList,
+                            placeholder: "Chọn sản phẩm...",
+                            allowClear: true
+                        });
 
-    lastProductSelect.select2({
-        data: productList,
-        placeholder: "Chọn sản phẩm...",
-        allowClear: true
-    });
-
-    lastZoneSelect.select2({
-        data: zoneList,
-        placeholder: "Chọn khu vực...",
-        allowClear: true
-    });
-}
-
+                        lastZoneSelect.select2({
+                            data: zoneList,
+                            placeholder: "Chọn khu vực...",
+                            allowClear: true
+                        });
+                    }
 
                     function deleteProductRow(button) {
                         $(button).closest('tr').remove();
                         calculateTotal();
                     }
+                    // Đếm số zone đã chọn cho 1 row
+            $(document).ready(function () {
+    $(document).on("change", ".zone-select", function () {
+        let selectedZones = $(this).val(); // Lấy danh sách khu vực đã chọn
+        let zoneCount = selectedZones ? selectedZones.length : 0; // Đếm số khu vực
+
+        // Cập nhật giá trị vào input ẩn trong dòng hiện tại
+        $(this).closest("tr").find(".zone-count-hidden").val(zoneCount);
+    });
+});
+
+                    
                 </script>
 
                 <!-- Trạng thái thanh toán -->

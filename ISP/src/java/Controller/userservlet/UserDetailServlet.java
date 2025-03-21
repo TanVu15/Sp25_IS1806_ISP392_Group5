@@ -45,6 +45,22 @@ public class UserDetailServlet extends HttpServlet {
         Users users = new Users();
         try {
             users = dao.getUserByID(userid);
+            int shopid = users.getShopID();
+            int shopid2 = user.getShopID();
+            if(users.getRoleid() > user.getRoleid()){
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
+            
+            if( (user.getRoleid() == 3) && users.getRoleid() != user.getRoleid() ){
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
+            
+            if(shopid != shopid2 && user.getRoleid() != 1){
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("users", users);
         } catch (Exception ex) {
             Logger.getLogger(UserDetailServlet.class.getName()).log(Level.SEVERE, null, ex);

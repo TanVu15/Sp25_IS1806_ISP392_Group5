@@ -1,5 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>filter.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/register</url-pattern>
+        <url-pattern>/listusers</url-pattern>
+        <url-pattern>/updateuser</url-pattern>
+        <url-pattern>/listusers</url-pattern>
+        <url-pattern>/deleteuser</url-pattern>
+        <url-pattern>/listcustomers</url-pattern>
+        <url-pattern>/deletecustomer</url-pattern>
+        <url-pattern>/updatecustomer</url-pattern>
+        <url-pattern>/addcustomer</url-pattern>
+        <url-pattern>/adddebtrecords</url-pattern>
+        <url-pattern>/listdebtrecords</url-pattern>
+        <url-pattern>/ListDebtCustomer</url-pattern>
+        <url-pattern>/listcustomerdebtrecords</url-pattern>
+        <url-pattern>/listproducts</url-pattern>
+        <url-pattern>/addproduct</url-pattern>
+        <url-pattern>/updateproduct</url-pattern>
+        <url-pattern>/deleteproduct</url-pattern>
+        <url-pattern>/listzones</url-pattern>
+        <url-pattern>/addzone</url-pattern>
+        <url-pattern>/deletezone</url-pattern>
+        <url-pattern>/updatezone</url-pattern>
+        <url-pattern>/resetpassword</url-pattern>
+        <url-pattern>/shopdetail</url-pattern>
+        <url-pattern>/updateshop</url-pattern>
+        <url-pattern>/userdetail</url-pattern>
+        <url-pattern>/customerdetail</url-pattern>
+        <url-pattern>/debtrecorddetail</url-pattern>
+        <url-pattern>/listdebtrecorddetail</url-pattern>
+        <url-pattern>/listorders</url-pattern>
+        <url-pattern>/addimportorder</url-pattern>
+        <url-pattern>/addexportorder</url-pattern>
+        <url-pattern>/addorder</url-pattern>
+        <url-pattern>/orderdetail</url-pattern>
+        <url-pattern>/listorderitems</url-pattern>
+    </filter-mapping>
+    
+    
+    
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>Controller.userservlet.RegisterServlet</servlet-class>
@@ -283,4 +328,7 @@
     <welcome-file-list>
         <welcome-file>Login/login.jsp</welcome-file>
     </welcome-file-list>
+    <listener>
+        <listener-class>Controller.Queue.WebAppListener</listener-class>
+    </listener>
 </web-app>

@@ -29,12 +29,14 @@ public class UpdateProductServlet extends HttpServlet {
 
         try {
             Products product = dao.getProductByID(productId);
+
             int shopid = product.getShopID();
-            int shopid2 = ((Users)session.getAttribute("user")).getShopID();
-            if(shopid != shopid2 && ((Users)session.getAttribute("user")).getRoleid() != 1){
+            int shopid2 = ((Users) session.getAttribute("user")).getShopID();
+            if (shopid != shopid2 && ((Users) session.getAttribute("user")).getRoleid() != 1) {
                 request.getRequestDispatcher("logout").forward(request, response);
                 return;
             }
+
             request.setAttribute("product", product);
             request.getRequestDispatcher("ProductsManager/UpdateProduct.jsp").forward(request, response);
         } catch (Exception ex) {
@@ -43,63 +45,70 @@ public class UpdateProductServlet extends HttpServlet {
         }
     }
 
-  @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    int productId = Integer.parseInt(request.getParameter("id"));
-    String productName = request.getParameter("productName");
-    String description = request.getParameter("description");
-    Part filePart = request.getPart("image");
-    int price = Integer.parseInt(request.getParameter("price"));
-    int quantity = Integer.parseInt(request.getParameter("quantity"));
-    String[] zoneIDs = request.getParameterValues("zoneIDs"); // Lấy danh sách ID khu vực
-
-    // Lấy đường dẫn thư mục ảnh
-    String imageDirectory = getServletContext().getRealPath("/Image/");
-    String imageLink = "";
-
-    // Lưu ảnh vào thư mục nếu có
-    if (filePart != null && filePart.getSize() > 0) {
-        String fileName = filePart.getSubmittedFileName();
-        File dir = new File(imageDirectory);
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-        File file = new File(dir, fileName);
-        filePart.write(file.getAbsolutePath());
-        imageLink = "Image/" + fileName; // Đường dẫn lưu trữ ảnh
-    } else {
-        imageLink = request.getParameter("currentImageLink"); // Giữ ảnh cũ
-    }
-
-    // Cập nhật sản phẩm trong database
-    Products product = new Products();
-    product.setID(productId);
-    product.setProductName(productName);
-    product.setDescription(description);
-    product.setImageLink(imageLink);
-    product.setPrice(price);
-    product.setQuantity(quantity);
-
-    try {
-        // Cập nhật sản phẩm
-        DAOProducts.INSTANCE.updateProducts(product);
-
-        // Cập nhật khu vực
-        if (zoneIDs != null) {
-            // Xóa các khu vực cũ (nếu cần)
-            DAOProducts.INSTANCE.updateProductZones(productId, zoneIDs);             
+        int productId = Integer.parseInt(request.getParameter("id"));
+        String productName = request.getParameter("productName");
+        String description = request.getParameter("description");
+        Part filePart = request.getPart("image");
+        int price = Integer.parseInt(request.getParameter("price"));
+        int quantity = Integer.parseInt(request.getParameter("quantity"));
+        String[] zoneIDs = request.getParameterValues("zoneIDs"); // Lấy danh sách ID khu vực
+        
+        if ( "".equals(productName) || zoneIDs == null) {
+            request.setAttribute("message", "Hãy xem lại!");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/UpdateProduct.jsp");
+            dispatcher.forward(request, response);
+            return;
         }
 
-        response.sendRedirect("listproducts");
-    } catch (Exception e) {
-        e.printStackTrace();
-        request.setAttribute("errorMessage", "Đã xảy ra lỗi khi cập nhật sản phẩm.");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/UpdateProduct.jsp");
-        dispatcher.forward(request, response);
+        // Lấy đường dẫn thư mục ảnh
+        String imageDirectory = getServletContext().getRealPath("/Image/");
+        String imageLink = "";
+
+        // Lưu ảnh vào thư mục nếu có
+        if (filePart != null && filePart.getSize() > 0) {
+            String fileName = filePart.getSubmittedFileName();
+            File dir = new File(imageDirectory);
+            if (!dir.exists()) {
+                dir.mkdir();
+            }
+            File file = new File(dir, fileName);
+            filePart.write(file.getAbsolutePath());
+            imageLink = "Image/" + fileName; // Đường dẫn lưu trữ ảnh
+        } else {
+            imageLink = request.getParameter("currentImageLink"); // Giữ ảnh cũ
+        }
+
+        // Cập nhật sản phẩm trong database
+        Products product = new Products();
+        product.setID(productId);
+        product.setProductName(productName);
+        product.setDescription(description);
+        product.setImageLink(imageLink);
+        product.setPrice(price);
+        product.setQuantity(quantity);
+
+        try {
+            // Cập nhật sản phẩm
+            DAOProducts.INSTANCE.updateProducts(product);
+
+            // Cập nhật khu vực
+            if (zoneIDs != null) {
+                // Xóa các khu vực cũ (nếu cần)
+                DAOProducts.INSTANCE.updateProductZones(productId, zoneIDs);
+            }
+
+            response.sendRedirect("listproducts");
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Đã xảy ra lỗi khi cập nhật sản phẩm.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/UpdateProduct.jsp");
+            dispatcher.forward(request, response);
+        }
     }
-}
 
     @Override
     public String getServletInfo() {

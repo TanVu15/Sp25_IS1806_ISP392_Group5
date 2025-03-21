@@ -12,12 +12,14 @@ import java.io.StringWriter;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Users;
 
 /**
  *
@@ -97,40 +99,31 @@ public class LoginFilter implements Filter {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet error occurs
      */
-    public void doFilter(ServletRequest request, ServletResponse response,
-            FilterChain chain)
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest req =(HttpServletRequest) request;
+        HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         HttpSession session = req.getSession();
-        if(session.getAttribute("user") == null){
+
+        // Kiểm tra session có user hay không
+        Object userObj = session.getAttribute("user");
+        if (userObj == null) {
             res.sendRedirect("LoginServlet");
+            return;
         }
-      
-        
-        
-        Throwable problem = null;
-	try {
-	    chain.doFilter(request, response);
-	}
-	catch(Throwable t) {
-	    // If an exception is thrown somewhere down the filter chain,
-	    // we still want to execute our after processing, and then
-	    // rethrow the problem after that.
-	    problem = t;
-	    t.printStackTrace();
-	}
 
-	doAfterProcessing(request, response);
+        // Kiểm tra user có thuộc tính getShopID() == 0 hay không
+        Users user = (Users) userObj; // Ép kiểu sang User
+        if (user.getShopID() == 0) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("ShopsManager/CreateShop.jsp");
+            requestDispatcher.forward(request, response);
+            return;
+        }
 
-	// If there was a problem, we want to rethrow it if it is
-	// a known type, otherwise log it.
-	if (problem != null) {
-	    if (problem instanceof ServletException) throw (ServletException)problem;
-	    if (problem instanceof IOException) throw (IOException)problem;
-	    sendProcessingError(problem, response);
-	}
+        // Nếu thỏa mãn điều kiện, tiếp tục chuỗi filter
+        chain.doFilter(request, response);
     }
 
     /**

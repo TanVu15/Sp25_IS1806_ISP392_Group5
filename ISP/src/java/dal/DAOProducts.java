@@ -134,25 +134,40 @@ public void updateProducts(Products product) {
         e.printStackTrace();
     }
 }
- 
- public void updateProductZones(int productId, String[] zoneIDs) {
-    // Here you can implement logic to update the zones directly associated with the product
-    // For example, you can set the ProductID in the Zones table for the selected zone IDs
 
-    for (String zoneID : zoneIDs) {
-        int zoneIdInt = Integer.parseInt(zoneID);
-        // Update the zone with the new product ID
-        String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
+    public void updateProductZones(int productId, String[] zoneIDs) {
+        // Here you can implement logic to update the zones directly associated with the product
+        // For example, you can set the ProductID in the Zones table for the selected zone IDs
+
+        for (String zoneID : zoneIDs) {
+            int zoneIdInt = Integer.parseInt(zoneID);
+            // Update the zone with the new product ID
+            String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
+            try (PreparedStatement ps = connect.prepareStatement(sql)) {
+                ps.setInt(1, productId);
+                ps.setInt(2, zoneIdInt);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public int getProductIdByNameAndShop(String productName, int shopId) {
+        String sql = "SELECT ID FROM Products WHERE productName = ? AND ShopID = ? ";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, productId);
-            ps.setInt(2, zoneIdInt);
-            ps.executeUpdate();
+            ps.setString(1, productName);
+            ps.setInt(2, shopId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("ID"); // Trả về ID
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return -1; // Không tìm thấy thì trả về -1
     }
-}
- 
+    
 
     public Products getProductByID(int ID) throws Exception {
         String query = "SELECT * FROM Products WHERE ID=?";
@@ -267,25 +282,12 @@ public void updateProducts(Products product) {
         return products;
     }
 
-public int getProductIdByNameAndShop(String productName, int shopID) {
-        String sql = "SELECT ID FROM Products WHERE ProductName = ? AND ShopID = ?";
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setString(1, productName);
-            ps.setInt(2, shopID);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("ID"); // Return the product ID if found
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return -1; // Return -1 if the product is not found
-    }    
+
     // Method to get products by shop ID
     public ArrayList<Products> getProductsByShopId(int shopID) throws SQLException {
         ArrayList<Products> products = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE ShopID = ?";
-        
+
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, shopID);
             ResultSet rs = ps.executeQuery();
@@ -303,7 +305,7 @@ public int getProductIdByNameAndShop(String productName, int shopID) {
         }
         return products;
     }
-    
+
 //    search product by name for order
     public ArrayList<Products> searchProductsByName(String productName) {
     ArrayList<Products> products = new ArrayList<>();
@@ -360,7 +362,19 @@ public int getProductIdByNameAndShop(String productName, int shopID) {
     
 
     public void updateProductQuantity(String productName, int quantityToAdd, int shopid) {
-        String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE productName = ? shopID = ?";
+        String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE productName = ? And shopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, quantityToAdd);
+            ps.setString(2, productName);
+            ps.setInt(3, shopid);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateProductQuantitydecre(String productName, int quantityToAdd, int shopid) {
+        String sql = "UPDATE Products SET Quantity = Quantity - ? WHERE productName = ? And shopID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, quantityToAdd);
             ps.setString(2, productName);

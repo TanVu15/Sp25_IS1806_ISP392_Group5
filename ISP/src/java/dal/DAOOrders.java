@@ -183,11 +183,18 @@ public class DAOOrders {
                 String orderData = (o.getCustomerID() + " "
                         + customerName + " "
                         + o.getShopID() + " "
+                        + o.getStatus() + " "
                         + o.getCreateAt() + " "
                         + o.getUpdateAt() + " "
                         + userCreate.getFullName().toLowerCase() + " "
                         + o.getIsDelete());
-
+                if(o.getStatus()==1){
+                    orderData+="Nhập hàng ";
+                }
+                if(o.getStatus()== -1){
+                    orderData+="Bán hàng ";
+                }
+                
                 // Lấy thông tin người xóa nếu có
                 if (o.getIsDelete() != 0) {
                     Users userDelete = DAO.INSTANCE.getUserByID(o.getDeleteBy());
@@ -207,6 +214,51 @@ public class DAOOrders {
             e.printStackTrace();
         }
         return orders;
+    }
+    
+    public int getTotalOrdersByShopId(int shopId) {
+        String sql = "SELECT COUNT(*) FROM Orders WHERE ShopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public ArrayList<Orders> getOrdersByPage(int page, int ordersPerPage, int shopId) {
+        ArrayList<Orders> order = new ArrayList<>();
+        String sql = "SELECT * FROM Orders WHERE ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ps.setInt(2, (page - 1) * ordersPerPage);
+            ps.setInt(3, ordersPerPage);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Orders o = new Orders();
+            o.setID(rs.getInt("ID"));
+            o.setCustomerID(rs.getInt("CustomerID"));
+            o.setTotalAmount(rs.getInt("TotalAmount"));
+            o.setShopID(rs.getInt("ShopID"));
+            o.setStatus(rs.getInt("status"));
+            o.setCreateAt(rs.getDate("CreateAt"));
+            o.setUpdateAt(rs.getDate("UpdateAt"));
+            o.setCreateBy(rs.getInt("CreateBy"));
+            o.setIsDelete(rs.getInt("isDelete"));
+            o.setDeleteBy(rs.getInt("DeleteBy"));
+            o.setDeletedAt(rs.getDate("DeletedAt"));
+                order.add(o);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return order;
     }
 
     public static void main(String[] args) throws Exception {
