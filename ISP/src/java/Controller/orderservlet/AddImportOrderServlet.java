@@ -129,7 +129,7 @@ public class AddImportOrderServlet extends HttpServlet {
         DAOCustomers dao1 = new DAOCustomers();
         DAOProducts dao2 = new DAOProducts();
         DAOOrderItem dao3 = new DAOOrderItem();
-
+        DAOZones dao4 = new DAOZones();
         try {
             int shopID = user.getShopID();
 
@@ -166,7 +166,6 @@ public class AddImportOrderServlet extends HttpServlet {
 
             // Lưu order vào DB và lấy ID
             int id = dao.addOrdersreturnID(order, user.getID());
-           
 
             // Xử lý thanh toán nếu có ghi nợ
             if ("partial".equals(paymentStatus) || "none".equals(paymentStatus)) {
@@ -210,12 +209,16 @@ public class AddImportOrderServlet extends HttpServlet {
                     return;
                 }
 
-                for (int i = 0; i <= productNames.length; i++) {
+                for (int i = 0; i < productNames.length; i++) {
                     // Kiểm tra từng phần tử không được null hoặc rỗng
                     if (productNames[i].trim().isEmpty()
-                            || quantities[i].trim().isEmpty() || prices[i].trim().isEmpty() || discounts[i].trim().isEmpty() || spec[i].trim().isEmpty()) {
+                            || quantities[i].trim().isEmpty()
+                            || prices[i].trim().isEmpty()
+                            || discounts[i].trim().isEmpty()
+                            || spec[i].trim().isEmpty()
+                            ) {
 
-                        out.println("<h3 style='color:red;'>Lỗi: Thiếu thông tin sản phẩm thứ " + (i + 1) + ".</h3>");
+                        out.println("<h3 style='color:red;'>Lỗi1: Thiếu thông tin sản phẩm thứ " + (i + 1) + ".</h3>");
                         return;
                     }
 
@@ -226,8 +229,9 @@ public class AddImportOrderServlet extends HttpServlet {
                         int price = Integer.parseInt(prices[i].trim());
                         String decription = spec[i].trim();
                         int discount = Integer.parseInt(discounts[i].trim());
-                        
+                        int pId = dao2.getProductIdByNameAndShop(productName, user.getShopID());
                         java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
+
                         // Tạo đối tượng OrderItems
                         OrderItems orderItem = new OrderItems();
                         orderItem.setOrderID(id);
@@ -245,9 +249,17 @@ public class AddImportOrderServlet extends HttpServlet {
 
                         // Cập nhật số lượng sản phẩm trong kho
                         dao2.updateProductQuantity(productName, quantity, user.getShopID());
-
+                        
+                        // 🔹 **Xử lý nhiều khu vực**
+                        String[] zoneNames = request.getParameterValues("area[" + i + "]");
+                        if (zoneNames != null) {
+                            for (String zoneName : zoneNames) {
+                                dao4.updateZoneImportOrder(zoneName.trim(), pId, shopID);
+                            }
+                        }
+                        
                     } catch (NumberFormatException e) {
-                        out.println("<h3 style='color:red;'>Lỗi định dạng số ở sản phẩm thứ " + (i + 1) + ": " + e.getMessage() + "</h3>");
+                        out.println("<h3 style='color:red;'>Lỗi2 định dạng số ở sản phẩm thứ - </h3>");
                         return;
                     }
                 }
