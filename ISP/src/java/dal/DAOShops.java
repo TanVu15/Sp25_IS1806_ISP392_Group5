@@ -120,11 +120,11 @@ public class DAOShops {
             ps.setString(1, shop.getShopName());
             ps.setString(2, shop.getLogoShop());
             ps.setString(3, shop.getLocation());
-            ps.setString(5, shop.getPhone());
-            ps.setString(6, shop.getBankAcc());
-            ps.setString(7, shop.getEmail());
-            ps.setDate(8, today);
-            ps.setInt(9, shop.getOwnerID());
+            ps.setString(4, shop.getPhone());
+            ps.setString(5, shop.getBankAcc());
+            ps.setString(6, shop.getEmail());
+            ps.setDate(7, today);
+            ps.setInt(8, shop.getOwnerID());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -134,6 +134,6 @@ public class DAOShops {
     public static void main(String[] args) throws Exception {
         DAOUser dao = new DAOUser();
         Shops shop = new Shops("a", "", "", "","","", 1);
-        DAOShops.INSTANCE.createShop(shop, 1);
+        DAOShops.INSTANCE.updateShopbyOwnerid(shop);
     }
 }
