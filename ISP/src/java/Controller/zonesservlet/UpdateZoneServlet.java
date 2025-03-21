@@ -62,21 +62,28 @@ public class UpdateZoneServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOZones dao = new DAOZones();
-        
+
         HttpSession session = request.getSession();
-        
+
         int zoneId = Integer.parseInt(request.getParameter("id"));
 
         try {
             Zones zone = dao.getZonesByID(zoneId);
             Shops shop = (Shops) session.getAttribute("shop");
-            if (shop.getID() != zone.getShopID() || zone == null) {
+            if (shop.getID() != zone.getShopID()) {
                 request.getRequestDispatcher("logout").forward(request, response);
                 return;
             }
             request.setAttribute("z", zone);
             request.getRequestDispatcher("ZoneManager/UpdateZones.jsp").forward(request, response);
         } catch (Exception ex) {
+            ex.printStackTrace(); // In lỗi ra console
+
+            // In lỗi trực tiếp lên trình duyệt
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().println("<h2>Đã xảy ra lỗi!</h2>");
+            response.getWriter().println("<p><b>Chi tiết lỗi:</b> " + ex.getMessage() + "</p>");
+            response.getWriter().println("<a href='home.jsp'>Quay lại trang chủ</a>");
         }
     }
 
@@ -96,8 +103,8 @@ public class UpdateZoneServlet extends HttpServlet {
         String zoneName = request.getParameter("zone");
         Shops shop1 = (Shops) session.getAttribute("shop");
         int shop = shop1.getID();
-        
-        if ( "".equals(zoneName)) {
+
+        if ("".equals(zoneName)) {
             request.setAttribute("message", "Hãy xem lại!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("ZoneManager/UpdateZones.jsp");
             dispatcher.forward(request, response);

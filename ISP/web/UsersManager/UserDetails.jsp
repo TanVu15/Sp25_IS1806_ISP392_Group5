@@ -104,14 +104,6 @@
                             <span class="user-info-label">Trạng thái:</span>
                             <span class="user-info-value"><%= (users.getIsDelete() == 0) ? "Hoạt Động" : "Xóa" %></span>
                         </div>
-                        <div class="user-info-item">
-                            <span class="user-info-label">Ngày xóa:</span>
-                            <span class="user-info-value"><%= users.getDeletedAt() %></span>
-                        </div>
-                        <div class="user-info-item">
-                            <span class="user-info-label">Người xóa:</span>
-                            <span class="user-info-value"><%= (users.getIsDelete() == 0) ? "Null" : dao.getUserByID(users.getDeleteBy()).getFullName() %></span>
-                        </div>
                         <button class="action-button" onclick="window.location.href = 'updateuser?id=<%= users.getID() %>'">Chỉnh sửa</button>
                     </div>
                 </div>

@@ -45,7 +45,11 @@ public class UpdateUserServlet extends HttpServlet {
 
                 int shopid = dao.getUserByID(userid).getShopID();
                 int shopid2 = userSession.getShopID();
-                if (user.getRoleid() >= userSession.getRoleid()) {
+                if (userSession.getRoleid()==3 && user.getRoleid() != userSession.getRoleid()) {
+                    request.getRequestDispatcher("logout").forward(request, response);
+                    return;
+                }
+                if (user.getRoleid() > userSession.getRoleid()) {
                     request.getRequestDispatcher("logout").forward(request, response);
                     return;
                 }

@@ -6,6 +6,8 @@
 
 <%@ page import="model.Zones" %>  
 <%@ page import="dal.DAOZones" %>  
+<%@ page import="model.Shops" %>
+<%@ page import="dal.DAOShops" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>  
 
 <!DOCTYPE html>  
@@ -36,6 +38,7 @@
         <form action="updatezone" method="post">  
             <%  
                 Zones z = (Zones) request.getAttribute("z");  
+                Shops shop = (Shops) session.getAttribute("shop");
             %>  
             <div class="form-group">  
                 <label for="zone">Kho:</label>  
@@ -43,7 +46,7 @@
                 
                 <label for="zone">Shop:</label>  
                 <input type="hidden" id="shop" name="shop" value="<%= z.getShopID() %>" required>
-                <span class="input-info"><%= z.getShopName() %></span>
+                <span class="input-info"><%= shop.getShopName() %></span>
             </div>  
 
             <input type="hidden" name="id" value="<%= z.getID() %>">  
