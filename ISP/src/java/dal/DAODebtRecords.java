@@ -195,10 +195,15 @@ public class DAODebtRecords {
                     String name = DAOCustomers.INSTANCE.getCustomersByID(debt.getCustomerID()).getName();
                     String status = "";
                     if (debt.getPaymentStatus() == 1) {
-                        status += "Trả Nợ";
-                    } else {
-                        status += "Vay Nợ";
+                        status += "Khách trả";
+                    } if (debt.getPaymentStatus() == -1) {
+                        status += "Khách vay";
+                    }if (debt.getPaymentStatus() == 2) {
+                        status += "Cửa hàng vay";
+                    }if (debt.getPaymentStatus() == -2) {
+                        status += "Cửa hàng trả";
                     }
+                    
                     String debtSeach = debt.getID() + " "
                             + name + " "
                             + debt.getAmountOwed() + " "
@@ -306,6 +311,55 @@ public class DAODebtRecords {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    
+    public int getTotalDebtRecordByShopId(int shopId) {
+        String sql = "SELECT COUNT(*) FROM DebtRecords WHERE ShopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public ArrayList<DebtRecords> getDebtrecordsByPage(int page, int debtsPerPage, int shopId) {
+        ArrayList<DebtRecords> debtRecordses = new ArrayList<>();
+        String sql = "SELECT * FROM DebtRecords WHERE ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ps.setInt(2, (page - 1) * debtsPerPage);
+            ps.setInt(3, debtsPerPage);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                DebtRecords debt = new DebtRecords();
+                    debt.setID(rs.getInt("ID"));
+                    debt.setCustomerID(rs.getInt("customerID"));
+                    debt.setAmountOwed(rs.getInt("AmountOwed"));
+                    debt.setPaymentStatus(rs.getInt("PaymentStatus"));
+                    debt.setInvoiceDate(rs.getDate("InvoiceDate"));
+                    debt.setImagePath(rs.getString("ImagePath"));
+                    debt.setShopID(rs.getInt("ShopID"));
+                    debt.setActive(rs.getInt("Active"));
+                    debt.setCreateAt(rs.getDate("CreateAt"));
+                    debt.setUpdateAt(rs.getDate("UpdateAt"));
+                    debt.setCreateBy(rs.getInt("CreateBy"));
+                    debt.setIsDelete(rs.getInt("isDelete"));
+                    debt.setDeletedAt(rs.getDate("DeletedAt"));
+                    debt.setDeleteBy(rs.getInt("DeleteBy"));
+                    debt.setNote(rs.getString("Note"));
+                    debtRecordses.add(debt);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return debtRecordses;
     }
 
     public int AddDebtRecords(DebtRecords debtrecords, int userid) throws Exception {

@@ -46,8 +46,24 @@ public class ListOrdersServlet extends HttpServlet {
             requestDispatcher.forward(request, response);
             return;
         }
-        ArrayList<Orders> orders = dao.getAllOrders();
+        
+        // Lấy trang hiện tại từ tham số URL, mặc định là 1
+        int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+        int ordersPerPage = 5; // Số sản phẩm trên mỗi trang
+
+       // Lấy tổng số sản phẩm cho shop hiện tại
+        int totalCustomer = dao.getTotalOrdersByShopId(user.getShopID());
+        int totalPages = (int) Math.ceil((double) totalCustomer / ordersPerPage);
+        
+        // Lấy danh sách sản phẩm cho trang hiện tại
+        ArrayList<Orders> orders = dao.getOrdersByPage(currentPage, ordersPerPage, user.getShopID());
+        
+        // Thiết lập các thuộc tính cho JSP
         request.setAttribute("orders", orders);
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
+        //ArrayList<Orders> orders = dao.getAllOrders();
+        //request.setAttribute("orders", orders);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("OrdersManager/ListOrders.jsp");
         requestDispatcher.forward(request, response);
     } 
@@ -80,7 +96,14 @@ public class ListOrdersServlet extends HttpServlet {
             } else {
                 request.setAttribute("orders", orders);
             }
-
+            // Cập nhật currentPage và totalPages
+            int totalProducts = orders.size(); // Tổng sản phẩm tìm được
+            int totalPages = (int) Math.ceil(totalProducts / 5.0); // Cập nhật với số sản phẩm mỗi trang
+            
+            // Thiết lập các thuộc tính cho JSP
+            request.setAttribute("orders", orders);
+            request.setAttribute("currentPage", 1); // Đặt lại về trang đầu tiên
+            request.setAttribute("totalPages", totalPages); // Cập nhật tổng trang
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("OrdersManager/ListOrders.jsp");
             requestDispatcher.forward(request, response);
         } catch (Exception ex) {

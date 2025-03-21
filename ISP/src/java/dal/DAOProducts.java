@@ -51,7 +51,7 @@ public class DAOProducts {
         return products;
     }
 
-       public ArrayList<Zones> getZonesByProductId(int productId) {
+    public ArrayList<Zones> getZonesByProductId(int productId) {
         ArrayList<Zones> zones = new ArrayList<>();
         String sql = "SELECT z.ID, z.ZoneName FROM Zones z WHERE z.ProductID = ?";
 
@@ -83,23 +83,23 @@ public class DAOProducts {
         }
     }
 
-public void updateProducts(Products product) {
-    String sql = "UPDATE Products SET ProductName = ?, Description = ?, Price = ?, Quantity = ?, UpdateAt = ?, ImageLink = ? WHERE ID = ?";
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setString(1, product.getProductName());
-        ps.setString(2, product.getDescription());
-        ps.setInt(3, product.getPrice());
-        ps.setInt(4, product.getQuantity());
-        ps.setDate(5, today);
-        ps.setString(6, product.getImageLink());
-        ps.setInt(7, product.getID());
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
+    public void updateProducts(Products product) {
+        String sql = "UPDATE Products SET ProductName = ?, Description = ?, Price = ?, Quantity = ?, UpdateAt = ?, ImageLink = ? WHERE ID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, product.getProductName());
+            ps.setString(2, product.getDescription());
+            ps.setInt(3, product.getPrice());
+            ps.setInt(4, product.getQuantity());
+            ps.setDate(5, today);
+            ps.setString(6, product.getImageLink());
+            ps.setInt(7, product.getID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
 
- public int addProducts(Products product, int userid) {
+    public int addProducts(Products product, int userid) {
         String sql = "INSERT INTO Products (ImageLink, ProductName, Description, Price, Quantity, CreateAt, CreateBy, UpdateAt, isDelete, ShopID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, product.getImageLink());
@@ -123,35 +123,63 @@ public void updateProducts(Products product) {
         }
         return -1; // Return -1 if error occurs
     }
- public void updateZoneWithProduct(int zoneId, int productId) {
-    String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setInt(1, productId);
-        ps.setInt(2, zoneId);
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
- 
- public void updateProductZones(int productId, String[] zoneIDs) {
-    // Here you can implement logic to update the zones directly associated with the product
-    // For example, you can set the ProductID in the Zones table for the selected zone IDs
 
-    for (String zoneID : zoneIDs) {
-        int zoneIdInt = Integer.parseInt(zoneID);
-        // Update the zone with the new product ID
+    public void updateZoneWithProduct(int zoneId, int productId) {
         String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, productId);
-            ps.setInt(2, zoneIdInt);
+            ps.setInt(2, zoneId);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    
+    public void updateSingleProductZone(int productId, String zoneID) {
+    int zoneIdInt = Integer.parseInt(zoneID);
+    // Update the zone with the new product ID
+    String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setInt(1, productId);
+        ps.setInt(2, zoneIdInt);
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
 }
- 
+
+    public void updateProductZones(int productId, String[] zoneIDs) {
+        // Here you can implement logic to update the zones directly associated with the product
+        // For example, you can set the ProductID in the Zones table for the selected zone IDs
+
+        for (String zoneID : zoneIDs) {
+            int zoneIdInt = Integer.parseInt(zoneID);
+            // Update the zone with the new product ID
+            String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
+            try (PreparedStatement ps = connect.prepareStatement(sql)) {
+                ps.setInt(1, productId);
+                ps.setInt(2, zoneIdInt);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public int getProductIdByNameAndShop(String productName, int shopId) {
+        String sql = "SELECT ID FROM Products WHERE productName = ? AND ShopID = ? ";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, productName);
+            ps.setInt(2, shopId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("ID"); // Trả về ID
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Không tìm thấy thì trả về -1
+    }
 
     public Products getProductByID(int ID) throws Exception {
         String query = "SELECT * FROM Products WHERE ID=?";
@@ -265,12 +293,12 @@ public void updateProducts(Products product) {
         }
         return products;
     }
-    
+
     // Method to get products by shop ID
     public ArrayList<Products> getProductsByShopId(int shopID) throws SQLException {
         ArrayList<Products> products = new ArrayList<>();
         String sql = "SELECT * FROM Products WHERE ShopID = ?";
-        
+
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, shopID);
             ResultSet rs = ps.executeQuery();
@@ -288,37 +316,37 @@ public void updateProducts(Products product) {
         }
         return products;
     }
-    
+
 //    search product by name for order
     public ArrayList<Products> searchProductsByName(String productName) {
-    ArrayList<Products> products = new ArrayList<>();
-    String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ProductName LIKE ?";
+        ArrayList<Products> products = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ProductName LIKE ?";
 
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setString(1, "%" + productName + "%"); // Use LIKE for partial matching
-        ResultSet rs = ps.executeQuery();
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, "%" + productName + "%"); // Use LIKE for partial matching
+            ResultSet rs = ps.executeQuery();
 
-        while (rs.next()) {
-            Products product = new Products();
-            product.setID(rs.getInt("ID"));
-            product.setProductName(rs.getString("ProductName"));
-            product.setDescription(rs.getString("Description"));
-            product.setPrice(rs.getInt("Price"));
-            product.setQuantity(rs.getInt("Quantity"));
-            product.setImageLink(rs.getString("ImageLink"));
-            product.setShopID(rs.getInt("ShopID"));
-            product.setCreateAt(rs.getDate("CreateAt"));
-            product.setUpdateAt(rs.getDate("UpdateAt"));
-            product.setCreateBy(rs.getInt("CreateBy"));
-            product.setIsDelete(rs.getInt("isDelete"));
+            while (rs.next()) {
+                Products product = new Products();
+                product.setID(rs.getInt("ID"));
+                product.setProductName(rs.getString("ProductName"));
+                product.setDescription(rs.getString("Description"));
+                product.setPrice(rs.getInt("Price"));
+                product.setQuantity(rs.getInt("Quantity"));
+                product.setImageLink(rs.getString("ImageLink"));
+                product.setShopID(rs.getInt("ShopID"));
+                product.setCreateAt(rs.getDate("CreateAt"));
+                product.setUpdateAt(rs.getDate("UpdateAt"));
+                product.setCreateBy(rs.getInt("CreateBy"));
+                product.setIsDelete(rs.getInt("isDelete"));
 
-            products.add(product);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return products;
     }
-    return products;
-}
 
     public ArrayList<Products> searchProductsByNameAndShop(String name, int shopId) {
         ArrayList<Products> products = new ArrayList<>();
@@ -342,19 +370,31 @@ public void updateProducts(Products product) {
         }
         return products;
     }
-    
+
 //    update quantity after importing
     public void updateProductQuantity(int productId, int quantity) throws SQLException {
-    String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE ID = ?";
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setInt(1, quantity);
-        ps.setInt(2, productId);
-        ps.executeUpdate();
+        String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE ID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, quantity);
+            ps.setInt(2, productId);
+            ps.executeUpdate();
+        }
     }
-}
 
     public void updateProductQuantity(String productName, int quantityToAdd, int shopid) {
-        String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE productName = ? shopID = ?";
+        String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE productName = ? And shopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, quantityToAdd);
+            ps.setString(2, productName);
+            ps.setInt(3, shopid);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateProductQuantitydecre(String productName, int quantityToAdd, int shopid) {
+        String sql = "UPDATE Products SET Quantity = Quantity - ? WHERE productName = ? And shopID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, quantityToAdd);
             ps.setString(2, productName);
@@ -397,12 +437,12 @@ public void updateProducts(Products product) {
     public static void main(String[] args) throws Exception {
         DAOProducts dao = DAOProducts.INSTANCE;
 
-         // Test update product with ID = 3
-    int productIdToUpdate = 3; // ID của sản phẩm cần cập nhật
-    Products productToUpdate = dao.getProductByID(productIdToUpdate);
-    int quantity = 400;
-    dao.updateProductQuantity(productIdToUpdate, quantity);
-   
+        // Test update product with ID = 3
+        int productIdToUpdate = 3; // ID của sản phẩm cần cập nhật
+        Products productToUpdate = dao.getProductByID(productIdToUpdate);
+        int quantity = 400;
+        System.out.println(dao.getProductIdByNameAndShop("Gạo", 2));
+
     }
-    
+
 }

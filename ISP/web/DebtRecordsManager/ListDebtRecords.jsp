@@ -35,7 +35,15 @@
             ArrayList<DebtRecords> debtrecords = (ArrayList<DebtRecords>) request.getAttribute("debtrecords");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
+        <%
+            Integer currentPage = (Integer) request.getAttribute("currentPage");
+            Integer totalPages = (Integer) request.getAttribute("totalPages");
 
+            // Kiểm tra xem các biến có được nhận hay không
+            if (currentPage == null || totalPages == null) {
+                out.println("<script>alert('Không thể nhận được currentPage hoặc totalPages.');</script>");
+            }
+        %>
         <div class="header">
             <div class="container">
                 <a href="shopdetail">
@@ -119,16 +127,16 @@
                                     <td class="table-cell"><%= dao1.getCustomersByID(debt.getCustomerID()).getName() %></td>
                                     <td class="table-cell"><%= currencyFormat.format(debt.getAmountOwed()) +" VND" %></td>
                                     <td class="table-cell"><% if (debt.getPaymentStatus() == 1) { %>
-                                        Trả Nợ
+                                        Khách trả
                                         <% } if (debt.getPaymentStatus() == -1) { %>
-                                        Vay Nợ
+                                        Khách vay
                                         <% } %>
                                         <% if (debt.getPaymentStatus() == 2) { %>
-                                        Đi Vay
+                                        Cửa hàng vay
                                         <% } %>
                                         <%if (debt.getPaymentStatus() == -2) { %>
-                                        Đi Trả
-                                    <% } %></td>
+                                        Cửa hàng trả
+                                        <% } %></td>
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'listdebtrecorddetail?debtid=<%= debt.getID() %>'">Xem chi tiết </button>
                                         <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= debt.getCustomerID() %>'">Công nợ</button>
@@ -137,6 +145,21 @@
                                 <% }} %>
                             </tbody>
                         </table>
+                    </div>
+                            <!-- Pagination -->
+                    <div class="pagination">
+                        <div class="pagination-controls">
+                            <button 
+                                class="pagination-button" 
+                                <% if (currentPage <= 1) { %> disabled <% }%> 
+                                onclick="window.location.href = 'listdebtrecords?page=<%= currentPage - 1%>'">Trước</button>
+                            <span class="pagination-info">Trang <%= currentPage%> / <%= totalPages%></span>
+
+                            <button 
+                                class="pagination-button" 
+                                <% if (currentPage >= totalPages) { %> disabled <% }%> 
+                                onclick="window.location.href = 'listdebtrecords?page=<%= currentPage + 1%>'">Sau</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -29,12 +29,12 @@
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        
+
         <script>
-    function openNewInvoiceTab() {
-        window.open('addimportorder', '_blank'); // Opens the add order page in a new tab
-    }
-</script>
+            function openNewInvoiceTab() {
+                window.open('addimportorder', '_blank'); // Opens the add order page in a new tab
+            }
+        </script>
 
     </head>
     <body>
@@ -90,7 +90,7 @@
                                 <th>Khu Vực</th>
                                 <th>Quy Cách</th>
                                 <th>Giá Gốc</th>
-                                <th>Giảm Giá</th>
+                                <th>Giảm giá</th>
                                 <th>Thành Tiền</th>
                                 <th>Xóa</th>
                             </tr>
@@ -109,12 +109,12 @@
                                 </td>
                                 <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
                                 <td>
-                                    <select class="area-select" name="area" multiple="multiple" required style="width: 100%;">
+                                    <select class="area-select" name="area[0]" multiple="multiple" required style="width: 100%;">
                                         <% 
                                            for (Zones zone : zones) { 
                                                 if(zone.getShopID() == u.getShopID()) { 
                                         %>
-                                        <option value="<%= zone.getID() %>"><%= zone.getZoneName() %></option>
+                                        <option value="<%= zone.getZoneName() %>"><%= zone.getZoneName() %></option>
                                         <% } } %>
                                     </select>
                                 </td>
@@ -140,7 +140,7 @@
                     <% if (products != null) { 
                         for (Products product : products) { 
                             if(product.getShopID() == u.getShopID()) { %>
-                        {id: '<%= product.getID() %>', text: '<%= product.getProductName() %>'},
+                        {id: '<%= product.getProductName() %>', text: '<%= product.getProductName() %>'},
                     <%    } 
                       } 
                    } %>
@@ -150,7 +150,7 @@
                     <%  if (zones != null) {
                         for (Zones zone : zones) { 
                         if(zone.getShopID() == u.getShopID()) { %>
-                        {id: '<%= zone.getID() %>', text: '<%= zone.getZoneName() %>'},
+                        {id: '<%= zone.getZoneName() %>', text: '<%= zone.getZoneName() %>'},
                     <% } } } %>
                     ];
 
@@ -229,15 +229,16 @@
 
 
                     function addProductRow() {
+                        const rowCount = $('#productList tr').length; // Lấy số lượng dòng hiện tại để tạo index
                         const newRow = `
                         <tr>
                             <td>
-                                <select class="area-select product-select" name="productName" multiple="multiple" required style="width: 100%;">
+                                <select class="area-select product-select" name="productName[${rowCount}]" multiple="multiple" required style="width: 100%;">
                                 </select>
                             </td>
                             <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
                             <td>
-                                <select class="area-select zone-select" name="area" multiple="multiple" required style="width: 100%;">
+                                <select class="area-select zone-select" name="area[${rowCount}]" multiple="multiple" required style="width: 100%;">
                                 </select>
                             </td>
                             <td><input type="text" name="spec" placeholder="Kg/bao"></td>
@@ -246,23 +247,23 @@
                             <td><input type="text" name="total" readonly></td>
                             <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
                         </tr>
-                    `;
+                        `;
 
                         $('#productList').append(newRow);
 
-                        // Khởi tạo select2 với data cho dropdown vừa thêm
+                        // Khởi tạo select2 với dữ liệu cho dropdown vừa thêm
                         const lastProductSelect = $('#productList').find('tr:last .product-select');
                         const lastZoneSelect = $('#productList').find('tr:last .zone-select');
 
                         lastProductSelect.select2({
                             data: productList,
-                            placeholder: "Chọn...",
+                            placeholder: "Chọn sản phẩm...",
                             allowClear: true
                         });
 
                         lastZoneSelect.select2({
                             data: zoneList,
-                            placeholder: "Chọn...",
+                            placeholder: "Chọn khu vực...",
                             allowClear: true
                         });
                     }

@@ -163,6 +163,7 @@ public class DAOCustomers {
                 String customerData = (cs.getWallet() + " "
                         + cs.getName() + " "
                         + cs.getPhone() + " "
+                        + cs.getAddress()+ " "
                         + cs.getCreateAt() + " "
                         + cs.getUpdateAt() + " "
                         + userCreate.getFullName().toLowerCase() + " "
@@ -190,7 +191,7 @@ public class DAOCustomers {
     }
 
     public int getTotalCustomersByShopId(int shopId) {
-        String sql = "SELECT COUNT(*) FROM Customers WHERE isDelete = 0 AND ShopID = ?";
+        String sql = "SELECT COUNT(*) FROM Customers WHERE ShopID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, shopId);
             ResultSet rs = ps.executeQuery();
@@ -205,7 +206,7 @@ public class DAOCustomers {
 
     public ArrayList<Customers> getCustomersByPage(int page, int productsPerPage, int shopId) {
         ArrayList<Customers> customers = new ArrayList<>();
-        String sql = "SELECT * FROM Customers WHERE isDelete = 0 AND ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT * FROM Customers WHERE ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, shopId);

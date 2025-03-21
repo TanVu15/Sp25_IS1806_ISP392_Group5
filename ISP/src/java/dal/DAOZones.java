@@ -99,14 +99,13 @@ public class DAOZones {
     }
 
     public void addZone(Zones zone, int userid) {
-        String sql = "INSERT INTO Zones (ZoneName, shopid, ProductID, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Zones (ZoneName, shopid, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, zone.getZoneName());
             ps.setInt(2, zone.getShopID());
-            ps.setInt(3, zone.getProductID()); // Include ProductID
-            ps.setDate(4, today);
-            ps.setInt(5, userid);
-            ps.setInt(6, 0);
+            ps.setDate(3, today);
+            ps.setInt(4, userid);
+            ps.setInt(5, 0);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error adding zone: " + e.getMessage());
@@ -142,7 +141,19 @@ public class DAOZones {
         return zones;
     }
     
-    public ArrayList<Zones> getZonesBySearch(String information) throws Exception {
+        public void updateZoneImportOrder(String zoneName,int ProductID, int shopid) {
+        String sql = "UPDATE Zones SET ProductID = ? WHERE zoneName = ? And shopID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, ProductID);
+            ps.setString(2, zoneName);
+            ps.setInt(3, shopid);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+        
+        public ArrayList<Zones> getZonesBySearch(String information) throws Exception {
         // Chuẩn hóa từ khóa tìm kiếm (bỏ dấu, chuyển thành chữ thường, xóa khoảng trắng thừa)
         String normalizedSearch = Normalizer.normalize(information, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
@@ -229,16 +240,26 @@ public class DAOZones {
         return zones;
     }
 
-
     public static void main(String[] args) {
-        // Testing methods
+        // Khởi tạo DAOZones
         DAOZones daoZones = new DAOZones();
 
-        // Example: Print all zones
+        // Tạo một zone mới để thêm vào database
+        Zones newZone = new Zones();
+        newZone.setZoneName("Test Zone");
+        newZone.setShopID(4); // Giả sử ShopID là 1
+        newZone.setProductID(3); // Giả sử ProductID là 101
+
+        int userId = 4; // Giả sử user ID của người tạo là 1
+
+        // Gọi hàm addZone để thêm zone mới
+        daoZones.addZone(newZone, userId);
+        System.out.println("Zone mới đã được thêm!");
+
+        // Kiểm tra lại bằng cách lấy danh sách zones từ database
         ArrayList<Zones> zonesList = daoZones.getAllZones();
         for (Zones z : zonesList) {
             System.out.println("ID: " + z.getID() + ", Zone Name: " + z.getZoneName() + ", Product ID: " + z.getProductID());
         }
-
     }
 }

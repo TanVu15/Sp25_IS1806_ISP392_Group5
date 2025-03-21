@@ -28,6 +28,16 @@
             ArrayList<Orders> orders = (ArrayList<Orders>) request.getAttribute("orders");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
+        
+        <%
+            Integer currentPage = (Integer) request.getAttribute("currentPage");
+            Integer totalPages = (Integer) request.getAttribute("totalPages");
+
+            // Kiểm tra xem các biến có được nhận hay không
+            if (currentPage == null || totalPages == null) {
+                out.println("<script>alert('Không thể nhận được currentPage hoặc totalPages.');</script>");
+            }
+        %>
         <div class="header">
             <div class="container">
                 <a href="shopdetail">
@@ -132,6 +142,22 @@
                                 %>
                             </tbody>
                         </table>
+                    </div>
+                            
+                            <!-- Pagination -->
+                    <div class="pagination">
+                        <div class="pagination-controls">
+                            <button 
+                                class="pagination-button" 
+                                <% if (currentPage <= 1) { %> disabled <% }%> 
+                                onclick="window.location.href = 'listorders?page=<%= currentPage - 1%>'">Trước</button>
+                            <span class="pagination-info">Trang <%= currentPage%> / <%= totalPages%></span>
+
+                            <button 
+                                class="pagination-button" 
+                                <% if (currentPage >= totalPages) { %> disabled <% }%> 
+                                onclick="window.location.href = 'listorders?page=<%= currentPage + 1%>'">Sau</button>
+                        </div>
                     </div>
 
                 </div>
