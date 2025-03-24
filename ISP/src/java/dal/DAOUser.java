@@ -190,9 +190,9 @@ public class DAOUser {
     public ArrayList<Users> getUsersBySearch(String information) throws Exception {
         ArrayList<Users> users = new ArrayList<>();
         String sql = "SELECT * FROM Users"; // Lấy toàn bộ dữ liệu từ bảng Users
-
+        
         try (PreparedStatement statement = connect.prepareStatement(sql); ResultSet rs = statement.executeQuery()) {
-
+            
             while (rs.next()) {
                 Users u = new Users();
                 u.setID(rs.getInt("ID"));
@@ -209,14 +209,13 @@ public class DAOUser {
                 u.setDeletedAt(rs.getDate("DeletedAt"));
 
                 // Lấy thông tin người tạo 
-                Users userCreate = DAO.INSTANCE.getUserByID(u.getCreateBy());
+                //Users userCreate = DAO.INSTANCE.getUserByID(u.getCreateBy());
 
                 // Chuyển thông tin của user thành một chuỗi
                 String userData = (u.getUsername() + " "
                         + u.getPasswordHash() + " "
                         + u.getFullName() + " "
-                        + u.getCreateAt() + " "
-                        + userCreate.getFullName().toLowerCase() + " ");
+                        );
 
                 //Lấy role 
                 if (u.getRoleid() == 1) {

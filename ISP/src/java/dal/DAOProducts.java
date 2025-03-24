@@ -433,7 +433,7 @@ public class DAOProducts {
 
         return productList;
     }
-
+    
     public static void main(String[] args) throws Exception {
         DAOProducts dao = DAOProducts.INSTANCE;
 

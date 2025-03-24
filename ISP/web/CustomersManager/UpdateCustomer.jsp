@@ -43,7 +43,7 @@
                             %>
             <div class="form-group">
                 <label for="name">Tên:</label>
-                <input type="text" id="name" name="name" value="<%= cus.getName() %>" readonly>
+                <input type="text" id="name" name="name" value="<%= cus.getName() %>">
             </div>
             <div class="form-group">
                 <input type="hidden" name="id" value="<%= cus.getID() %>">

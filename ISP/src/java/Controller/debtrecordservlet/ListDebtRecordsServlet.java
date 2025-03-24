@@ -96,16 +96,15 @@ public class ListDebtRecordsServlet extends HttpServlet {
         try {
             debtrecords = dao.getDebtRecordsSearch(information);
             if (debtrecords == null || debtrecords.isEmpty()) {
-                debtrecords = dao.getDebtRecords();
                 request.setAttribute("message", "Không tìm thấy kết quả nào.");
-                request.setAttribute("debtrecords", debtrecords);
+                
             } else {
-                request.setAttribute("debtrecords", debtrecords);
+                request.setAttribute("message", "Kết quả tìm kiếm cho: " + information);
             }
             
             // Cập nhật currentPage và totalPages
             int totalProducts = debtrecords.size(); // Tổng sản phẩm tìm được
-            int totalPages = (int) Math.ceil(totalProducts / 10); // Cập nhật với số sản phẩm mỗi trang
+            int totalPages = (int) Math.ceil(totalProducts / 10.0); // Cập nhật với số sản phẩm mỗi trang
             
             // Thiết lập các thuộc tính cho JSP
             request.setAttribute("debtrecords", debtrecords);

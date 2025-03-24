@@ -205,7 +205,18 @@ public class AddExportOrderServlet extends HttpServlet {
                     // Chuyển đổi dữ liệu từ chuỗi sang số
                     try {
                         String productName = productNames[i].trim();
+                        int pId = dao2.getProductIdByNameAndShop(productName, user.getShopID());
+
                         int quantity = Integer.parseInt(quantities[i].trim());
+                        //int quantityInDB = dao2.getQuantityFromDB(pId, user.getShopID()
+                        //); // Hàm lấy số lượng từ DB
+
+                        //if (quantity > quantityInDB) {
+                            //request.setAttribute("message", "Số lượng xuất không thể lớn hơn số lượng tồn kho!");
+                            //request.getRequestDispatcher("addexportorder").forward(request, response);
+                        //}
+                            // Tiếp tục xử lý xuất hàng
+                    
                         int price = Integer.parseInt(prices[i].trim());
                         String decription = spec[i].trim();
                         int discount = Integer.parseInt(discounts[i].trim());

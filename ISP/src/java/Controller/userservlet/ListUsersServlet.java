@@ -66,7 +66,7 @@ public class ListUsersServlet extends HttpServlet {
 
                 // Lấy trang hiện tại từ tham số URL, mặc định là 1
                 int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-                int productsPerPage = 5; // Số sản phẩm trên mỗi trang
+                int productsPerPage = 10; // Số sản phẩm trên mỗi trang
 
                 // Lấy tổng số sản phẩm cho shop hiện tại
                 int totalUser = dao.getTotalUsersById();
@@ -91,7 +91,7 @@ public class ListUsersServlet extends HttpServlet {
                 } else {
                     // Lấy trang hiện tại từ tham số URL, mặc định là 1
                     int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-                    int productsPerPage = 5; // Số sản phẩm trên mỗi trang
+                    int productsPerPage = 10; // Số sản phẩm trên mỗi trang
 
                     // Lấy tổng số sản phẩm cho shop hiện tại
                     int totalUser = dao.getTotalUsersByShopId(user.getShopID());
@@ -146,11 +146,19 @@ public class ListUsersServlet extends HttpServlet {
                 users = dao.getUsersBySearch(information);
                 if (users == null || users.isEmpty()) {
                     request.setAttribute("message", "Không tìm thấy kết quả nào.");
-                    users = dao.getUsers();
-                    request.setAttribute("users", users);
                 } else {
-                    request.setAttribute("users", users);
+                    request.setAttribute("message", "Kết quả tìm kiếm cho: " + information);
                 }
+                 int productsPerPage = 10;
+                    // Cập nhật currentPage và totalPages
+                    int totalUsers = users.size(); // Tổng sản phẩm tìm được
+                    int totalPages = (int) Math.ceil(totalUsers / productsPerPage); // Cập nhật với số sản phẩm mỗi trang
+
+                    // Thiết lập các thuộc tính cho JSP
+                    request.setAttribute("users", users);
+                    request.setAttribute("currentPage", 1); // Đặt lại về trang đầu tiên
+                    request.setAttribute("totalPages", totalPages);
+                    
             } catch (Exception ex) {
                 Logger.getLogger(ListUsersServlet.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -65,6 +65,16 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
         //lay user người đang đăng nhập
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
+         // Lấy trang hiện tại từ tham số URL, mặc định là 1
+        int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+        int debtsPerPage = 10; // Số sản phẩm trên mỗi trang
+
+       // Lấy tổng số sản phẩm cho shop hiện tại
+        int totalCustomer = dao.getTotalDebtRecordByShopId(user.getShopID());
+        int totalPages = (int) Math.ceil((double) totalCustomer / debtsPerPage);
+        
+        request.setAttribute("currentPage", currentPage);
+        request.setAttribute("totalPages", totalPages);
         // lay líst debt của customer
         ArrayList<DebtRecords> debtrecords = dao.getCustomerDebtRecords(customerID);
         request.setAttribute("debtrecords", debtrecords);
@@ -109,7 +119,17 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
                 debtrecords = dao.getCustomerDebtRecords(customerID);
                 request.setAttribute("debtrecords", debtrecords);
             } else {
-                request.setAttribute("debtrecords", debtrecords);
+                request.setAttribute("message", "Kết quả tìm kiếm cho: " + information);
+                
+                // Cập nhật currentPage và totalPages
+                int debtsPerPage = 10;
+            int totalProducts = debtrecords.size(); // Tổng sản phẩm tìm được
+            int totalPages = (int) Math.ceil(totalProducts / debtsPerPage); // Cập nhật với số sản phẩm mỗi trang
+            
+            // Thiết lập các thuộc tính cho JSP
+            request.setAttribute("debtrecords", debtrecords);
+            request.setAttribute("currentPage", 1); // Đặt lại về trang đầu tiên
+            request.setAttribute("totalPages", totalPages);
             }
 
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListCustomerDebtRecords.jsp");

@@ -49,7 +49,7 @@ public class ListOrdersServlet extends HttpServlet {
         
         // Lấy trang hiện tại từ tham số URL, mặc định là 1
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-        int ordersPerPage = 5; // Số sản phẩm trên mỗi trang
+        int ordersPerPage = 10; // Số sản phẩm trên mỗi trang
 
        // Lấy tổng số sản phẩm cho shop hiện tại
         int totalCustomer = dao.getTotalOrdersByShopId(user.getShopID());
@@ -80,6 +80,7 @@ public class ListOrdersServlet extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String information = request.getParameter("information");
+        int ordersPerPage = 10;
 
         DAOOrders dao = new DAOOrders();
         HttpSession session = request.getSession();
@@ -91,14 +92,13 @@ public class ListOrdersServlet extends HttpServlet {
             orders = dao.getOrdersBySearch(information);
             if (orders == null || orders.isEmpty()) {
                 request.setAttribute("message", "Không tìm thấy kết quả nào.");
-                orders = dao.getAllOrders();
-                request.setAttribute("orders", orders);
+                
             } else {
-                request.setAttribute("orders", orders);
+                request.setAttribute("message", "Kết quả tìm kiếm cho: " + information);
             }
             // Cập nhật currentPage và totalPages
             int totalProducts = orders.size(); // Tổng sản phẩm tìm được
-            int totalPages = (int) Math.ceil(totalProducts / 5.0); // Cập nhật với số sản phẩm mỗi trang
+            int totalPages = (int) Math.ceil(totalProducts / ordersPerPage); // Cập nhật với số sản phẩm mỗi trang
             
             // Thiết lập các thuộc tính cho JSP
             request.setAttribute("orders", orders);

@@ -82,7 +82,7 @@
                         <h3 class="body__head-title">Danh sách công nợ</h3>
                         <div class="search-container">
                             <form action='listdebtrecords' method="post">
-                                <input type="text" id="information" name="information" placeholder="Tìm kiếm khách hàng..." class="search-input">
+                                <input type="text" id="information" name="information" placeholder="Tìm kiếm công nợ..." class="search-input">
                                 <button type="submit" class="search-button">Search</button>
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>

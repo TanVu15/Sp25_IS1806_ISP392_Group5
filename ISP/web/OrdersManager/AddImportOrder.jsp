@@ -58,7 +58,7 @@
                 <div class="invoice-info">
                     <div class="input-container">
                         <label for="customerName">Tên Khách Hàng:</label>
-                        <input class="input-info" type="text" id="customerName" name="customerName" list="customersList" placeholder="Tìm kiếm khách hàng..." required>
+                        <input class="input-info" type="text" id="customerName" name="customerName" list="customersList" placeholder="Tìm kiếm khách hàng." .." required>
                         <datalist id="customersList">
                             <%
                            if (customers != null && !customers.isEmpty()) {
@@ -80,7 +80,23 @@
                         <span class="input-info"><%= u.getFullName() %></span>
                     </div>
                 </div>
-
+                    
+                    <div class="search-container">
+                        <h2 class="search-heading">Tìm kiếm sản phẩm</h2>
+                        <input type="text" id="productSearch" list="productsList" placeholder="Nhập tên sản phẩm...">
+                        <datalist id="productsList">
+                            <%
+                           if (products != null && !products.isEmpty()) {
+                           for (Products produc : products) { 
+                                if(produc.getShopID() == u.getShopID()){
+                            %>
+                            <option value="ten san pham:<%= produc.getProductName() %> |
+                                    gia: <%= produc.getPrice() %> | 
+                                    so luong:<%= produc.getQuantity() %> " ></option>
+                            <% } } }%>
+                        </datalist>
+                    </div>
+        
                 <div class="product-list">
                     <table id="productTable">
                         <thead>
@@ -206,7 +222,22 @@
                             const quantity = quantityVal.trim() === "" ? 0 : parseInt(quantityVal);
                             const price = priceVal.trim() === "" ? 0 : parseFloat(priceVal);
                             const discount = discountVal.trim() === "" ? 0 : parseFloat(discountVal);
-
+                            
+                            if (discount > price) {
+                                showToast("Giảm giá không thể lớn hơn giá gốc!");
+                                $(this).find('input[name="discount"]').val(0); // Đặt lại giá trị giảm giá
+                                isValid = false;
+                                }
+                                 function showToast(message) {
+                                var toast = $('<div class="toast-message">' + message + '</div>');
+                                $('body').append(toast);
+                                setTimeout(function () {
+                                    toast.fadeOut(500, function () {
+                                        $(this).remove();
+                                    });
+                                }, 3000);
+                                }
+                            
                             // Tính thành tiền
                             let totalPrice = (price * quantity) - discount;
                             totalPrice = totalPrice < 0 ? 0 : totalPrice; // Không cho âm tiền

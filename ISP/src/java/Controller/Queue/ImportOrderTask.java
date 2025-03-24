@@ -33,13 +33,11 @@ public class ImportOrderTask {
     }
 
     public void processOrder() {
-        
         try {
             DAOOrders daoOrders = DAOOrders.INSTANCE;
             DAOCustomers daoCustomers = DAOCustomers.INSTANCE;
             DAOProducts daoProducts = DAOProducts.INSTANCE;
-            DAOOrderItem daoOrderItem = DAOOrderItem.INSTANCE; // Thêm DAOOrderItem
-            
+            DAOOrderItem daoOrderItem = DAOOrderItem.INSTANCE;
 
             // 1. Lấy thông tin người tạo từ session
             Users creator = (Users) session.getAttribute("user");
@@ -60,9 +58,9 @@ public class ImportOrderTask {
             order.setCustomerID(customerID);
             order.setTotalAmount((float) totalCost);
             order.setShopID(creator.getShopID());
-            order.setStatus(1); // Đơn nhập hàng
+            order.setStatus(1);
 
-            // 4. Thêm đơn hàng và lấy OrderID
+            // 4. Thêm đơn hàng vào DB
             int orderID = daoOrders.addOrdersreturnID(order, creator.getID());
             if (orderID == -1) {
                 System.out.println("Failed to create order.");
@@ -71,29 +69,23 @@ public class ImportOrderTask {
 
             System.out.println("Added order for customer: " + customerName + " with Order ID: " + orderID);
 
-            // 5. Thêm sản phẩm vào OrderItems và cập nhật số lượng kho
+            // 5. Thêm sản phẩm vào đơn hàng
             for (Products product : productList) {
                 OrderItems orderItem = new OrderItems();
                 orderItem.setOrderID(orderID);
                 orderItem.setProductName(product.getProductName());
                 orderItem.setQuantity(product.getQuantity());
                 orderItem.setPrice(product.getPrice());
-                orderItem.setUnitPrice(product.getPrice()); // Nếu có khuyến mãi, cần cập nhật từ form
-                orderItem.setDescription(""); // Mô tả đơn hàng nhập
+                orderItem.setUnitPrice(product.getPrice());
+                orderItem.setDescription("");
                 orderItem.setShopID(creator.getShopID());
-
-                // Thêm thông tin thời gian & người tạo
                 orderItem.setCreateBy(creator.getID());
                 orderItem.setIsDelete(0);
-                orderItem.setDeletedAt(null);
-                orderItem.setDeleteBy(0);
 
-                // Thêm vào OrderItems
                 daoOrderItem.AddOrderItems(orderItem, creator.getID());
-                
 
-                // Cập nhật số lượng sản phẩm trong kho (nhập hàng nên số lượng tăng)
-                //daoProducts.updateProductQuantity(product.getProductName(), product.getQuantity(),creator.getShopID());
+                // Cập nhật số lượng kho
+                daoProducts.updateProductQuantity(product.getProductName(), product.getQuantity(), creator.getShopID());
             }
 
             System.out.println("Successfully processed import order!");
@@ -105,5 +97,3 @@ public class ImportOrderTask {
     }
 
 }
-
-
