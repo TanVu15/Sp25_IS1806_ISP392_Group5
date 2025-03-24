@@ -29,20 +29,20 @@
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        
+
         <script>
-    function openNewInvoiceTab() {
-        window.open('addimportorder', '_blank'); // Opens the add order page in a new tab
-    }
-</script>
+            function openNewInvoiceTab() {
+                window.open('addimportorder', '_blank'); // Opens the add order page in a new tab
+            }
+        </script>
 
     </head>
     <body>
-        <% DAOUser dao = new DAOUser(); 
-        List<Zones> zones = (List<Zones>) request.getAttribute("zones");
-        ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
-        ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
-        Users u = (Users) request.getAttribute("user"); 
+        <% DAOUser dao = new DAOUser();
+            List<Zones> zones = (List<Zones>) request.getAttribute("zones");
+            ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
+            ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
+            Users u = (Users) request.getAttribute("user");
         %>
 
         <form action="addexportorder" method="post" id="invoiceForm">
@@ -61,12 +61,14 @@
                         <input class="input-info" type="text" id="customerName" name="customerName" list="customersList" placeholder="Tìm kiếm khách hàng..." required>
                         <datalist id="customersList">
                             <%
-                           if (customers != null && !customers.isEmpty()) {
-                           for (Customers customer1 : customers) { 
-                                if(customer1.getShopID() == u.getShopID()){
+                                if (customers != null && !customers.isEmpty()) {
+                                    for (Customers customer1 : customers) {
+                                        if (customer1.getShopID() == u.getShopID()) {
                             %>
-                            <option value="<%= customer1.getName() %>"></option>
-                            <% } } }%>
+                            <option value="<%= customer1.getName()%>"></option>
+                            <% }
+                                    }
+                                }%>
                         </datalist>
                     </div>
                     <div class="input-container">
@@ -76,8 +78,8 @@
 
                     <div class="input-container">
                         <label for="creater">Người tạo phiếu:</label>
-                        <input type="hidden" name="creater" value="<%= u.getFullName() %>"> <!-- Gửi giá trị 1 -->
-                        <span class="input-info"><%= u.getFullName() %></span>
+                        <input type="hidden" name="creater" value="<%= u.getFullName()%>"> <!-- Gửi giá trị 1 -->
+                        <span class="input-info"><%= u.getFullName()%></span>
                     </div>
                 </div>
 
@@ -99,25 +101,28 @@
                             <tr>
                                 <td>
                                     <select class="area-select" name="productName" multiple="multiple" required style="width: 100%;">
-                                        <% 
-                                          for (Products product : products) { 
-                                               if(product.getShopID() == u.getShopID()) {
+                                        <%
+                                            for (Products product : products) {
+                                                if (product.getShopID() == u.getShopID()) {
                                         %>
-                                        <option value="<%= product.getProductName() %>"><%= product.getProductName() %></option>
-                                        <% } }%>
+                                        <option value="<%= product.getProductName()%>"><%= product.getProductName()%></option>
+                                        <% }
+                                            }%>
                                     </select>
                                 </td>
                                 <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
                                 <td>
                                     <select class="area-select" name="area" multiple="multiple" required style="width: 100%;">
-                                        <% 
-                                           for (Zones zone : zones) { 
-                                                if(zone.getShopID() == u.getShopID()) { 
+                                        <%
+                                            for (Zones zone : zones) {
+                                                if (zone.getShopID() == u.getShopID()) {
                                         %>
-                                        <option value="<%= zone.getID() %>"><%= zone.getZoneName() %></option>
-                                        <% } } %>
+                                        <option value="<%= zone.getZoneName()%>"><%= zone.getZoneName()%></option>
+                                        <% }
+                                            } %>
                                     </select>
                                 </td>
+                                <td><input type="number" class="zone-count-hidden" name="zoneCount" value="0" readonly></td>
                                 <td><input type="text" name="spec" placeholder="Kg/bao"></td>
                                 <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
                                 <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
@@ -136,22 +141,31 @@
                         });
                     });
 
+                    $(document).ready(function () {
+                        $('.product-select').select2({
+                            placeholder: "Chọn sản phẩm...",
+                            allowClear: true
+                        });
+                    });
+
                     const productList = [
-                    <% if (products != null) { 
-                        for (Products product : products) { 
-                            if(product.getShopID() == u.getShopID()) { %>
-                        {id: '<%= product.getProductName() %>', text: '<%= product.getProductName() %>'},
-                    <%    } 
-                      } 
-                   } %>
+                    <% if (products != null) {
+                            for (Products product : products) {
+                                if (product.getShopID() == u.getShopID()) {%>
+                        {id: '<%= product.getProductName()%>', text: '<%= product.getProductName()%>'},
+                    <%    }
+                            }
+                        } %>
                     ];
 
                     const zoneList = [
                     <%  if (zones != null) {
-                        for (Zones zone : zones) { 
-                        if(zone.getShopID() == u.getShopID()) { %>
-                        {id: '<%= zone.getID() %>', text: '<%= zone.getZoneName() %>'},
-                    <% } } } %>
+                            for (Zones zone : zones) {
+                                if (zone.getShopID() == u.getShopID()) {%>
+                        {id: '<%= zone.getZoneName()%>', text: '<%= zone.getZoneName()%>'},
+                    <% }
+                            }
+                        }%>
                     ];
 
                     // Hiển thị/ẩn các ô khi chọn hình thức thanh toán
@@ -228,6 +242,7 @@
                     }
 
 
+
                     function addProductRow() {
                         const newRow = `
                         <tr>
@@ -240,6 +255,7 @@
                                 <select class="area-select zone-select" name="area" multiple="multiple" required style="width: 100%;">
                                 </select>
                             </td>
+                            <td><input type="number" class="zone-count-hidden" name="zoneCount" value="0" readonly></td>
                             <td><input type="text" name="spec" placeholder="Kg/bao"></td>
                             <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
                             <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
@@ -271,6 +287,27 @@
                         $(button).closest('tr').remove();
                         calculateTotal();
                     }
+
+                    // count zone select
+                    $(document).ready(function () {
+                        $(document).on("change", ".area-select", function () {
+                            let selectedZones = $(this).val(); // Lấy danh sách khu vực đã chọn
+                            let zoneCount = selectedZones ? selectedZones.length : 0; // Đếm số khu vực
+
+                            // Cập nhật giá trị vào input ẩn trong dòng hiện tại
+                            $(this).closest("tr").find(".zone-count-hidden").val(zoneCount);
+                        });
+                    });
+
+
+
+                    $("#invoiceForm").on("submit", function () {
+                        $(".zone-select").each(function () {
+                            let selectedZones = $(this).val();
+                            let zoneCount = selectedZones ? selectedZones.length : 0;
+                            $(this).closest("tr").find(".zone-count-hidden").val(zoneCount);
+                        });
+                    });
                 </script>
 
                 <!-- Trạng thái thanh toán -->

@@ -231,7 +231,7 @@ public class DAO {
         }
         return users;
     }
-
+    
     public static void main(String[] args) throws Exception {
         DAO dao = new DAO();
 //        Users admin = new Users(0, "Admin2", "1234", 1, "Hoangvanviet2", today, today, 0, 0, today, 0);

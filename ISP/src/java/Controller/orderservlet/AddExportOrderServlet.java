@@ -113,6 +113,7 @@ public class AddExportOrderServlet extends HttpServlet {
         DAOCustomers dao1 = new DAOCustomers();
         DAOProducts dao2 = new DAOProducts();
         DAOOrderItem dao3 = new DAOOrderItem();
+        DAOZones dao4 = new DAOZones();
 
         try {
             int shopID = user.getShopID();
@@ -186,6 +187,9 @@ public class AddExportOrderServlet extends HttpServlet {
                 String[] prices = request.getParameterValues("price");
                 String[] spec = request.getParameterValues("spec");
                 String[] discounts = request.getParameterValues("discount");
+                String[] zoneNames = request.getParameterValues("area");
+                String[] zoneCounts = request.getParameterValues("zoneCount"); // Lấy số lượng khu vực
+                int zoneIndex = 0;
 
                 // Kiểm tra dữ liệu đầu vào
                 if (productNames == null || quantities == null || prices == null || discounts == null || spec == null) {
@@ -209,6 +213,7 @@ public class AddExportOrderServlet extends HttpServlet {
                         int price = Integer.parseInt(prices[i].trim());
                         String decription = spec[i].trim();
                         int discount = Integer.parseInt(discounts[i].trim());
+                        int pId = dao2.getProductIdByNameAndShop(productName, user.getShopID());
 
                         java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
                         // Tạo đối tượng OrderItems
@@ -228,6 +233,21 @@ public class AddExportOrderServlet extends HttpServlet {
 
                         // Cập nhật số lượng sản phẩm trong kho
                         dao2.updateProductQuantitydecre(productName, quantity, user.getShopID());
+
+                        // 🔹 **Xử lý nhiều khu vực**
+                        int zoneCount = Integer.parseInt(zoneCounts[i].trim());
+
+                        // Cập nhật zoneCount vào sản phẩm nếu cần
+                        if (zoneNames != null && zoneCount > 0) {
+                            for (int j = 0; j < zoneCount; j++) {
+                                if (zoneIndex >= zoneNames.length) {
+                                    break; // Đảm bảo không vượt quá mảng
+                                }
+                                String zoneName = zoneNames[zoneIndex].trim();
+                                dao4.updateZoneImportOrder(zoneName, pId, shopID);
+                                zoneIndex++; // Chuyển sang khu vực tiếp theo
+                            }
+                        }
 
                     } catch (NumberFormatException e) {
                         out.println("<h3 style='color:red;'>Lỗi định dạng số ở sản phẩm thứ " + (i + 1) + ": " + e.getMessage() + "</h3>");

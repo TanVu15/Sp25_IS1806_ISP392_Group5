@@ -169,6 +169,7 @@
         <div class="footer">
             <div class="container">
                 <p>&copy; 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
+                <h3>Tổng số sản phẩm trong đơn: <%= request.getAttribute("totalProducts") %></h3>
             </div>
         </div>   
     </body>

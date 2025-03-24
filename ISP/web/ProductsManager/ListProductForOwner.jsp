@@ -79,17 +79,18 @@
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
                         <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="analysis"><i class="fa-solid fa-chart-simple list-item-icon"></i></i>Báo Cáo</a></li>
                     </ul>
                 </div>
 
                 <!-- HomePage Body -->
                 <div class="homepage-body">
                     <div class="body-head">
-                        <h3 class="body__head-title">Thông tin sản phẩm</h3>
+                        <h5 class="body__head-title">Thông tin sản phẩm</h5>
                         <div class="search-container">
                             <form action="listproducts" method="post">
                                 <input type="text" id="information" name="information" placeholder="Tìm kiếm sản phẩm..." class="search-input">
-                                <input type="submit" class="search-button" value="Search">
+                                <input type="submit" class="search-button" value="Tìm Kiếm">
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>
                             <% if (message != null && !message.isEmpty()) {%>
@@ -108,6 +109,20 @@
                                     }
                                 };
                             </script>
+                            
+                            <form action="listproducts" method="get">
+                                <!-- Dropdown sắp xếp -->
+                                <select name="sortBy" class="sort-dropdown" onchange="this.form.submit()">
+                                    <option class="dropdown-default" value="" disabled selected>Sắp xếp theo</option>
+                                    <option class="dropdown-value" value="price_asc">Giá tăng dần</option>
+                                    <option class="dropdown-value" value="price_desc">Giá giảm dần</option>
+                                    <option class="dropdown-value" value="quantity_asc">Số lượng ít → nhiều</option>
+                                    <option class="dropdown-value" value="quantity_desc">Số lượng nhiều → ít</option>
+                                    <option class="dropdown-value" value="name_asc">Tên A → Z</option>
+                                    <option class="dropdown-value" value="name_desc">Tên Z → A</option>
+                                </select>
+                            </form>
+
                             <a href="addproduct" class="add-product-button">Thêm sản phẩm</a>
                         </div>
                     </div>
@@ -117,13 +132,13 @@
                             <thead>
                                 <tr class="table-header">
                                     <th class="table-header-item">Hình ảnh</th>
-                                    <th class="table-header-item">Mã sản phẩm</th>
+                                    <th class="table-header-item" style="max-width: 24px">Mã sản phẩm</th>
                                     <th class="table-header-item">Tên sản phẩm</th>
                                     <th class="table-header-item">Giá tiền / KG</th>
-                                    <th class="table-header-item">Số lượng</th>
+                                    <th class="table-header-item" style="max-width: 30px">Số lượng</th>
                                     <th class="table-header-item">Vị trí</th>
-                                    <th class="table-header-item">Mô tả</th>
-                                    <th class="table-header-item">Hành động</th>
+                                    <th class="table-header-item" style="width: 180px">Mô tả</th>
+                                    <th class="table-header-item" style="width: 98px">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -153,7 +168,7 @@
                                     <td class="table-cell"><%= currencyFormat.format(product.getPrice()) + " VND"%></td>
                                     <td class="table-cell"><%= product.getQuantity()%></td>
                                     <td class="table-cell"><%= zoneDisplay%></td>
-                                    <td class="table-cell description"><%= product.getDescription()%></td>
+                                    <td class="table-cell description" style="height: 80px"><%= product.getDescription()%></td>
                                     <td class="table-cell">
                                         <a href="updateproduct?id=<%= product.getID()%>" class="action-button">Sửa</a>
                                         <button class="action-button" onclick="if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {

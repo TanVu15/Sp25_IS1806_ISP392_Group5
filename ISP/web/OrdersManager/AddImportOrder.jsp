@@ -88,6 +88,7 @@
                                 <th>Tên Sản Phẩm</th>
                                 <th>Số Lượng</th>
                                 <th>Khu Vực</th>
+                                <th>Số kv</th>
                                 <th>Quy Cách</th>
                                 <th>Giá Gốc</th>
                                 <th>Giảm giá</th>
@@ -98,7 +99,7 @@
                         <tbody id="productList">
                             <tr>
                                 <td>
-                                    <select class="area-select" name="productName" multiple="multiple" required style="width: 100%;">
+                                    <select class="product-select" name="productName" multiple="multiple" required style="width: 100%;">
                                         <% 
                                           for (Products product : products) { 
                                                if(product.getShopID() == u.getShopID()) {
@@ -109,7 +110,7 @@
                                 </td>
                                 <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
                                 <td>
-                                    <select class="area-select" name="area[0]" multiple="multiple" required style="width: 100%;">
+                                    <select class="area-select" name="area" multiple="multiple" required style="width: 100%;">
                                         <% 
                                            for (Zones zone : zones) { 
                                                 if(zone.getShopID() == u.getShopID()) { 
@@ -118,8 +119,7 @@
                                         <% } } %>
                                     </select>
                                 </td>
-                                <td><input type="number" class="zone-count-hidden" name="zoneCount[]" value="0"></td>
-
+                                <td><input type="number" class="zone-count-hidden" name="zoneCount" value="0" readonly></td>
                                 <td><input type="text" name="spec" placeholder="Kg/bao"></td>
                                 <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
                                 <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
@@ -133,11 +133,18 @@
                 <script>
                     $(document).ready(function () {
                         $('.area-select').select2({
-                            placeholder: "Chọn...",
+                            placeholder: "Chọn khu vực...",
                             allowClear: true
                         });
                     });
-
+                    
+                      $(document).ready(function () {
+                        $('.product-select').select2({
+                            placeholder: "Chọn sản phẩm...",
+                            allowClear: true
+                        });
+                    });
+                    
                     const productList = [
                     <% if (products != null) { 
                         for (Products product : products) { 
@@ -241,55 +248,51 @@
                     }
 
 
+function addProductRow() {
+    const newRow = `
+    <tr>
+        <td>
+            <select class="product-select product-select" name="productName" multiple="multiple" required style="width: 100%;"></select>
+        </td>
+        <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
+        <td>
+            <select class="area-select zone-select" name="area" multiple="multiple" required style="width: 100%;"></select>
+        </td>
+        <td><input type="number" class="zone-count-hidden" name="zoneCount" value="0" readonly></td>
+        <td><input type="text" name="spec" placeholder="Kg/bao"></td>
+        <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
+        <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
+        <td><input type="text" name="total" readonly></td>
+        <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
+    </tr>
+    `;
 
-                    function addProductRow() {
-                        const rowCount = $('#productList tr').length; // Lấy số lượng dòng hiện tại để tạo index
-                        const newRow = `
-                        <tr>
-                            <td>
-                                <select class="area-select product-select" name="productName[${rowCount}]" multiple="multiple" required style="width: 100%;">
-                                </select>
-                            </td>
-                            
-                            <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
-                            <td>
-                                <select class="area-select zone-select" name="area[${rowCount}]" multiple="multiple" required style="width: 100%;">
-                                </select>
-                            </td>
-                            <td><input type="text" name="spec" placeholder="Kg/bao"></td>
-                            <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
-                            <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
-                            <td><input type="text" name="total" readonly></td>
-                            <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
-                        </tr>
-                        `;
+    $('#productList').append(newRow);
 
-                        $('#productList').append(newRow);
+    // Gán lại Select2 cho phần tử mới được thêm vào
+    $('#productList tr:last .product-select').select2({
+        data: productList,
+        placeholder: "Chọn sản phẩm...",
+        allowClear: true
+    });
 
-                        // Khởi tạo select2 với dữ liệu cho dropdown vừa thêm
-                        const lastProductSelect = $('#productList').find('tr:last .product-select');
-                        const lastZoneSelect = $('#productList').find('tr:last .zone-select');
+    $('#productList tr:last .zone-select').select2({
+        data: zoneList,
+        placeholder: "Chọn khu vực...",
+        allowClear: true
+    });
+}
 
-                        lastProductSelect.select2({
-                            data: productList,
-                            placeholder: "Chọn sản phẩm...",
-                            allowClear: true
-                        });
 
-                        lastZoneSelect.select2({
-                            data: zoneList,
-                            placeholder: "Chọn khu vực...",
-                            allowClear: true
-                        });
-                    }
 
                     function deleteProductRow(button) {
                         $(button).closest('tr').remove();
                         calculateTotal();
                     }
-                    // Đếm số zone đã chọn cho 1 row
-            $(document).ready(function () {
-    $(document).on("change", ".zone-select", function () {
+
+// count zone select
+$(document).ready(function () {
+    $(document).on("change", ".area-select", function () {
         let selectedZones = $(this).val(); // Lấy danh sách khu vực đã chọn
         let zoneCount = selectedZones ? selectedZones.length : 0; // Đếm số khu vực
 
@@ -297,6 +300,18 @@
         $(this).closest("tr").find(".zone-count-hidden").val(zoneCount);
     });
 });
+
+
+
+$("#invoiceForm").on("submit", function () {
+    $(".zone-select").each(function () {
+        let selectedZones = $(this).val();
+        let zoneCount = selectedZones ? selectedZones.length : 0;
+        $(this).closest("tr").find(".zone-count-hidden").val(zoneCount);
+    });
+});
+
+
 
                     
                 </script>
