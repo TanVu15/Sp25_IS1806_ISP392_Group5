@@ -18,6 +18,7 @@ public class Customers {
     private String Phone;
     private String Address;
     private int ShopID;
+    private String BankAcc;
     private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
@@ -28,13 +29,14 @@ public class Customers {
     public Customers() {
     }
 
-    public Customers(int ID, int Wallet, String Name, String Phone, String Address, int ShopID, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
+    public Customers(int ID, int Wallet, String Name, String Phone, String Address, int ShopID, String BankAcc, Date CreateAt, Date UpdateAt, int CreateBy, int isDelete, Date deletedAt, int deleteBy) {
         this.ID = ID;
         this.Wallet = Wallet;
         this.Name = Name;
         this.Phone = Phone;
         this.Address = Address;
         this.ShopID = ShopID;
+        this.BankAcc = BankAcc;
         this.CreateAt = CreateAt;
         this.UpdateAt = UpdateAt;
         this.CreateBy = CreateBy;
@@ -91,6 +93,14 @@ public class Customers {
         this.ShopID = ShopID;
     }
 
+    public String getBankAcc() {
+        return BankAcc;
+    }
+
+    public void setBankAcc(String BankAcc) {
+        this.BankAcc = BankAcc;
+    }
+
     public Date getCreateAt() {
         return CreateAt;
     }
@@ -138,8 +148,5 @@ public class Customers {
     public void setDeleteBy(int deleteBy) {
         this.deleteBy = deleteBy;
     }
-
-    
-    
     
 }

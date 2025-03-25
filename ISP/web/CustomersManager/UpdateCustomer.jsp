@@ -50,11 +50,15 @@
             </div>
             <div class="form-group">
                 <label for="phone">Số điện thoại:</label>
-                <input type="number" id="phone" name="phone" value="<%= cus.getPhone() %> ">
+                <input type="text" id="phone" name="phone" value="<%= cus.getPhone() %> ">
             </div>
             <div class="form-group">
                 <label for="address">Địa chỉ:</label>
                 <input type="text" id="address" name="address" value="<%= cus.getAddress() %> ">
+            </div>
+            <div class="form-group">
+                <label for="bank">Ngân hàng:</label>
+                <input type="text" id="bank" name="bank" value="<%= cus.getBankAcc() %> ">
             </div>
             <div class="button-container">
                 <input type="submit" class="btn btn-primary" value="Cập nhật">

@@ -95,6 +95,10 @@
                             <span class="user-info-value"><%= customer.getAddress() %></span>
                         </div>
                         <div class="user-info-item">
+                            <span class="user-info-label">Ngân hàng</span>
+                            <span class="user-info-value"><%= customer.getBankAcc() %></span>
+                        </div>
+                        <div class="user-info-item">
                             <span class="user-info-label">Ngày tạo</span>
                             <span class="user-info-value"><%= customer.getCreateAt() %></span>
                         </div>
