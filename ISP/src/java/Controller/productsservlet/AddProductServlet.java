@@ -125,6 +125,15 @@ public class AddProductServlet extends HttpServlet {
                         dao.updateZoneWithProduct(zoneIdInt, newProductId);
                     }
                 }
+                
+                    // Lưu lịch sử giá ban đầu vào ProductPriceHistory
+            boolean logged = dao.logPriceChange(newProductId, price, "export", user.getID());
+            if (!logged) {
+                System.err.println("Không thể ghi lịch sử giá cho productId: " + newProductId + ", userId: " + user.getID());
+                request.setAttribute("warningMessage", "Thêm sản phẩm thành công nhưng không lưu được lịch sử giá.");
+            } else {
+                System.out.println("Đã lưu lịch sử giá ban đầu cho productId: " + newProductId + ", price: " + price);
+            }
 
                 response.sendRedirect("listproducts");
             } else {

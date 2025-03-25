@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import model.ProductPriceHistory;
 import model.Users;
 
 public class DAOProducts {
@@ -51,7 +53,7 @@ public class DAOProducts {
         return products;
     }
 
-       public ArrayList<Zones> getZonesByProductId(int productId) {
+    public ArrayList<Zones> getZonesByProductId(int productId) {
         ArrayList<Zones> zones = new ArrayList<>();
         String sql = "SELECT z.ID, z.ZoneName FROM Zones z WHERE z.ProductID = ?";
 
@@ -83,23 +85,23 @@ public class DAOProducts {
         }
     }
 
-public void updateProducts(Products product) {
-    String sql = "UPDATE Products SET ProductName = ?, Description = ?, Price = ?, Quantity = ?, UpdateAt = ?, ImageLink = ? WHERE ID = ?";
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setString(1, product.getProductName());
-        ps.setString(2, product.getDescription());
-        ps.setInt(3, product.getPrice());
-        ps.setInt(4, product.getQuantity());
-        ps.setDate(5, today);
-        ps.setString(6, product.getImageLink());
-        ps.setInt(7, product.getID());
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
+    public void updateProducts(Products product) {
+        String sql = "UPDATE Products SET ProductName = ?, Description = ?, Price = ?, Quantity = ?, UpdateAt = ?, ImageLink = ? WHERE ID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, product.getProductName());
+            ps.setString(2, product.getDescription());
+            ps.setInt(3, product.getPrice());
+            ps.setInt(4, product.getQuantity());
+            ps.setDate(5, today);
+            ps.setString(6, product.getImageLink());
+            ps.setInt(7, product.getID());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
 
- public int addProducts(Products product, int userid) {
+    public int addProducts(Products product, int userid) {
         String sql = "INSERT INTO Products (ImageLink, ProductName, Description, Price, Quantity, CreateAt, CreateBy, UpdateAt, isDelete, ShopID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, product.getImageLink());
@@ -123,16 +125,16 @@ public void updateProducts(Products product) {
         }
         return -1; // Return -1 if error occurs
     }
- public void updateZoneWithProduct(int zoneId, int productId) {
-    String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setInt(1, productId);
-        ps.setInt(2, zoneId);
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
+    public void updateZoneWithProduct(int zoneId, int productId) {
+        String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, productId);
+            ps.setInt(2, zoneId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
 
     public void updateProductZones(int productId, String[] zoneIDs) {
         // Here you can implement logic to update the zones directly associated with the product
@@ -166,7 +168,7 @@ public void updateProducts(Products product) {
         }
         return -1; // Không tìm thấy thì trả về -1
     }
-    
+
     public Products getProductByID(int ID) throws Exception {
         String query = "SELECT * FROM Products WHERE ID=?";
         try (PreparedStatement ps = connect.prepareStatement(query)) {
@@ -305,34 +307,34 @@ public void updateProducts(Products product) {
 
 //    search product by name for order
     public ArrayList<Products> searchProductsByName(String productName) {
-    ArrayList<Products> products = new ArrayList<>();
-    String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ProductName LIKE ?";
+        ArrayList<Products> products = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ProductName LIKE ?";
 
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setString(1, "%" + productName + "%"); // Use LIKE for partial matching
-        ResultSet rs = ps.executeQuery();
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, "%" + productName + "%"); // Use LIKE for partial matching
+            ResultSet rs = ps.executeQuery();
 
-        while (rs.next()) {
-            Products product = new Products();
-            product.setID(rs.getInt("ID"));
-            product.setProductName(rs.getString("ProductName"));
-            product.setDescription(rs.getString("Description"));
-            product.setPrice(rs.getInt("Price"));
-            product.setQuantity(rs.getInt("Quantity"));
-            product.setImageLink(rs.getString("ImageLink"));
-            product.setShopID(rs.getInt("ShopID"));
-            product.setCreateAt(rs.getDate("CreateAt"));
-            product.setUpdateAt(rs.getDate("UpdateAt"));
-            product.setCreateBy(rs.getInt("CreateBy"));
-            product.setIsDelete(rs.getInt("isDelete"));
+            while (rs.next()) {
+                Products product = new Products();
+                product.setID(rs.getInt("ID"));
+                product.setProductName(rs.getString("ProductName"));
+                product.setDescription(rs.getString("Description"));
+                product.setPrice(rs.getInt("Price"));
+                product.setQuantity(rs.getInt("Quantity"));
+                product.setImageLink(rs.getString("ImageLink"));
+                product.setShopID(rs.getInt("ShopID"));
+                product.setCreateAt(rs.getDate("CreateAt"));
+                product.setUpdateAt(rs.getDate("UpdateAt"));
+                product.setCreateBy(rs.getInt("CreateBy"));
+                product.setIsDelete(rs.getInt("isDelete"));
 
-            products.add(product);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return products;
     }
-    return products;
-}
 
     public ArrayList<Products> searchProductsByNameAndShop(String name, int shopId) {
         ArrayList<Products> products = new ArrayList<>();
@@ -356,7 +358,7 @@ public void updateProducts(Products product) {
         }
         return products;
     }
-    
+
 
     public void updateProductQuantity(String productName, int quantityToAdd, int shopid) {
         String sql = "UPDATE Products SET Quantity = Quantity + ? WHERE productName = ? And shopID = ?";
@@ -381,28 +383,6 @@ public void updateProducts(Products product) {
             e.printStackTrace();
         }
     }
-    
-   public void updateProductZones2(int productId, ArrayList<String> zoneIDs) {
-    for (String zoneID : zoneIDs) {
-        int zoneIdInt;
-        try {
-            zoneIdInt = Integer.parseInt(zoneID);
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid zone ID: " + zoneID);
-            continue; // Skip to the next zoneID
-        }
-
-        // Update the zone with the new product ID
-        String sql = "UPDATE Zones SET ProductID = ? WHERE ID = ?";
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, productId);
-            ps.setInt(2, zoneIdInt);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-}
 
     public ArrayList<Products> getProductListFromRequest(HttpServletRequest request) {
         ArrayList<Products> productList = new ArrayList<>();
@@ -432,15 +412,192 @@ public void updateProducts(Products product) {
 
         return productList;
     }
-    
+
+    public Integer getStoreIdByUserId(int userId) {
+        String sql = "SELECT ShopID FROM Users WHERE ID = ?";
+        Integer storeId = null;
+        try (PreparedStatement stmt = connect.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                storeId = rs.getInt("ShopID");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return storeId;
+    }
+
+    public boolean logPriceChange(int productId, int newPrice, String priceType, int userId) {
+        Integer storeId = getStoreIdByUserId(userId);
+        if (storeId == null) {
+            System.err.println("Không tìm thấy ShopID cho userId: " + userId);
+            return false;
+        }
+
+        String sql = "INSERT INTO ProductPriceHistory (productID, price, priceType, changedBy, ShopID) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connect.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            stmt.setInt(2, newPrice);
+            stmt.setString(3, priceType);
+            stmt.setInt(4, userId);
+            stmt.setInt(5, storeId);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<ProductPriceHistory> getAllExportPriceHistory(int userId) {
+        Integer storeId = getStoreIdByUserId(userId);
+        if (storeId == null) {
+            return new ArrayList<>();
+        }
+
+        List<ProductPriceHistory> historyList = new ArrayList<>();
+        String sql = """
+            SELECT pph.historyID, pph.productID, p.productName, p.ImageLink AS image, 
+                   pph.price, pph.priceType, pph.changedAt, u.Username AS changedBy
+            FROM ProductPriceHistory pph
+            JOIN Products p ON pph.productID = p.ID
+            JOIN Users u ON pph.changedBy = u.ID
+            WHERE p.ShopID = ? AND pph.priceType = 'export'
+            ORDER BY pph.changedAt DESC
+        """;
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, storeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ProductPriceHistory history = new ProductPriceHistory(
+                            rs.getInt("historyID"),
+                            rs.getInt("productID"),
+                            rs.getString("productName"),
+                            rs.getString("image"),
+                            rs.getInt("price"),
+                            rs.getString("priceType"),
+                            rs.getTimestamp("changedAt"), // Sửa thành Date
+                            rs.getString("changedBy")
+                    );
+                    historyList.add(history);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return historyList;
+    }
+
+    public int getTotalHistoryRecords(String keyword, String startDate, String endDate, int userId) {
+        Integer storeId = getStoreIdByUserId(userId);
+        if (storeId == null) {
+            return 0;
+        }
+
+        String sql = """
+        SELECT COUNT(*) AS total
+        FROM ProductPriceHistory pph
+        JOIN Products p ON pph.productID = p.ID
+        WHERE p.ShopID = ? AND pph.priceType = 'export'
+              AND p.productName COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ?
+    """;
+        if (startDate != null && !startDate.isEmpty()) {
+            sql += " AND pph.changedAt >= ?";
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            sql += " AND pph.changedAt < DATEADD(day, 1, CAST(? AS DATE))";
+        }
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, storeId);
+            ps.setString(paramIndex++, "%" + keyword + "%");
+            if (startDate != null && !startDate.isEmpty()) {
+                ps.setString(paramIndex++, startDate + " 00:00:00");
+            }
+            if (endDate != null && !endDate.isEmpty()) {
+                ps.setString(paramIndex++, endDate); // Không cần thêm giờ, dùng DATEADD
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<ProductPriceHistory> getExportPriceHistory(String keyword, String startDate, String endDate, int page, int recordsPerPage, int userId, String sortOrder) {
+        Integer storeId = getStoreIdByUserId(userId);
+        if (storeId == null) {
+            return new ArrayList<>();
+        }
+
+        List<ProductPriceHistory> historyList = new ArrayList<>();
+        int offset = (page - 1) * recordsPerPage;
+        String sql = """
+        SELECT pph.historyID, pph.productID, p.productName, p.ImageLink AS image, 
+               pph.price, pph.priceType, pph.changedAt, u.Username AS changedBy
+        FROM ProductPriceHistory pph
+        JOIN Products p ON pph.productID = p.ID
+        JOIN Users u ON pph.changedBy = u.ID
+        WHERE p.ShopID = ? AND pph.priceType = 'export'
+              AND p.productName COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ?
+    """;
+        if (startDate != null && !startDate.isEmpty()) {
+            sql += " AND pph.changedAt >= ?";
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            sql += " AND pph.changedAt < DATEADD(day, 1, CAST(? AS DATE))";
+        }
+        sql += " ORDER BY pph.changedAt %s OFFSET ? ROWS FETCH NEXT ? ROWS ONLY".formatted(sortOrder);
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, storeId);
+            ps.setString(paramIndex++, "%" + keyword + "%");
+            if (startDate != null && !startDate.isEmpty()) {
+                ps.setString(paramIndex++, startDate + " 00:00:00");
+            }
+            if (endDate != null && !endDate.isEmpty()) {
+                ps.setString(paramIndex++, endDate); // Không cần thêm giờ, dùng DATEADD
+            }
+            ps.setInt(paramIndex++, offset);
+            ps.setInt(paramIndex++, recordsPerPage);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ProductPriceHistory history = new ProductPriceHistory(
+                            rs.getInt("historyID"),
+                            rs.getInt("productID"),
+                            rs.getString("productName"),
+                            rs.getString("image"),
+                            rs.getInt("price"),
+                            rs.getString("priceType"),
+                            rs.getTimestamp("changedAt"),
+                            rs.getString("changedBy")
+                    );
+                    historyList.add(history);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return historyList;
+    }
+
     public static void main(String[] args) throws Exception {
         DAOProducts dao = DAOProducts.INSTANCE;
 
-         // Test update product with ID = 3
-    int productIdToUpdate = 3; // ID của sản phẩm cần cập nhật
-    Products productToUpdate = dao.getProductByID(productIdToUpdate);
-    int quantity = 400;
-   
+        // Test update product with ID = 3
+        int productIdToUpdate = 3; // ID của sản phẩm cần cập nhật
+        Products productToUpdate = dao.getProductByID(productIdToUpdate);
+        int quantity = 400;
+        System.out.println(dao.getProductIdByNameAndShop("Gạo", 2));
+
     }
-    
+
 }
