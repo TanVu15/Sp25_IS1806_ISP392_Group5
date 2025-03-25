@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,6 +46,7 @@ public class ListDebtRecordsServlet extends HttpServlet {
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
+        String sortBy = request.getParameter("sortBy");
         if(user.getShopID()==0&&user.getRoleid()==2){
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
             requestDispatcher.forward(request, response);
@@ -61,11 +63,23 @@ public class ListDebtRecordsServlet extends HttpServlet {
         
         // Lấy danh sách sản phẩm cho trang hiện tại
         ArrayList<DebtRecords> debtrecords = dao.getDebtrecordsByPage(currentPage, debtsPerPage, user.getShopID());
-        
+        // Xử lý sắp xếp
+            if (sortBy != null) {
+                switch (sortBy) {
+                    case "price_asc":
+                        debtrecords.sort(Comparator.comparingDouble(DebtRecords::getAmountOwed));
+                        break;
+                    case "price_desc":
+                        debtrecords.sort(Comparator.comparingDouble(DebtRecords::getAmountOwed).reversed());
+                        break;
+                }
+            }
+            
         // Thiết lập các thuộc tính cho JSP
         request.setAttribute("debtrecords", debtrecords);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("sortBy", sortBy);
         //ArrayList<DebtRecords> debtrecords = dao.getDebtRecords();
         //request.setAttribute("debtrecords", debtrecords);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListDebtRecords.jsp");

@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Products;
@@ -42,7 +43,7 @@ public class ListCustomersServlet extends HttpServlet {
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
-        
+        String sortBy = request.getParameter("sortBy");
         if (user.getShopID() == 0 && user.getRoleid() == 2) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
             requestDispatcher.forward(request, response);
@@ -59,11 +60,23 @@ public class ListCustomersServlet extends HttpServlet {
         
         // Lấy danh sách sản phẩm cho trang hiện tại
         ArrayList<Customers> customers = dao.getCustomersByPage(currentPage, customersPerPage, user.getShopID());
-        
+        // Xử lý sắp xếp
+            if (sortBy != null) {
+                switch (sortBy) {
+                    case "name_asc":
+                        customers.sort(Comparator.comparing(Customers::getName));
+                        break;
+                    case "name_desc":
+                        customers.sort(Comparator.comparing(Customers::getName).reversed());
+                        break;
+                }
+            }
+            
         // Thiết lập các thuộc tính cho JSP
         request.setAttribute("customers", customers);
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
+        request.setAttribute("sortBy", sortBy);
 //        ArrayList<Customers> customers = dao.getAllCustomers();
 //        request.setAttribute("customers", customers);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("CustomersManager/ListCustomers.jsp");

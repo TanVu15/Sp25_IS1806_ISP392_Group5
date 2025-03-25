@@ -47,18 +47,20 @@ public class DAOZones {
         return zones;
     }
 
-    public void deleteZones(int deleteid, int userid) {
-        String sql = "UPDATE Zones SET isDelete = ?, DeleteBy = ?, DeletedAt = ? WHERE ID = ?";
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, 1);
-            ps.setInt(2, userid);
-            ps.setDate(3, today);
-            ps.setInt(4, deleteid);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("Error deleting zone: " + e.getMessage());
-        }
+public void deleteZones(int deleteid, int userid) {
+    String sql = "UPDATE Zones SET IsDelete = ?, DeleteBy = ?, DeletedAt = ? WHERE ID = ?";
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setInt(1, 1); // Đánh dấu là đã xóa
+        ps.setInt(2, userid); // Lưu thông tin người xóa
+        ps.setDate(3, new java.sql.Date(System.currentTimeMillis())); // Thời gian xóa
+        ps.setInt(4, deleteid);
+        ps.executeUpdate();
+        System.out.println("Zone " + deleteid + " has been marked as deleted.");
+    } catch (SQLException e) {
+        System.err.println("Error deleting zone: " + e.getMessage());
     }
+}
+
 
     public void updateZones(Zones zones) {
         String sql = "UPDATE Zones SET ZoneName = ?, ProductID = ?, UpdateAt = ? WHERE ID = ?";
@@ -72,6 +74,7 @@ public class DAOZones {
             System.err.println("Error updating zone: " + e.getMessage());
         }
     }
+    
 
     public Zones getZonesByID(int ID) {
         Zones z = null;

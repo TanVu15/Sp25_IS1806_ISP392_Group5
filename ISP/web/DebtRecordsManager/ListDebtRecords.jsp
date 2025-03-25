@@ -102,8 +102,16 @@
                                     }
                                 };
                             </script>
+                            <form action="listdebtrecords" method="get">
+                                <!-- Dropdown sắp xếp -->
+                                <select name="sortBy" class="sort-dropdown" onchange="this.form.submit()">
+                                    <option class="dropdown-default" value="" disabled selected>Sắp xếp theo</option>
+                                    <option class="dropdown-value" value="price_asc">Số tiền tăng dần</option>
+                                    <option class="dropdown-value" value="price_desc">Số tiền giảm dần</option>
+                                </select>
+                            </form>
                         </div>
-
+                            
                     </div>
                     <div class="table-container">
                         <table class="product-table">

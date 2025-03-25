@@ -182,8 +182,8 @@
         <servlet-class>Controller.orderitemservlet.ListOrderItemsServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ProductAPI</servlet-name>
-        <servlet-class>Controller.productsservlet.ProductAPI</servlet-class>
+        <servlet-name>AnalysisServlet</servlet-name>
+        <servlet-class>Controller.analysis.AnalysisServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
@@ -326,8 +326,8 @@
         <url-pattern>/listorderitems</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ProductAPI</servlet-name>
-        <url-pattern>/api/products</url-pattern>
+        <servlet-name>AnalysisServlet</servlet-name>
+        <url-pattern>/analysis</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Login/login.jsp</welcome-file>

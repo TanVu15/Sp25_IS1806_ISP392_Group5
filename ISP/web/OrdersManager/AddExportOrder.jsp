@@ -25,75 +25,96 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Hóa Đơn Nhập Kho</title>
-        <link rel="stylesheet" href="css/addorder.css">
+        <link rel="stylesheet" href="css/exportorder.css">
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
         <script>
-    function openNewInvoiceTab() {
-        window.open('addimportorder', '_blank'); // Opens the add order page in a new tab
-    }
-</script>
+            function openNewInvoiceTab() {
+                window.open('addexportorder', '_blank'); // Opens the add order page in a new tab
+            }
+        </script>
 
     </head>
     <body>
-        <% DAOUser dao = new DAOUser(); 
-        List<Zones> zones = (List<Zones>) request.getAttribute("zones");
-        ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
-        ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
-        Users u = (Users) request.getAttribute("user"); 
+        <% DAOUser dao = new DAOUser();
+            List<Zones> zones = (List<Zones>) request.getAttribute("zones");
+            ArrayList<Products> products = (ArrayList<Products>) request.getAttribute("products");
+            ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
+            Users u = (Users) request.getAttribute("user");
         %>
 
-        <form action="addexportorder" method="post" id="invoiceForm">
-            <div class="invoice-details">
-                <h2>Chi Tiết Hóa Đơn</h2>
-                <div class="input-container">
-                    <label>Loại Hóa Đơn:</label>
-                    <input type="hidden" name="orderType" value="-1"> <!-- Gửi giá trị 1 -->
-                    <span class="input-info">Bán Hàng</span> <!-- Hiển thị cho người dùng -->
-                </div>
+        <script>
+            const productPrices = {
+            <%
+                    if (products != null && !products.isEmpty()) {
+                        for (int i = 0; i < products.size(); i++) {
+                            Products product = products.get(i);
+                            if(product.getShopID() == u.getShopID()){
+                                String productName = product.getProductName().replace("\"", "\\\""); // Escape dấu "
+            %>
+                "<%= productName %>": <%= product.getPrice() %><% if (i < products.size() - 1) { %>,<% } %>
+            <%
+                            }
+                        }
+                    }
+            %>
+            };
+        </script>
 
-                <div class="invoice-info">
-                    <div class="input-container">
+        <div class="container">
+            <form action="addexportorder" method="post" id="invoiceForm">
+                <h1>Hóa Đơn Bán Hàng</h1>
+                <div class="form-group">
+                    <h2>Chi Tiết Hóa Đơn</h2>
+                    <div class="form-group">
+                        <label>Loại Hóa Đơn:</label>
+                        <input type="hidden" name="orderType" value="-1"> <!-- Gửi giá trị 1 -->
+                        <div class="readonly-input">Bán Hàng</div> <!-- Hiển thị cho người dùng -->
+                    </div>
+
+                    <div class="form-group">
                         <label for="customerName">Tên Khách Hàng:</label>
-                        <input class="input-info" type="text" id="customerName" name="customerName" list="customersList" placeholder="Tìm kiếm khách hàng..." required>
+                        <input type="text" id="customerName" name="customerName" list="customersList" placeholder="Tìm kiếm khách hàng..." required>
                         <datalist id="customersList">
                             <%
-                           if (customers != null && !customers.isEmpty()) {
-                           for (Customers customer1 : customers) { 
-                                if(customer1.getShopID() == u.getShopID()){
+                                if (customers != null && !customers.isEmpty()) {
+                                    for (Customers customer1 : customers) {
+                                        if (customer1.getShopID() == u.getShopID()) {
                             %>
-                            <option value="<%= customer1.getName() %>"></option>
-                            <% } } }%>
+                            <option value="<%= customer1.getName()%>"></option>
+                            <% }
+                                    }
+                                }%>
                         </datalist>
                     </div>
-                    <div class="input-container">
+                    <div class="form-group">
                         <label for="customerPhone">Số Điện thoại:</label>
-                        <input class="input-info" type="text" id="customerPhone" name="customerPhone">
+                        <input type="text" id="customerPhone" name="customerPhone">
                     </div>
 
-                    <div class="input-container">
+                    <div class="form-group">
                         <label for="creater">Người tạo phiếu:</label>
-                        <input type="hidden" name="creater" value="<%= u.getFullName() %>"> <!-- Gửi giá trị 1 -->
-                        <span class="input-info"><%= u.getFullName() %></span>
+                        <input type="hidden" name="creater" value="<%= u.getFullName()%>"> <!-- Gửi giá trị 1 -->
+                        <div class="readonly-input"><%= u.getFullName()%></div>
                     </div>
                 </div>
-                <div class="search-container">
-                        <h2 class="search-heading">Tìm kiếm sản phẩm</h2>
-                        <input type="text" id="productSearch" list="productsList" placeholder="Nhập tên sản phẩm...">
-                        <datalist id="productsList">
-                            <%
-                           if (products != null && !products.isEmpty()) {
-                           for (Products produc : products) { 
-                                if(produc.getShopID() == u.getShopID()){
-                            %>
-                            <option value="ten san pham:<%= produc.getProductName() %> |
-                                    gia: <%= produc.getPrice() %> | 
-                                    so luong:<%= produc.getQuantity() %> " ></option>
-                            <% } } }%>
-                        </datalist>
-                    </div>  
-                <div class="product-list">
+                <div class="form-group search-container">
+                    <label class="search-heading">Tìm kiếm sản phẩm</label>
+                    <input type="text" id="productSearch" list="productsList" placeholder="Nhập tên sản phẩm...">
+                    <datalist id="productsList">
+                        <%
+                            if (products != null && !products.isEmpty()) {
+                                for (Products produc : products) {
+                                    if(produc.getShopID() == u.getShopID()){
+                        %>
+                        <option value="<%= produc.getProductName() %>"></option>
+                        <% } } }%>
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <h2>Danh Sách Sản Phẩm</h2>
                     <table id="productTable">
                         <thead>
                             <tr>
@@ -111,36 +132,56 @@
                             <tr>
                                 <td>
                                     <select class="area-select" name="productName" multiple="multiple" required style="width: 100%;">
-                                        <% 
-                                          for (Products product : products) { 
-                                               if(product.getShopID() == u.getShopID()) {
+                                        <%
+                                            for (Products product : products) {
+                                                if (product.getShopID() == u.getShopID()) {
                                         %>
-                                        <option value="<%= product.getProductName() %>"><%= product.getProductName() %></option>
-                                        <% } }%>
+                                        <option value="<%= product.getProductName()%>"><%= product.getProductName()%></option>
+                                        <% }
+                                }%>
                                     </select>
                                 </td>
                                 <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
                                 <td>
                                     <select class="area-select" name="area" multiple="multiple" required style="width: 100%;">
-                                        <% 
-                                           for (Zones zone : zones) { 
-                                                if(zone.getShopID() == u.getShopID()) { 
+                                        <%
+                                            for (Zones zone : zones) {
+                                                if (zone.getShopID() == u.getShopID()) {
                                         %>
-                                        <option value="<%= zone.getID() %>"><%= zone.getZoneName() %></option>
-                                        <% } } %>
+                                        <option value="<%= zone.getZoneName()%>"><%= zone.getZoneName()%></option>
+                                        <% }
+                                } %>
                                     </select>
                                 </td>
                                 <td><input type="text" name="spec" placeholder="Kg/bao"></td>
-                                <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
+                                <td><input type="number" id="price" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
                                 <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
                                 <td><input type="text" name="total" readonly></td>
-                                <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
+                                <td><button type="button" class="remove-row" onclick="deleteProductRow(this)">Xóa</button></td>
                             </tr>
                         </tbody>
                     </table>
-                    <button type="button" onclick="addProductRow()">Thêm Sản Phẩm</button>
+                    <button type="button" id="addProductButton" onclick="addProductRow()">Thêm Sản Phẩm</button>
                 </div>
                 <script>
+
+                    $(document).ready(function () {
+                        $(document).on('change', 'select[name="productName"]', function () {
+                            let selectedProduct = $(this).val();
+                            let priceInput = $(this).closest('tr').find('input[name="price"]');
+
+                            if (productPrices.hasOwnProperty(selectedProduct)) {
+                                priceInput.val(productPrices[selectedProduct]);
+                            } else {
+                                priceInput.val(0); // Hoặc một giá trị mặc định khác
+                                console.warn("Không tìm thấy giá cho sản phẩm: " + selectedProduct);
+                            }
+
+                            calculateTotal(); // Tính lại tổng tiền ngay sau khi cập nhật giá
+                        });
+                    });
+
+
                     $(document).ready(function () {
                         $('.area-select').select2({
                             placeholder: "Chọn...",
@@ -148,22 +189,33 @@
                         });
                     });
 
+                    $(document).ready(function () {
+                        $('.product-select').select2({
+                            placeholder: "Chọn...",
+                            allowClear: true
+                        });
+                    });
+
                     const productList = [
-                    <% if (products != null) { 
-                        for (Products product : products) { 
-                            if(product.getShopID() == u.getShopID()) { %>
-                        {id: '<%= product.getProductName() %>', text: '<%= product.getProductName() %>'},
-                    <%    } 
-                      } 
-                   } %>
+                    <% if (products != null) {
+                            for (Products product : products) {
+                                if (product.getShopID() == u.getShopID()) {%>
+                    {id: '<%= product.getProductName()%>', text: '<%= product.getProductName()%>'}
+                    ,
+                    <%    }
+                            }
+                        } %>
                     ];
 
                     const zoneList = [
                     <%  if (zones != null) {
-                        for (Zones zone : zones) { 
-                        if(zone.getShopID() == u.getShopID()) { %>
-                        {id: '<%= zone.getID() %>', text: '<%= zone.getZoneName() %>'},
-                    <% } } } %>
+                            for (Zones zone : zones) {
+                                if (zone.getShopID() == u.getShopID()) {%>
+                    {id: '<%= zone.getZoneName()%>', text: '<%= zone.getZoneName()%>'}
+                    ,
+                    <% }
+                            }
+                        }%>
                     ];
 
                     // Hiển thị/ẩn các ô khi chọn hình thức thanh toán
@@ -173,8 +225,8 @@
                         const remainingAmountContainer = document.getElementById('remainingAmountContainer');
 
                         if (paymentStatus === 'partial') {
-                            partialPaymentContainer.style.display = 'flex';
-                            remainingAmountContainer.style.display = 'flex';
+                            partialPaymentContainer.style.display = 'block';
+                            remainingAmountContainer.style.display = 'block';
                             calculateRemainingAmount(); // Tính toán lại số tiền còn lại khi hiện form
                         } else {
                             partialPaymentContainer.style.display = 'none';
@@ -218,13 +270,13 @@
                             const quantity = quantityVal.trim() === "" ? 0 : parseInt(quantityVal);
                             const price = priceVal.trim() === "" ? 0 : parseFloat(priceVal);
                             const discount = discountVal.trim() === "" ? 0 : parseFloat(discountVal);
-                            
+
                             if (discount > price) {
                                 showToast("Giảm giá không thể lớn hơn giá gốc!");
                                 $(this).find('input[name="discount"]').val(0); // Đặt lại giá trị giảm giá
                                 isValid = false;
-                                }
-                                 function showToast(message) {
+                            }
+                            function showToast(message) {
                                 var toast = $('<div class="toast-message">' + message + '</div>');
                                 $('body').append(toast);
                                 setTimeout(function () {
@@ -232,7 +284,8 @@
                                         $(this).remove();
                                     });
                                 }, 3000);
-                                }
+                            }
+
                             // Tính thành tiền
                             let totalPrice = (price * quantity) - discount;
                             totalPrice = totalPrice < 0 ? 0 : totalPrice; // Không cho âm tiền
@@ -253,7 +306,6 @@
                         }
                     }
 
-
                     function addProductRow() {
                         const newRow = `
                         <tr>
@@ -267,10 +319,10 @@
                                 </select>
                             </td>
                             <td><input type="text" name="spec" placeholder="Kg/bao"></td>
-                            <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
+                            <td><input type="number" id="price" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
                             <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
                             <td><input type="text" name="total" readonly></td>
-                            <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
+                            <td><button type="button" class="remove-row" onclick="deleteProductRow(this)">Xóa</button></td>
                         </tr>
                     `;
 
@@ -300,18 +352,18 @@
                 </script>
 
                 <!-- Trạng thái thanh toán -->
-                <div class="input-container">
+                <div class="form-group">
                     <label>Thanh toán:</label>
                     <div class="payment-options">
-                        <div>
+                        <div class="payment-option-item">
                             <input type="radio" id="payment-full" name="paymentStatus" value="full" checked onchange="handlePaymentChange()">
                             <label for="payment-full">Trả đủ</label>
                         </div>
-                        <div>
+                        <div class="payment-option-item">
                             <input type="radio" id="payment-partial" name="paymentStatus" value="partial" onchange="handlePaymentChange()">
                             <label for="payment-partial">Trả một phần</label>
                         </div>
-                        <div>
+                        <div class="payment-option-item">
                             <input type="radio" id="payment-none" name="paymentStatus" value="none" onchange="handlePaymentChange()">
                             <label for="payment-none">Ghi nợ</label>
                         </div>
@@ -319,28 +371,29 @@
                 </div>
 
                 <!-- Số tiền trả (hiện khi trả 1 phần) -->
-                <div class="input-container" id="partialPaymentContainer" style="display: none;">
+                <div class="form-group" id="partialPaymentContainer" style="display: none;">
                     <label for="partialPayment">Số tiền trả:</label>
-                    <input class="input-info" type="number" id="partialPayment" name="partialPayment" min="0" value="0" onchange="calculateRemainingAmount()">
+                    <input type="number" id="partialPayment" name="partialPayment" min="0" value="0" onchange="calculateRemainingAmount()">
                 </div>
 
                 <!-- Số tiền còn lại (hiện khi trả 1 phần) -->
-                <div class="input-container" id="remainingAmountContainer" style="display: none;">
+                <div class="form-group" id="remainingAmountContainer" style="display: none;">
                     <label for="remainingAmount">Số tiền còn lại:</label>
-                    <input class="input-info" type="text" id="remainingAmount" name="remainingAmount" readonly>
+                    <input type="text" id="remainingAmount" name="remainingAmount" class="readonly-input" readonly>
                 </div>
 
-                <div class="input-container">
+                <div class="form-group">
                     <label for="totalCost">Tổng chi phí:</label>
-                    <input class="input-info" type="text" id="totalCost" name="totalCost" readonly>
+                    <input type="text" id="totalCost" name="totalCost" class="readonly-input" readonly>
                 </div>
 
-                <div class="action-buttons">
-                    <button id="createButton" type="submit">Tạo</button>
-                    <button id="createButton" onclick="window.location.href = 'listorders'">Hủy</button>
-                    <button id="createButton" type="button" onclick="openNewInvoiceTab()">Thêm Hóa Đơn Mới</button>
+                <div class="actions">
+                    <button type="submit" class="save">Tạo</button>
+                    <button type="button" class="cancel" onclick="window.location.href = 'listorders'">Hủy</button>
+                    <button type="button" class="new-invoice" onclick="openNewInvoiceTab()">Thêm Hóa Đơn Mới</button>
                 </div>
-            </div>
-        </form>
-    </body>
+        </div>
+    </form>
+</div>
+</body>
 </html>
