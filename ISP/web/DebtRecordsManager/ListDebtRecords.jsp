@@ -148,7 +148,17 @@
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'listdebtrecorddetail?debtid=<%= debt.getID() %>'">Xem chi tiết </button>
                                         <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= debt.getCustomerID() %>'">Công nợ</button>
+                                    
+                                    <%
+                                    // Kiểm tra xem có hóa đơn cho khách hàng này hay không
+                                    if (debt.getOrderID() != 0) {
+                                %>
+                                <button class="action-button" onclick="window.location.href = 'listorderitems?id=<%= debt.getOrderID() %>'">Hóa đơn</button>
+                                <%
+                                    }
+                                %>
                                     </td>
+                                   
                                 </tr>
                                 <% }} %>
                             </tbody>

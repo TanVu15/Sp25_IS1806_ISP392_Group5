@@ -45,6 +45,7 @@ public class DAODebtRecords {
                 debt.setInvoiceDate(rs.getDate("InvoiceDate"));
                 debt.setImagePath(rs.getString("ImagePath"));
                 debt.setShopID(rs.getInt("ShopID"));
+                debt.setOrderID(rs.getInt("OrderID"));
                 debt.setCreateAt(rs.getDate("CreateAt"));
                 debt.setUpdateAt(rs.getDate("UpdateAt"));
                 debt.setCreateBy(rs.getInt("CreateBy"));
@@ -77,6 +78,7 @@ public class DAODebtRecords {
                     debt.setImagePath(rs.getString("ImagePath"));
                     debt.setShopID(rs.getInt("ShopID"));
                     debt.setActive(rs.getInt("Active"));
+                    debt.setOrderID(rs.getInt("OrderID"));
                     debt.setCreateAt(rs.getDate("CreateAt"));
                     debt.setUpdateAt(rs.getDate("UpdateAt"));
                     debt.setCreateBy(rs.getInt("CreateBy"));
@@ -135,6 +137,7 @@ public class DAODebtRecords {
                     debt.setCreateAt(rs.getDate("CreateAt"));
                     debt.setShopID(rs.getInt("ShopID"));
                     debt.setActive(rs.getInt("Active"));
+                    debt.setOrderID(rs.getInt("OrderID"));
                     debt.setUpdateAt(rs.getDate("UpdateAt"));
                     debt.setCreateBy(rs.getInt("CreateBy"));
                     debt.setIsDelete(rs.getInt("isDelete"));
@@ -183,6 +186,7 @@ public class DAODebtRecords {
                     debt.setPaymentStatus(rs.getInt("PaymentStatus"));
                     debt.setShopID(rs.getInt("ShopID"));
                     debt.setActive(rs.getInt("Active"));
+                    debt.setOrderID(rs.getInt("OrderID"));
                     debt.setCreateAt(rs.getDate("CreateAt"));
                     debt.setUpdateAt(rs.getDate("UpdateAt"));
                     debt.setCreateBy(rs.getInt("CreateBy"));
@@ -238,6 +242,7 @@ public class DAODebtRecords {
             debt.setInvoiceDate(rs.getDate("InvoiceDate"));
             debt.setImagePath(rs.getString("ImagePath"));
             debt.setShopID(rs.getInt("ShopID"));
+            debt.setOrderID(rs.getInt("OrderID"));
             debt.setCreateAt(rs.getDate("CreateAt"));
             debt.setUpdateAt(rs.getDate("UpdateAt"));
             debt.setCreateBy(rs.getInt("CreateBy"));
@@ -286,6 +291,7 @@ public class DAODebtRecords {
                     debt.setImagePath(rs.getString("ImagePath"));
                     debt.setShopID(rs.getInt("ShopID"));
                     debt.setActive(rs.getInt("Active"));
+                    debt.setOrderID(rs.getInt("OrderID"));
                     debt.setCreateAt(rs.getDate("CreateAt"));
                     debt.setUpdateAt(rs.getDate("UpdateAt"));
                     debt.setCreateBy(rs.getInt("CreateBy"));
@@ -347,6 +353,7 @@ public class DAODebtRecords {
                     debt.setImagePath(rs.getString("ImagePath"));
                     debt.setShopID(rs.getInt("ShopID"));
                     debt.setActive(rs.getInt("Active"));
+                    debt.setOrderID(rs.getInt("OrderID"));
                     debt.setCreateAt(rs.getDate("CreateAt"));
                     debt.setUpdateAt(rs.getDate("UpdateAt"));
                     debt.setCreateBy(rs.getInt("CreateBy"));
@@ -365,7 +372,7 @@ public class DAODebtRecords {
     public int AddDebtRecords(DebtRecords debtrecords, int userid) throws Exception {
         int generatedDebtID = -1; // Giá trị mặc định nếu lỗi xảy ra
 
-        String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, InvoiceDate, CreateAt, CreateBy, isDelete, ImagePath, Note, shopid, Active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO DebtRecords (CustomerID, AmountOwed, PaymentStatus, InvoiceDate, CreateAt, CreateBy, isDelete, ImagePath, Note, shopid, Active, OrderID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) { // 🔥 THÊM RETURN_GENERATED_KEYS
             ps.setInt(1, debtrecords.getCustomerID());
@@ -379,6 +386,7 @@ public class DAODebtRecords {
             ps.setString(9, debtrecords.getNote());
             ps.setInt(10, debtrecords.getShopID());
             ps.setInt(11, 0);
+            ps.setInt(12, debtrecords.getOrderID());
 
             int affectedRows = ps.executeUpdate(); // 🔥 PHẢI CHẠY EXECUTEUPDATE() TRƯỚC
             if (affectedRows == 0) {

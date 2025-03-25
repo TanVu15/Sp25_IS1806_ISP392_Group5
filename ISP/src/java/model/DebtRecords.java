@@ -11,7 +11,7 @@ import java.sql.Date;
  * @author ADMIN
  */
 public class DebtRecords {
-    
+
     private int ID;
     private int CustomerID;
     private int AmountOwed;
@@ -21,6 +21,7 @@ public class DebtRecords {
     private String ImagePath;
     private int ShopID;
     private int Active;
+    private int OrderID;
     private Date CreateAt;
     private Date UpdateAt;
     private int CreateBy;
@@ -169,8 +170,12 @@ public class DebtRecords {
         this.deleteBy = deleteBy;
     }
 
-   
-   
-    
-    
+    public int getOrderID() {
+        return OrderID;
+    }
+
+    public void setOrderID(int OrderID) {
+        this.OrderID = OrderID;
+    }
+
 }

@@ -175,6 +175,7 @@ public class AddExportOrderServlet extends HttpServlet {
                     debtRecord.setNote(note);
                     debtRecord.setInvoiceDate(invoiceDate);
                     debtRecord.setShopID(shopID);
+                    debtRecord.setOrderID(id);
 
                     DAODebtRecords.INSTANCE.AddDebtRecords(debtRecord, user.getID());
                 }

@@ -251,6 +251,25 @@ public class DAOCustomers {
     return -1; // Không tìm thấy thì trả về -1
 }
 
+    public boolean checkCustomerHasInvoice(int customerID) {
+    String sql = "SELECT COUNT(*) FROM Orders WHERE CustomerID = ?"; //Sửa Orders thành tên bảng Order của bạn
+
+    try (
+         PreparedStatement ps = connect.prepareStatement(sql)) {
+
+        ps.setInt(1, customerID);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // Trả về true nếu có ít nhất 1 hóa đơn
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        // Xử lý exception, có thể log lỗi
+    }
+    return false; // Trả về false nếu có lỗi hoặc không tìm thấy hóa đơn
+}
 
     public static void main(String[] args) throws Exception {
         DAOCustomers dao = new DAOCustomers();
