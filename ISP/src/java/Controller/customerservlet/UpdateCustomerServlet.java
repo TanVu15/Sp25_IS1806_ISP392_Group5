@@ -82,7 +82,7 @@ public class UpdateCustomerServlet extends HttpServlet {
         String name = request.getParameter("name");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        
+        String bank = request.getParameter("bank");
         if ( "".equals(name)) {
             request.setAttribute("message", "Hãy xem lại!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("CustomersManager/UpdateCustomer.jsp");
@@ -96,6 +96,7 @@ public class UpdateCustomerServlet extends HttpServlet {
         cus.setName(name);
         cus.setPhone(phone);
         cus.setAddress(address);
+        cus.setBankAcc(bank);
         DAOCustomers.INSTANCE.updateCustomers(cus);
 
         // Chuyển hướng tới trang danh sách người dùng sau khi cập nhật thành công

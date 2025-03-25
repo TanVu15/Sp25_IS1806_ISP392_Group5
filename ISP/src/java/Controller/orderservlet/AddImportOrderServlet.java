@@ -192,6 +192,7 @@ public class AddImportOrderServlet extends HttpServlet {
                 debtRecord.setNote(note);
                 debtRecord.setInvoiceDate(invoiceDate);
                 debtRecord.setShopID(shopID);
+                debtRecord.setOrderID(id);
 
                 try {
                     DAODebtRecords.INSTANCE.AddDebtRecords(debtRecord, user.getID());

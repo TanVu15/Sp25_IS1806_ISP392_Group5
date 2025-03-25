@@ -78,6 +78,13 @@
         Integer currentPage = (Integer) request.getAttribute("currentPage");
         Integer totalPages = (Integer) request.getAttribute("totalPages");
         String orderId = request.getAttribute("orderId") != null ? request.getAttribute("orderId").toString() : 
+
+            String orderType = "Không xác định";
+            if (order != null) {
+                orderType = order.getStatus() == 1 ? "Nhập Hàng" : order.getStatus() == -1 ? "Xuất Hàng" : "Không xác định";
+            }
+        %>
+
                         request.getParameter("id") != null ? request.getParameter("id") : "";
 
         String orderType = "Không xác định";
@@ -121,40 +128,40 @@
                         <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="analysis"><i class="fa-solid fa-chart-simple list-item-icon"></i></i>Báo Cáo</a></li>
                     </ul>
-                </div>
-
-                <div class="homepage-body">
-                    <div class="body-head">
-                        <h3 class="body__head-title">Thông tin đơn hàng</h3>
-                        <form action="listorderitems" method="post">
-                            <input type="hidden" name="orderid" value="<%= orderId %>">
-                            <input type="hidden" name="page" value="1">
-                            <input type="text" id="information" name="information" placeholder="Nhập tên sản phẩm..." class="search-input">
-                            <button type="submit" class="search-button">Tìm kiếm</button>
-                        </form>
-                    <button class="action-button" onclick="showPopup()">Xem hóa đơn</button>
-                    <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại</button>
                     </div>
-                    
-                    <% if (message != null) { %>
-                        <p class="error"><%= message %></p>
-                    <% } %>
 
-                    <div class="table-container">
-                        <table class="product-table">
-                            <thead>
-                                <tr class="table-header">
-                                    <th class="table-header-item">Tên sản phẩm</th>
-                                    <th class="table-header-item">Số lượng</th>
-                                    <th class="table-header-item">Quy cách</th>
-                                    <th class="table-header-item">Giá sản phẩm</th>
-                                    <th class="table-header-item">Giảm giá</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% if (orderitems != null && !orderitems.isEmpty()) { 
-                                    for (OrderItems o : orderitems) { 
-                                        if (u != null && o.getShopID() == u.getShopID()) { %>
+                    <div class="homepage-body">
+                        <div class="body-head">
+                            <h3 class="body__head-title">Thông tin đơn hàng</h3>
+                            <form action="listorderitems" method="post">
+                                <input type="hidden" name="orderid" value="<%= orderId %>">
+                                <input type="hidden" name="page" value="1">
+                                <input type="text" id="information" name="information" placeholder="Nhập tên sản phẩm..." class="search-input">
+                                <button type="submit" class="search-button">Tìm kiếm</button>
+                            </form>
+                            <button class="invoice-button" onclick="showPopup()">Xem hóa đơn</button>
+                            <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại</button>
+                        </div>
+
+                        <% if (message != null) { %>
+                        <p class="error"><%= message %></p>
+                        <% } %>
+
+                        <div class="table-container">
+                            <table class="product-table">
+                                <thead>
+                                    <tr class="table-header">
+                                        <th class="table-header-item">Tên sản phẩm</th>
+                                        <th class="table-header-item">Số lượng</th>
+                                        <th class="table-header-item">Quy cách</th>
+                                        <th class="table-header-item">Giá sản phẩm</th>
+                                        <th class="table-header-item">Giảm giá</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (orderitems != null && !orderitems.isEmpty()) { 
+                                        for (OrderItems o : orderitems) { 
+                                            if (u != null && o.getShopID() == u.getShopID()) { %>
                                     <tr class="table-row">
                                         <td class="table-cell"><%= o.getProductName() %></td>
                                         <td class="table-cell"><%= o.getQuantity() %></td>
@@ -162,130 +169,130 @@
                                         <td class="table-cell"><%= currencyFormat.format(o.getPrice()) %> VND</td>
                                         <td class="table-cell"><%= currencyFormat.format(o.getUnitPrice()) %> VND</td>
                                     </tr>
-                                <%      }
-                                    }
-                                } else { %>
+                                    <%      }
+                                        }
+                                    } else { %>
                                     <tr><td colspan="5">Không có sản phẩm nào trong đơn hàng.</td></tr>
-                                <% } %>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="pagination">
-                        <div class="pagination-controls">
-                            <% 
-                                String searchTerm = (String) session.getAttribute("searchTerm");
-                                String pageUrl = searchTerm != null ? 
-                                    "listorderitems?information=" + searchTerm + "&id=" + orderId + "&page=" : 
-                                    "listorderitems?id=" + orderId + "&page=";
-                            %>
-                            <button 
-                                class="pagination-button" 
-                                <% if (currentPage == null || currentPage <= 1) { %> disabled <% } %> 
-                                onclick="window.location.href = '<%= pageUrl %><%= currentPage != null ? currentPage - 1 : 1 %>'">Trước</button>
-
-                            <span class="pagination-info">Trang <%= currentPage != null ? currentPage : 1 %> / <%= totalPages != null ? totalPages : 1 %></span>
-
-                            <button 
-                                class="pagination-button" 
-                                <% if (currentPage == null || totalPages == null || currentPage >= totalPages) { %> disabled <% } %> 
-                                onclick="window.location.href = '<%= pageUrl %><%= currentPage != null ? currentPage + 1 : 1 %>'">Sau</button>
+                                    <% } %>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
 
-                    
+                        <!-- Pagination -->
+                        <div class="pagination">
+                            <div class="pagination-controls">
+                                <% 
+                                    String searchTerm = (String) session.getAttribute("searchTerm");
+                                    String pageUrl = searchTerm != null ? 
+                                        "listorderitems?information=" + searchTerm + "&id=" + orderId + "&page=" : 
+                                        "listorderitems?id=" + orderId + "&page=";
+                                %>
+                                <button 
+                                    class="pagination-button" 
+                                    <% if (currentPage == null || currentPage <= 1) { %> disabled <% } %> 
+                                    onclick="window.location.href = '<%= pageUrl %><%= currentPage != null ? currentPage - 1 : 1 %>'">Trước</button>
+
+                                <span class="pagination-info">Trang <%= currentPage != null ? currentPage : 1 %> / <%= totalPages != null ? totalPages : 1 %></span>
+
+                                <button 
+                                    class="pagination-button" 
+                                    <% if (currentPage == null || totalPages == null || currentPage >= totalPages) { %> disabled <% } %> 
+                                    onclick="window.location.href = '<%= pageUrl %><%= currentPage != null ? currentPage + 1 : 1 %>'">Sau</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pop-up Overlay -->
+            <div class="popup-overlay" onclick="hidePopup()"></div>
+            <!-- Pop-up Hóa Đơn -->
+            <div class="popup" id="invoicePopup">
+                <span class="close-button" onclick="hidePopup()">×</span>
+                <h2>Chi Tiết Hóa Đơn</h2>
+                <div class="input-container">
+                    <label>Mã Đơn Hàng:</label>
+                    <span><%= order != null ? order.getID() : "Không xác định" %></span>
+                </div>
+                <div class="input-container">
+                    <label>Loại Hóa Đơn:</label>
+                    <span><%= orderType %></span>
+                </div>
+                <div class="input-container">
+                    <label>Tên Khách Hàng:</label>
+                    <span><%= customer != null ? customer.getName() : "Không xác định" %></span>
+                </div>
+                <div class="input-container">
+                    <label>Người Tạo Phiếu:</label>
+                    <span><%= order != null && order.getCreateBy() != 0 ? daoUser.getUserByID(order.getCreateBy()).getFullName() : "Không xác định" %></span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tên Sản Phẩm</th>
+                            <th>Số Lượng</th>
+                            <th>Quy Cách</th>
+                            <th>Giá Gốc</th>
+                            <th>Giảm Giá</th>
+                            <th>Thành Tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% 
+                            if (allOrderItems != null && !allOrderItems.isEmpty()) { 
+                                for (OrderItems o : allOrderItems) { 
+                                    if (u != null && o.getShopID() == u.getShopID()) { 
+                                        double itemTotal = o.getPrice() * o.getQuantity() - o.getUnitPrice();
+                        %>
+                        <tr>
+                            <td><%= o.getProductName() %></td>
+                            <td><%= o.getQuantity() %></td>
+                            <td><%= o.getDescription() %> Kg/Bao</td>
+                            <td><%= currencyFormat.format(o.getPrice()) %> VND</td>
+                            <td><%= currencyFormat.format(o.getUnitPrice()) %> VND</td>
+                            <td><%= currencyFormat.format(itemTotal) %> VND</td>
+                        </tr>
+                        <%          }
+                                }
+                            } else { %>
+                        <tr>
+                            <td colspan="6">Không có sản phẩm trong đơn hàng.</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+                <div class="input-container">
+                    <label>Tổng Chi Phí:</label>
+                    <span><%= order != null ? currencyFormat.format(order.getTotalAmount()) : "Không xác định" %> VND</span>
                 </div>
             </div>
         </div>
 
-        <!-- Pop-up Overlay -->
-        <div class="popup-overlay" onclick="hidePopup()"></div>
-        <!-- Pop-up Hóa Đơn -->
-        <div class="popup" id="invoicePopup">
-            <span class="close-button" onclick="hidePopup()">×</span>
-            <h2>Chi Tiết Hóa Đơn</h2>
-            <div class="input-container">
-                <label>Mã Đơn Hàng:</label>
-                <span><%= order != null ? order.getID() : "Không xác định" %></span>
-            </div>
-            <div class="input-container">
-                <label>Loại Hóa Đơn:</label>
-                <span><%= orderType %></span>
-            </div>
-            <div class="input-container">
-                <label>Tên Khách Hàng:</label>
-                <span><%= customer != null ? customer.getName() : "Không xác định" %></span>
-            </div>
-            <div class="input-container">
-                <label>Người Tạo Phiếu:</label>
-                <span><%= order != null && order.getCreateBy() != 0 ? daoUser.getUserByID(order.getCreateBy()).getFullName() : "Không xác định" %></span>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tên Sản Phẩm</th>
-                        <th>Số Lượng</th>
-                        <th>Quy Cách</th>
-                        <th>Giá Gốc</th>
-                        <th>Giảm Giá</th>
-                        <th>Thành Tiền</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% 
-                        if (allOrderItems != null && !allOrderItems.isEmpty()) { 
-                            for (OrderItems o : allOrderItems) { 
-                                if (u != null && o.getShopID() == u.getShopID()) { 
-                                    double itemTotal = o.getPrice() * o.getQuantity() - o.getUnitPrice();
-                    %>
-                    <tr>
-                        <td><%= o.getProductName() %></td>
-                        <td><%= o.getQuantity() %></td>
-                        <td><%= o.getDescription() %> Kg/Bao</td>
-                        <td><%= currencyFormat.format(o.getPrice()) %> VND</td>
-                        <td><%= currencyFormat.format(o.getUnitPrice()) %> VND</td>
-                        <td><%= currencyFormat.format(itemTotal) %> VND</td>
-                    </tr>
-                    <%          }
-                            }
-                        } else { %>
-                    <tr>
-                        <td colspan="6">Không có sản phẩm trong đơn hàng.</td>
-                    </tr>
-                    <% } %>
-                </tbody>
-            </table>
-            <div class="input-container">
-                <label>Tổng Chi Phí:</label>
-                <span><%= order != null ? currencyFormat.format(order.getTotalAmount()) : "Không xác định" %> VND</span>
+        <div class="footer">
+            <div class="container">
+                <p>© 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
             </div>
         </div>
-    </div>
 
-    <div class="footer">
-        <div class="container">
-            <p>© 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
-        </div>
-    </div>
-
-    <script>
-        function showPopup() {
-            const popup = document.getElementById("invoicePopup");
-            const overlay = document.querySelector(".popup-overlay");
-            if (popup && overlay) {
-                popup.style.display = "block";
-                overlay.style.display = "block";
+        <script>
+            function showPopup() {
+                const popup = document.getElementById("invoicePopup");
+                const overlay = document.querySelector(".popup-overlay");
+                if (popup && overlay) {
+                    popup.style.display = "block";
+                    overlay.style.display = "block";
+                }
             }
-        }
-        function hidePopup() {
-            const popup = document.getElementById("invoicePopup");
-            const overlay = document.querySelector(".popup-overlay");
-            if (popup && overlay) {
-                popup.style.display = "none";
-                overlay.style.display = "none";
+            function hidePopup() {
+                const popup = document.getElementById("invoicePopup");
+                const overlay = document.querySelector(".popup-overlay");
+                if (popup && overlay) {
+                    popup.style.display = "none";
+                    overlay.style.display = "none";
+                }
             }
-        }
-    </script>
-</body>
+        </script>
+    </body>
 </html>

@@ -62,6 +62,10 @@
                 <label for="address">Địa chỉ:</label>
                 <input type="text" name="address" >
             </div>
+            <div class="form-group">
+                <label for="bank">Ngân Hàng:</label>
+                <input type="text" name="bank" >
+            </div>
             <div class="button-container">
                 <input type="submit" class="btn add-button" value="Thêm Khách Hàng">
                 <a href="listcustomers" class="btn cancel-button">Hủy</a>

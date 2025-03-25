@@ -73,7 +73,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
 
         // Chuyển đến trang dựa trên vai trò người dùng
         if (user.getRoleid() == 1) {
-            request.getRequestDispatcher("ProductsManager/ListProductForAdmin.jsp").forward(request, response);
+            request.getRequestDispatcher("listusers").forward(request, response);
         } else if (user.getRoleid() == 2) {
             request.getRequestDispatcher("ProductsManager/ListProductForOwner.jsp").forward(request, response);
         } else if (user.getRoleid() == 3) {

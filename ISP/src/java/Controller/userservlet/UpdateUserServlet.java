@@ -42,20 +42,25 @@ public class UpdateUserServlet extends HttpServlet {
         try {
             Users user = dao.getUserByID(userid);
             try {
+                if (user.getRoleid() != 1) {
+                    int shopid = dao.getUserByID(userid).getShopID();
+                    int shopid2 = userSession.getShopID();
 
-                int shopid = dao.getUserByID(userid).getShopID();
-                int shopid2 = userSession.getShopID();
-                if (userSession.getRoleid()==3 && user.getRoleid() != userSession.getRoleid()) {
-                    request.getRequestDispatcher("logout").forward(request, response);
-                    return;
-                }
-                if (user.getRoleid() > userSession.getRoleid()) {
-                    request.getRequestDispatcher("logout").forward(request, response);
-                    return;
-                }
-                if (shopid != shopid2 && userSession.getRoleid() != 1) {
-                    request.getRequestDispatcher("logout").forward(request, response);
-                    return;
+                    if (userSession.getRoleid() != 1) {
+
+                        if (userSession.getRoleid() == 3 && user.getRoleid() != userSession.getRoleid()) {
+                            request.getRequestDispatcher("logout").forward(request, response);
+                            return;
+                        }
+                        if (user.getRoleid() > userSession.getRoleid()) {
+                            request.getRequestDispatcher("logout").forward(request, response);
+                            return;
+                        }
+                        if (shopid != shopid2 && userSession.getRoleid() != 1) {
+                            request.getRequestDispatcher("logout").forward(request, response);
+                            return;
+                        }
+                    }
                 }
 
             } catch (Exception ex) {
