@@ -78,13 +78,6 @@
         Integer currentPage = (Integer) request.getAttribute("currentPage");
         Integer totalPages = (Integer) request.getAttribute("totalPages");
         String orderId = request.getAttribute("orderId") != null ? request.getAttribute("orderId").toString() : 
-
-            String orderType = "Không xác định";
-            if (order != null) {
-                orderType = order.getStatus() == 1 ? "Nhập Hàng" : order.getStatus() == -1 ? "Xuất Hàng" : "Không xác định";
-            }
-        %>
-
                         request.getParameter("id") != null ? request.getParameter("id") : "";
 
         String orderType = "Không xác định";
@@ -139,7 +132,7 @@
                                 <input type="text" id="information" name="information" placeholder="Nhập tên sản phẩm..." class="search-input">
                                 <button type="submit" class="search-button">Tìm kiếm</button>
                             </form>
-                            <button class="invoice-button" onclick="showPopup()">Xem hóa đơn</button>
+                            <button class="action-button" onclick="showPopup()">Xem hóa đơn</button>
                             <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại</button>
                         </div>
 

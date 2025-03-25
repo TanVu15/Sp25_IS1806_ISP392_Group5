@@ -256,6 +256,13 @@ a {
     font-size: 14px; /* Kích thước chữ */
 }
 
+.date-input {
+    width: 130px; /* Độ dài thanh tìm kiếm */
+    padding: 8px 12px; /* Padding cho nội dung bên trong */
+    border: 1px solid var(--border-color); /* Viền cho thanh tìm kiếm */
+    border-radius: 4px; /* Bo góc */
+    font-size: 14px; /* Kích thước chữ */
+}
 .search-icon {
     margin-left: 10px; /* Khoảng cách giữa ô tìm kiếm và biểu tượng */
     cursor: pointer; /* Thay đổi con trỏ khi di chuột qua */

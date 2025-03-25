@@ -41,16 +41,14 @@
                 Shops shop = (Shops) session.getAttribute("shop");
             %>  
             <div class="form-group">  
-                <label for="zone">Kho:</label>  
+                <input type="hidden" name="id" value="<%= z.getID() %>">  
+                <label for="zone">Khu vực:</label>  
                 <input type="text" id="zone" name="zone" value="<%= z.getZoneName() %>" required>
                 
                 <label for="zone">Shop:</label>  
                 <input type="hidden" id="shop" name="shop" value="<%= z.getShopID() %>" required>
-                <span class="input-info"><%= shop.getShopName() %></span>
+                <span class="input-info" ><%= shop.getShopName() %></span>
             </div>  
-
-            <input type="hidden" name="id" value="<%= z.getID() %>">  
-
             <div class="button-container">  
                 <input type="submit" class="btn add-button" value="Cập nhật">  
                 <a href="listzones" class="btn cancel-button">Hủy</a>  

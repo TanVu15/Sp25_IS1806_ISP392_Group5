@@ -63,12 +63,11 @@ public void deleteZones(int deleteid, int userid) {
 
 
     public void updateZones(Zones zones) {
-        String sql = "UPDATE Zones SET ZoneName = ?, ProductID = ?, UpdateAt = ? WHERE ID = ?";
+        String sql = "UPDATE Zones SET ZoneName = ?, UpdateAt = ? WHERE ID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, zones.getZoneName());
-            ps.setInt(2, zones.getProductID()); // Update ProductID
-            ps.setDate(3, today);
-            ps.setInt(4, zones.getID());
+            ps.setDate(2, today);
+            ps.setInt(3, zones.getID());
             ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error updating zone: " + e.getMessage());

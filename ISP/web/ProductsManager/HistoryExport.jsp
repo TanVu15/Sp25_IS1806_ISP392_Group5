@@ -80,18 +80,16 @@
                             <form action="historyexport" method="get">
                                 <input type="text" id="information" name="keyword" placeholder="Tìm kiếm sản phẩm..." class="search-input" value="<%= keyword != null ? keyword : "" %>">
                                 <label for="startDate">Từ ngày:</label>
-                                <input type="date" id="startDate" name="startDate" placeholder="Từ ngày..." value="<%= startDate != null ? startDate : "" %>">
+                                <input type="date" id="startDate" name="startDate" placeholder="Từ ngày..." class="date-input" value="<%= startDate != null ? startDate : "" %>">
                                 <label for="startDate">Đến ngày:</label>
-                                <input type="date" id="endDate" name="endDate" placeholder="Đến ngày..." value="<%= endDate != null ? endDate : "" %>">
+                                <input type="date" id="endDate" name="endDate" placeholder="Đến ngày..." class="date-input" value="<%= endDate != null ? endDate : "" %>">
                                 <input type="hidden" name="page" value="1">
-                                <label for="sortOrder">Sắp xếp:</label>
-                                <select id="sortOrder" name="sortOrder" onchange="this.form.submit();">
-                                    <option value="asc" <%= "asc".equals(sortOrder) ? "selected" : "" %>>Cũ nhất → Mới nhất</option>
-                                    <option value="desc" <%= "desc".equals(sortOrder) ? "selected" : "" %>>Mới nhất → Cũ nhất</option>
+                                <select id="sortOrder" class="sort-dropdown" name="sortOrder" onchange="this.form.submit();">
+                                    <option class="dropdown-value" value="asc" <%= "asc".equals(sortOrder) ? "selected" : "" %>>Cũ nhất → Mới nhất</option>
+                                    <option class="dropdown-value" value="desc" <%= "desc".equals(sortOrder) ? "selected" : "" %>>Mới nhất → Cũ nhất</option>
                                 </select>
                                 <button type="submit" class="search-button">Tìm kiếm</button>
                             </form>
-                            <a href="historyexport?page=1&sortOrder=asc" class="reset-filter-button">Xóa bộ lọc</a>
                             <% String message = (String) request.getAttribute("message"); %>
                             <% if (message != null && !message.isEmpty()) { %>
                             <div id="toast-message" class="toast-message"><%= message %></div>
@@ -108,6 +106,7 @@
                                     }
                                 };
                             </script>
+                            <a href="historyexport?page=1&sortOrder=asc" class="add-product-button">Xóa bộ lọc</a>
                         </div>
                     </div>
                     <div class="table-container">
