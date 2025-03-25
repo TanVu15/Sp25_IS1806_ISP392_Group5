@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Shops;
@@ -27,8 +28,6 @@ import model.Shops;
  * @author Admin
  */
 public class ListCustomerDebtRecordsServlet extends HttpServlet {
-
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -45,7 +44,7 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
         DAODebtRecords dao = new DAODebtRecords();
         DAOCustomers dao1 = new DAOCustomers();
         HttpSession session = request.getSession();
-        
+        String sortBy = request.getParameter("sortBy");
         request.setAttribute("message", "");
         int customerID = Integer.parseInt(request.getParameter("customerid"));
         Customers customer;
@@ -53,30 +52,43 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
             // lay customer đang cần
             customer = dao1.getCustomersByID(customerID);
             Shops shop = (Shops) session.getAttribute("shop");
-            if(shop.getID() != customer.getShopID() || customer == null){
+            if (shop.getID() != customer.getShopID() || customer == null) {
                 request.getRequestDispatcher("logout").forward(request, response);
                 return;
             }
             request.setAttribute("customer", customer);
         } catch (Exception ex) {
             request.getRequestDispatcher("logout").forward(request, response);
-                return;
+            return;
         }
         //lay user người đang đăng nhập
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
-         // Lấy trang hiện tại từ tham số URL, mặc định là 1
+        // Lấy trang hiện tại từ tham số URL, mặc định là 1
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
         int debtsPerPage = 10; // Số sản phẩm trên mỗi trang
 
-       // Lấy tổng số sản phẩm cho shop hiện tại
+        // Lấy tổng số sản phẩm cho shop hiện tại
         int totalCustomer = dao.getTotalDebtRecordByShopId(user.getShopID());
         int totalPages = (int) Math.ceil((double) totalCustomer / debtsPerPage);
+
+        // lay líst debt của customer
+        ArrayList<DebtRecords> debtrecords = dao.getCustomerDebtRecords(customerID);
+        // Xử lý sắp xếp
+        if (sortBy != null) {
+            switch (sortBy) {
+                case "price_asc":
+                    debtrecords.sort(Comparator.comparingDouble(DebtRecords::getAmountOwed));
+                    break;
+                case "price_desc":
+                    debtrecords.sort(Comparator.comparingDouble(DebtRecords::getAmountOwed).reversed());
+                    break;
+            }
+        }
         
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
-        // lay líst debt của customer
-        ArrayList<DebtRecords> debtrecords = dao.getCustomerDebtRecords(customerID);
+        request.setAttribute("sortBy", sortBy);
         request.setAttribute("debtrecords", debtrecords);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListCustomerDebtRecords.jsp");
         requestDispatcher.forward(request, response);
@@ -120,16 +132,16 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
                 request.setAttribute("debtrecords", debtrecords);
             } else {
                 request.setAttribute("message", "Kết quả tìm kiếm cho: " + information);
-                
+
                 // Cập nhật currentPage và totalPages
                 int debtsPerPage = 10;
-            int totalProducts = debtrecords.size(); // Tổng sản phẩm tìm được
-            int totalPages = (int) Math.ceil(totalProducts / debtsPerPage); // Cập nhật với số sản phẩm mỗi trang
-            
-            // Thiết lập các thuộc tính cho JSP
-            request.setAttribute("debtrecords", debtrecords);
-            request.setAttribute("currentPage", 1); // Đặt lại về trang đầu tiên
-            request.setAttribute("totalPages", totalPages);
+                int totalProducts = debtrecords.size(); // Tổng sản phẩm tìm được
+                int totalPages = (int) Math.ceil(totalProducts / debtsPerPage); // Cập nhật với số sản phẩm mỗi trang
+
+                // Thiết lập các thuộc tính cho JSP
+                request.setAttribute("debtrecords", debtrecords);
+                request.setAttribute("currentPage", 1); // Đặt lại về trang đầu tiên
+                request.setAttribute("totalPages", totalPages);
             }
 
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("DebtRecordsManager/ListCustomerDebtRecords.jsp");

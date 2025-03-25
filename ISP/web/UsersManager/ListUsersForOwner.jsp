@@ -94,6 +94,13 @@
                                     }
                                 };
                             </script>
+                            <form action="listusers" method="get">
+                                <select name="sortBy" class="sort-dropdown" onchange="this.form.submit()">
+                                    <option class="dropdown-default" value="" disabled selected>Sắp xếp theo</option>
+                                    <option class="dropdown-value" value="name_asc">Tên A → Z</option>
+                                    <option class="dropdown-value" value="name_desc">Tên Z → A</option>
+                                </select>
+                            </form>
                             <a href="register" class="add-product-button">Thêm tài khoản</a>
                         </div>
                     </div>

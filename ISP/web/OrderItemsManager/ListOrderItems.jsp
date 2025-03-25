@@ -20,41 +20,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thông tin đơn hàng</title>
     <link rel="stylesheet" href="css/product.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSF7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+              integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+              crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        .error { color: red; }
-        .homepage-body { position: relative; min-height: 400px; }
-        .action-button {
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .action-button:hover { background-color: #0056b3; }
-        .invoice-button {
-            position: absolute;
-            right: 150px;
-            bottom: 20px;
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .invoice-button:hover { background-color: #218838; }
+       
+        
         .popup {
             display: none;
             position: fixed;
@@ -121,21 +92,18 @@
                 <a href="shopdetail">
                     <img src="<%=shop.getLogoShop()%>" alt="logo" class="home-logo">
                 </a>
-                <div class="header__navbar-item navbar__user">
-                    <% if (u != null) { %>
-                        <span class="navbar__user--name"><%= u.getFullName()%></span>
-                        <div class="navbar__user--info">
-                            <div class="navbar__info--wrapper">
-                                <a href="userdetail?id=<%= u.getID()%>" class="navbar__info--item">Tài khoản của tôi</a>
-                            </div>
-                            <div class="navbar__info--wrapper">
-                                <a href="logout" class="navbar__info--item">Đăng xuất</a>
-                            </div>
-                        </div>
-                    <% } else { %>
-                        <span class="navbar__user--name">Khách</span>
-                        <a href="login">Đăng nhập</a>
-                    <% } %>
+            </div>
+            <div class="header__navbar-item navbar__user">
+                <span class="navbar__user--name">
+                    <%= u.getFullName()%>
+                </span>
+                <div class="navbar__user--info">
+                    <div class="navbar__info--wrapper">
+                        <a href="userdetail?id=<%= u.getID() %>" class="navbar__info--item">Tài khoản của tôi</a>
+                    </div>
+                    <div class="navbar__info--wrapper">
+                        <a href="logout" class="navbar__info--item">Đăng xuất</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -150,7 +118,8 @@
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
-                        <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-user list-item-icon"></i>Cửa Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="analysis"><i class="fa-solid fa-chart-simple list-item-icon"></i></i>Báo Cáo</a></li>
                     </ul>
                 </div>
 
@@ -163,7 +132,7 @@
                             <input type="text" id="information" name="information" placeholder="Nhập tên sản phẩm..." class="search-input">
                             <button type="submit" class="search-button">Tìm kiếm</button>
                         </form>
-                    <button class="invoice-button" onclick="showPopup()">Xem hóa đơn</button>
+                    <button class="action-button" onclick="showPopup()">Xem hóa đơn</button>
                     <button class="action-button" onclick="window.location.href = 'listorders'">Quay lại</button>
                     </div>
                     

@@ -15,8 +15,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Customers;
 
 /**
  *
@@ -58,6 +60,7 @@ public class ListUsersServlet extends HttpServlet {
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
+        String sortBy = request.getParameter("sortBy");
         //ArrayList<Users> users = dao.getUsers();
         //.setAttribute("users", users);
 
@@ -100,10 +103,23 @@ public class ListUsersServlet extends HttpServlet {
                     // Lấy danh sách sản phẩm cho trang hiện tại
                     ArrayList<Users> user1 = dao.getUsersByPage(currentPage, productsPerPage, user.getShopID());
 
+                    // Xử lý sắp xếp
+                    if (sortBy != null) {
+                        switch (sortBy) {
+                            case "name_asc":
+                                user1.sort(Comparator.comparing(Users::getUsername));
+                                break;
+                            case "name_desc":
+                                user1.sort(Comparator.comparing(Users::getUsername).reversed());
+                                break;
+                        }
+                    }
+
                     // Thiết lập các thuộc tính cho JSP
                     request.setAttribute("users", user1);
                     request.setAttribute("currentPage", currentPage);
                     request.setAttribute("totalPages", totalPages);
+                    request.setAttribute("sortBy", sortBy);
                     RequestDispatcher requestDispatcher = request.getRequestDispatcher("UsersManager/ListUsersForOwner.jsp");
                     requestDispatcher.forward(request, response);
                     return;
@@ -140,7 +156,7 @@ public class ListUsersServlet extends HttpServlet {
             return;
         }
         ArrayList<Users> users = new ArrayList<>(); // Tránh lỗi null
-        
+
         if (!information.equals("")) {
             try {
                 users = dao.getUsersBySearch(information);
@@ -149,16 +165,16 @@ public class ListUsersServlet extends HttpServlet {
                 } else {
                     request.setAttribute("message", "Kết quả tìm kiếm cho: " + information);
                 }
-                 int productsPerPage = 10;
-                    // Cập nhật currentPage và totalPages
-                    int totalUsers = users.size(); // Tổng sản phẩm tìm được
-                    int totalPages = (int) Math.ceil(totalUsers / productsPerPage); // Cập nhật với số sản phẩm mỗi trang
+                int productsPerPage = 10;
+                // Cập nhật currentPage và totalPages
+                int totalUsers = users.size(); // Tổng sản phẩm tìm được
+                int totalPages = (int) Math.ceil(totalUsers / productsPerPage); // Cập nhật với số sản phẩm mỗi trang
 
-                    // Thiết lập các thuộc tính cho JSP
-                    request.setAttribute("users", users);
-                    request.setAttribute("currentPage", 1); // Đặt lại về trang đầu tiên
-                    request.setAttribute("totalPages", totalPages);
-                    
+                // Thiết lập các thuộc tính cho JSP
+                request.setAttribute("users", users);
+                request.setAttribute("currentPage", 1); // Đặt lại về trang đầu tiên
+                request.setAttribute("totalPages", totalPages);
+
             } catch (Exception ex) {
                 Logger.getLogger(ListUsersServlet.class.getName()).log(Level.SEVERE, null, ex);
             }

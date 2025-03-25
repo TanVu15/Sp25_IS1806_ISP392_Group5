@@ -15,7 +15,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý Công Nợ</title>
-        <link rel="stylesheet" href="css/product.css">
+        <link rel="stylesheet" href="css/customer.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
@@ -77,8 +77,16 @@
                 <div class="homepage-body">
                     <div class="body-head">
                         <h3 class="body__head-title">
-                            Khách Hàng: <%= customer.getName() %> <br> <br> 
-                            Ví: <%= currencyFormat.format(customer.getWallet()) +" VND" %>
+                            <div class="customer-info">
+                                <div class="customer-name">
+                                    <a href="customerdetail?customerid=<%= customer.getID() %>">
+                                        <%= customer.getName() %>
+                                    </a>
+                                </div>
+                                <div class="customer-wallet">
+                                    Ví: <%= currencyFormat.format(customer.getWallet()) %> VND
+                                </div>
+                            </div>
                         </h3>
                         <div class="search-container">
                             <form action='listcustomerdebtrecords?customerid=<%= customer.getID() %>' method="post">
@@ -102,6 +110,16 @@
                                     }
                                 };
                             </script>
+                            <form action='listcustomerdebtrecords' method="get">
+                                <!-- Truyền customerid vào request -->
+                                <input type="hidden" name="customerid" value="<%= customer.getID() %>">
+                                <select name="sortBy" class="sort-dropdown" onchange="this.form.submit()">
+                                    <option class="dropdown-default" value="" disabled selected>Sắp xếp theo</option>
+                                    <option class="dropdown-value" value="price_asc">Số tiền tăng dần</option>
+                                    <option class="dropdown-value" value="price_desc">Số tiền giảm dần</option>
+                                </select>
+                            </form>
+
                             <a href='adddebtrecords?customerid=<%= customer.getID() %>' class="add-product-button">Thêm công nợ</a>
                         </div>
                     </div>
@@ -139,13 +157,22 @@
                                     <td class="table-cell"><%= debt.getCreateAt() %></td>
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'debtrecorddetail?debtid=<%= debt.getID() %>'">Chi tiết công nợ</button>
+                                        <%
+                                    // Kiểm tra xem có hóa đơn cho khách hàng này hay không
+                                    if (debt.getOrderID() != 0) {
+                                        %>
+                                        <button class="action-button" onclick="window.location.href = 'listorderitems?id=<%= debt.getOrderID() %>'">Hóa đơn</button>
+                                        <%
+                                            }
+                                        %>
+
                                     </td>
                                 </tr>
                                 <% } %>
                             </tbody>
                         </table>
                     </div>
-                            <!-- Pagination -->
+                    <!-- Pagination -->
 
                     <div class="pagination">
                         <div class="pagination-controls">

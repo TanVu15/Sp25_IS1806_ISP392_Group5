@@ -47,7 +47,7 @@ public class ListDebtRecordsServlet extends HttpServlet {
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
         String sortBy = request.getParameter("sortBy");
-        if(user.getShopID()==0&&user.getRoleid()==2){
+        if(user.getShopID()==0 && user.getRoleid()==2){
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("createshop");
             requestDispatcher.forward(request, response);
             return;
