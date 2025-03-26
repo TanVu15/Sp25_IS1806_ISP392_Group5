@@ -34,7 +34,7 @@
             ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
-        
+
         <%
             Integer currentPage = (Integer) request.getAttribute("currentPage");
             Integer totalPages = (Integer) request.getAttribute("totalPages");
@@ -136,9 +136,13 @@
                                     <td class="table-cell"><%= currencyFormat.format(cus.getWallet()) + " VND"%></td>
                                     <td class="table-cell"><%= cus.getPhone() %></td>
                                     <td class="table-cell">
+                                        <% if(u.getRoleid() != 3) { %>
                                         <button class="action-button" onclick="window.location.href = 'updatecustomer?id=<%= cus.getID() %>'">Chỉnh sửa</button>
+                                        <% } %>
+
                                         <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= cus.getID() %>'">Công nợ</button>
                                         <button class="action-button" onclick="window.location.href = 'customerdetail?customerid=<%= cus.getID() %>'">Chi tiết khách hàng</button>
+                                        <button class="action-button" onclick="window.location.href = 'listcustomerorders?customerid=<%= cus.getID() %>'">Hóa Đơn</button>
                                     </td>
                                 </tr>
                                 <% } 

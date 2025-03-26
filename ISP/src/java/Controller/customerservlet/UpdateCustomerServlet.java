@@ -54,7 +54,7 @@ public class UpdateCustomerServlet extends HttpServlet {
         try {
             Customers cus = dao.getCustomersByID(customerid);
             Shops shop = (Shops) session.getAttribute("shop");
-            if (shop.getID() != cus.getShopID() || cus == null) {
+            if (shop.getID() != cus.getShopID() || cus == null || user.getRoleid()!= 2) {
                 request.getRequestDispatcher("logout").forward(request, response);
                 return;
             }

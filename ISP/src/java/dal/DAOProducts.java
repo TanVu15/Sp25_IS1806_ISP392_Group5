@@ -304,6 +304,41 @@ public class DAOProducts {
         }
         return products;
     }
+    
+    public ArrayList<Products> getAllProductsByShopId(int shopID) {
+    ArrayList<Products> productList = new ArrayList<>();
+    String query = "SELECT * FROM Products WHERE shopID = ?";
+    try (
+         PreparedStatement ps = connect.prepareStatement(query)) {
+        ps.setInt(1, shopID);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+             Products product = new Products();
+                product.setID(rs.getInt("ID"));
+                product.setProductName(rs.getString("ProductName"));
+                product.setDescription(rs.getString("Description"));
+                product.setPrice(rs.getInt("Price"));
+                product.setQuantity(rs.getInt("Quantity"));
+                // Create and set the Zones object
+//                Zones productZone = new Zones();
+//                productZone.setID(rs.getInt("ID"));
+//                productZone.setZoneName(rs.getString("ZoneName")); 
+//                product.setProductZone(productZone);
+                
+                product.setImageLink(rs.getString("ImageLink"));
+                product.setShopID(rs.getInt("ShopID"));
+                product.setCreateAt(rs.getDate("CreateAt"));
+                product.setUpdateAt(rs.getDate("UpdateAt"));
+                product.setCreateBy(rs.getInt("CreateBy"));
+                product.setIsDelete(rs.getInt("isDelete"));
+                productList.add(product);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return productList;
+}
+
 
 //    search product by name for order
     public ArrayList<Products> searchProductsByName(String productName) {

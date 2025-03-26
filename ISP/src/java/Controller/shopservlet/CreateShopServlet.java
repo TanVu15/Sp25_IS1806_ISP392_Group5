@@ -80,7 +80,7 @@ public class CreateShopServlet extends HttpServlet {
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
         request.setAttribute("message", "");
-        if (user.getShopID() != 0) {
+        if (user.getShopID() != 0 || user.getRoleid() == 3) {
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("logout");
             requestDispatcher.forward(request, response);
             return;

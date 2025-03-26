@@ -74,7 +74,8 @@ public class AddExportOrderServlet extends HttpServlet {
         int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
 
         // Lấy danh sách sản phẩm cho trang hiện tại
-        ArrayList<Products> products = dao2.getProductsByPage(currentPage, productsPerPage, user.getShopID());
+        //ArrayList<Products> products = dao2.getProductsByPage(currentPage, productsPerPage,user.getShopID());
+        ArrayList<Products> products = dao2.getAllProductsByShopId(user.getShopID());
         request.setAttribute("products", products);
 
         DAOZones zoneDAO = new DAOZones();
