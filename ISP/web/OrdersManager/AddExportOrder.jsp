@@ -32,7 +32,7 @@
 
         <script>
             function openNewInvoiceTab() {
-                window.open('addexportorder', '_blank'); // Opens the add order page in a new tab
+            window.open('addexportorder', '_blank'); // Opens the add order page in a new tab
             }
         </script>
 
@@ -54,11 +54,26 @@
                             if(product.getShopID() == u.getShopID()){
                                 String productName = product.getProductName().replace("\"", "\\\""); // Escape dấu "
             %>
-                "<%= productName %>": <%= product.getPrice() %><% if (i < products.size() - 1) { %>,<% } %>
+            "<%= productName %>": <%= product.getPrice() %><% if (i < products.size() - 1) { %>,<% } %>
             <%
                             }
                         }
                     }
+            %>
+            };
+            const productStock = {
+            <%
+                if (products != null && !products.isEmpty()) {
+                    for (int i = 0; i < products.size(); i++) {
+                        Products product = products.get(i);
+                        if(product.getShopID() == u.getShopID()){
+                            String productName = product.getProductName().replace("\"", "\\\"");
+            %>
+            "<%= productName %>": <%= product.getQuantity() %><% if (i < products.size() - 1) { %>,<% } %>
+            <%
+                        }
+                    }
+                }
             %>
             };
         </script>
@@ -166,188 +181,179 @@
                 <script>
 
                     $(document).ready(function () {
-                        $(document).on('change', 'select[name="productName"]', function () {
-                            let selectedProduct = $(this).val();
-                            let priceInput = $(this).closest('tr').find('input[name="price"]');
+                    $(document).on('change', 'select[name="productName"]', function () {
+                    let selectedProduct = $(this).val();
+                    let priceInput = $(this).closest('tr').find('input[name="price"]');
+                    if (productPrices.hasOwnProperty(selectedProduct)) {
+                    priceInput.val(productPrices[selectedProduct]);
+                    } else {
+                    priceInput.val(0); // Hoặc một giá trị mặc định khác
+                    console.warn("Không tìm thấy giá cho sản phẩm: " + selectedProduct);
+                    }
 
-                            if (productPrices.hasOwnProperty(selectedProduct)) {
-                                priceInput.val(productPrices[selectedProduct]);
-                            } else {
-                                priceInput.val(0); // Hoặc một giá trị mặc định khác
-                                console.warn("Không tìm thấy giá cho sản phẩm: " + selectedProduct);
-                            }
-
-                            calculateTotal(); // Tính lại tổng tiền ngay sau khi cập nhật giá
-                        });
+                    calculateTotal(); // Tính lại tổng tiền ngay sau khi cập nhật giá
                     });
-
-
+                    });
                     $(document).ready(function () {
-                        $('.area-select').select2({
-                            placeholder: "Chọn...",
+                    $('.area-select').select2({
+                    placeholder: "Chọn...",
                             allowClear: true
-                        });
                     });
-
+                    });
                     $(document).ready(function () {
-                        $('.product-select').select2({
-                            placeholder: "Chọn...",
+                    $('.product-select').select2({
+                    placeholder: "Chọn...",
                             allowClear: true
-                        });
                     });
-
+                    });
                     const productList = [
                     <% if (products != null) {
-                            for (Products product : products) {
-                                if (product.getShopID() == u.getShopID()) {%>
+                                for (Products product : products) {
+                                    if (product.getShopID() == u.getShopID()) {%>
                     {id: '<%= product.getProductName()%>', text: '<%= product.getProductName()%>'}
                     ,
                     <%    }
                             }
                         } %>
                     ];
-
                     const zoneList = [
                     <%  if (zones != null) {
-                            for (Zones zone : zones) {
-                                if (zone.getShopID() == u.getShopID()) {%>
+                        for (Zones zone : zones) {
+                            if (zone.getShopID() == u.getShopID()) {%>
                     {id: '<%= zone.getZoneName()%>', text: '<%= zone.getZoneName()%>'}
                     ,
                     <% }
-                            }
-                        }%>
+                                            }
+                                        }%>
                     ];
-
                     // Hiển thị/ẩn các ô khi chọn hình thức thanh toán
                     function handlePaymentChange() {
-                        const paymentStatus = document.querySelector('input[name="paymentStatus"]:checked').value;
-                        const partialPaymentContainer = document.getElementById('partialPaymentContainer');
-                        const remainingAmountContainer = document.getElementById('remainingAmountContainer');
-
-                        if (paymentStatus === 'partial') {
-                            partialPaymentContainer.style.display = 'block';
-                            remainingAmountContainer.style.display = 'block';
-                            calculateRemainingAmount(); // Tính toán lại số tiền còn lại khi hiện form
-                        } else {
-                            partialPaymentContainer.style.display = 'none';
-                            remainingAmountContainer.style.display = 'none';
-                            document.getElementById('partialPayment').value = 0;
-                            document.getElementById('remainingAmount').value = '';
-                        }
+                    const paymentStatus = document.querySelector('input[name="paymentStatus"]:checked').value;
+                    const partialPaymentContainer = document.getElementById('partialPaymentContainer');
+                    const remainingAmountContainer = document.getElementById('remainingAmountContainer');
+                    if (paymentStatus === 'partial') {
+                    partialPaymentContainer.style.display = 'block';
+                    remainingAmountContainer.style.display = 'block';
+                    calculateRemainingAmount(); // Tính toán lại số tiền còn lại khi hiện form
+                    } else {
+                    partialPaymentContainer.style.display = 'none';
+                    remainingAmountContainer.style.display = 'none';
+                    document.getElementById('partialPayment').value = 0;
+                    document.getElementById('remainingAmount').value = '';
+                    }
                     }
 
                     // Tính số tiền còn lại khi nhập số tiền trả
                     function calculateRemainingAmount() {
-                        const totalCostStr = document.getElementById('totalCost').value.replace(/\./g, '').replace(/,/g, '.');
-                        const totalCost = parseFloat(totalCostStr) || 0;
-                        const partialPayment = parseFloat(document.getElementById('partialPayment').value) || 0;
-
-                        let remainingAmount = totalCost - partialPayment;
-                        remainingAmount = remainingAmount < 0 ? 0 : remainingAmount;
-
-                        document.getElementById('remainingAmount').value = remainingAmount.toLocaleString('vi-VN');
+                    const totalCostStr = document.getElementById('totalCost').value.replace(/\./g, '').replace(/,/g, '.');
+                    const totalCost = parseFloat(totalCostStr) || 0;
+                    const partialPayment = parseFloat(document.getElementById('partialPayment').value) || 0;
+                    let remainingAmount = totalCost - partialPayment;
+                    remainingAmount = remainingAmount < 0 ? 0 : remainingAmount;
+                    document.getElementById('remainingAmount').value = remainingAmount.toLocaleString('vi-VN');
                     }
 
                     // Khởi tạo khi load trang
                     $(document).ready(function () {
-                        // Sự kiện khi nhập số tiền trả
-                        $('#partialPayment').on('input', calculateRemainingAmount);
-                        // Khởi tạo ẩn/hiện các phần
-                        handlePaymentChange();
+                    // Sự kiện khi nhập số tiền trả
+                    $('#partialPayment').on('input', calculateRemainingAmount);
+                    // Khởi tạo ẩn/hiện các phần
+                    handlePaymentChange();
                     });
-
                     // Update the calculateTotal function to also update the remaining amount
                     function calculateTotal() {
-                        let grandTotal = 0;
-
-                        $('#productList tr').each(function () {
+                    let grandTotal = 0;
+                    $('#productList tr').each(function () {
                             // Lấy giá trị các input
+                            let productName = $(this).find('select[name="productName"]').val();
                             let quantityVal = $(this).find('input[name="quantity"]').val();
                             let priceVal = $(this).find('input[name="price"]').val();
                             let discountVal = $(this).find('input[name="discount"]').val();
-
                             // Chuyển đổi về số, nếu rỗng thì thành 0
                             const quantity = quantityVal.trim() === "" ? 0 : parseInt(quantityVal);
                             const price = priceVal.trim() === "" ? 0 : parseFloat(priceVal);
                             const discount = discountVal.trim() === "" ? 0 : parseFloat(discountVal);
-
-                            if (discount > price) {
-                                showToast("Giảm giá không thể lớn hơn giá gốc!");
-                                $(this).find('input[name="discount"]').val(0); // Đặt lại giá trị giảm giá
-                                isValid = false;
-                            }
-                            function showToast(message) {
-                                var toast = $('<div class="toast-message">' + message + '</div>');
-                                $('body').append(toast);
-                                setTimeout(function () {
-                                    toast.fadeOut(500, function () {
-                                        $(this).remove();
-                                    });
-                                }, 3000);
-                            }
-
-                            // Tính thành tiền
-                            let totalPrice = (price * quantity) - discount;
-                            totalPrice = totalPrice < 0 ? 0 : totalPrice; // Không cho âm tiền
-
-                            // Cập nhật ô thành tiền, định dạng kiểu số Việt Nam
-                            $(this).find('input[name="total"]').val(totalPrice.toLocaleString('vi-VN'));
-
-                            // Cộng vào tổng tiền
-                            grandTotal += totalPrice;
-                        });
-
-                        // Hiển thị tổng chi phí
-                        $('#totalCost').val(grandTotal.toLocaleString('vi-VN'));
-
-                        // Update remaining amount if partial payment is selected
-                        if (document.getElementById('paymentStatus').value === 'partial') {
-                            calculateRemainingAmount();
+                    if (discount > price) {
+                            showToast("Giảm giá không thể lớn hơn giá gốc!");
+                        $(this).find('input[name="discount"]').val(0); // Đặt lại giá trị giảm giá
+                            isValid = false;
                         }
+                    function showToast(message) {
+                    var toast = $('<div class="toast-message">' + message + '</div>');
+                            $('body').append(toast);
+                            setTimeout(function () {
+                            toast.fadeOut(500, function () {
+                            $(this).remove();
+                            });
+                        }, 3000);
+                    }
+                     
+                    // Kiểm tra số lượng nhập có vượt quá số lượng tồn kho không
+                    if (productStock.hasOwnProperty(productName)) {
+                        let availableQuantity = productStock[productName];
+                        if (quantity > availableQuantity) {
+                            showToast(`Số lượng nhập (${quantity}) vượt quá số lượng tồn kho (${availableQuantity})!`);
+                            $(this).find('input[name="quantity"]').val(availableQuantity); // Giới hạn lại số lượng
+                            return;
+                        }
+                    }
+                    
+
+                    // Tính thành tiền
+                    let totalPrice = (price * quantity * spec); - (price * discount);
+                    totalPrice = totalPrice < 0 ? 0 : totalPrice; // Không cho âm tiền
+
+                    // Cập nhật ô thành tiền, định dạng kiểu số Việt Nam
+                    $(this).find('input[name="total"]').val(totalPrice.toLocaleString('vi-VN'));
+                    // Cộng vào tổng tiền
+                    grandTotal += totalPrice;
+                    });
+                    // Hiển thị tổng chi phí
+                    $('#totalCost').val(grandTotal.toLocaleString('vi-VN'));
+                    // Update remaining amount if partial payment is selected
+                    if (document.getElementById('paymentStatus').value === 'partial') {
+                    calculateRemainingAmount();
+                    }
                     }
 
                     function addProductRow() {
-                        const newRow = `
-                        <tr>
-                            <td>
-                                <select class="area-select product-select" name="productName" multiple="multiple" required style="width: 100%;">
-                                </select>
-                            </td>
-                            <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
-                            <td>
-                                <select class="area-select zone-select" name="area" multiple="multiple" required style="width: 100%;">
-                                </select>
-                            </td>
-                            <td><input type="text" name="spec" placeholder="Kg/bao"></td>
-                            <td><input type="number" id="price" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
-                            <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
-                            <td><input type="text" name="total" readonly></td>
-                            <td><button type="button" class="remove-row" onclick="deleteProductRow(this)">Xóa</button></td>
-                        </tr>
-                    `;
-
-                        $('#productList').append(newRow);
-
-                        // Khởi tạo select2 với data cho dropdown vừa thêm
-                        const lastProductSelect = $('#productList').find('tr:last .product-select');
-                        const lastZoneSelect = $('#productList').find('tr:last .zone-select');
-
-                        lastProductSelect.select2({
-                            data: productList,
+                    const newRow = `
+                                <tr>
+                                    <td>
+                                        <select class="area-select product-select" name="productName" multiple="multiple" required style="width: 100%;">
+                                        </select>
+                                    </td>
+                                    <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
+                                    <td>
+                                        <select class="area-select zone-select" name="area" multiple="multiple" required style="width: 100%;">
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="spec" placeholder="Kg/bao"></td>
+                                    <td><input type="number" id="price" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
+                                    <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
+                                    <td><input type="text" name="total" readonly></td>
+                                    <td><button type="button" class="remove-row" onclick="deleteProductRow(this)">Xóa</button></td>
+                                </tr>
+                            `;
+                    $('#productList').append(newRow);
+                    // Khởi tạo select2 với data cho dropdown vừa thêm
+                    const lastProductSelect = $('#productList').find('tr:last .product-select');
+                    const lastZoneSelect = $('#productList').find('tr:last .zone-select');
+                    lastProductSelect.select2({
+                    data: productList,
                             placeholder: "Chọn...",
                             allowClear: true
-                        });
-
-                        lastZoneSelect.select2({
-                            data: zoneList,
+                    });
+                    lastZoneSelect.select2({
+                    data: zoneList,
                             placeholder: "Chọn...",
                             allowClear: true
-                        });
+                    });
                     }
 
                     function deleteProductRow(button) {
-                        $(button).closest('tr').remove();
-                        calculateTotal();
+                    $(button).closest('tr').remove();
+                    calculateTotal();
                     }
                 </script>
 
