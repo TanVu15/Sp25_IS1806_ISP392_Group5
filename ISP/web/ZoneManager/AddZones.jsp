@@ -19,7 +19,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/add.css">
-    <title>Thêm kho</title>
+    <title>Thêm khu vực</title>
     <link rel="stylesheet" href="css/product.css">
 </head>
 <body>
@@ -45,12 +45,9 @@
 
         <form action="addzone" method="post">
             <div class="form-group">
-                <label for="zone">Kho:</label>
+                <label for="zone">Khu vực:</label>
                 <input type="text" id="zone" name="zone" required>
-                
-                <label for="zone">Shop Name:</label>
-                <input type="hidden" id="shop" name="shop" value="<%= shop.getShopName() %>" required>
-                <span class="input-info"><%= shop.getShopName() %></span>
+ 
             </div>
             
             <div class="button-container">

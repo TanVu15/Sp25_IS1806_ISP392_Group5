@@ -239,6 +239,18 @@ public class AddImportOrderServlet extends HttpServlet {
             String decription = spec[i].trim();
             int discount = Integer.parseInt(discounts[i].trim());
             int pId = dao2.getProductIdByNameAndShop(productName, user.getShopID());
+            
+            // Lấy giá nhập cũ từ Products
+                int oldImportPrice = dao2.getImportPrice(pId);
+
+                // Cập nhật giá nhập mới vào Products
+                dao2.updateImportPrice(pId, price);
+
+                // So sánh giá cũ và giá mới, lưu lịch sử nếu khác
+                if (oldImportPrice == -1 || oldImportPrice != price) {
+                    dao2.logPriceChange(pId, price, "import", user.getID());
+                }
+            
             java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
 
             // Tạo đối tượng OrderItems

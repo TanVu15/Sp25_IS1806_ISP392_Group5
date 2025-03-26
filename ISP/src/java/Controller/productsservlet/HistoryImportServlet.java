@@ -1,5 +1,6 @@
 package Controller.productsservlet;
 
+
 import dal.DAOProducts;
 import dal.DAOShops;
 import jakarta.servlet.RequestDispatcher;
@@ -15,7 +16,7 @@ import model.Users;
 import java.io.IOException;
 import java.util.List;
 
-public class HistoryExportServlet extends HttpServlet {
+public class HistoryImportServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -32,7 +33,7 @@ public class HistoryExportServlet extends HttpServlet {
             return;
         }
 
-        // Ph�n trang
+        // Phân trang
         int recordsPerPage = 5;
         int currentPage = 1;
         String pageParam = request.getParameter("page");
@@ -45,7 +46,7 @@ public class HistoryExportServlet extends HttpServlet {
             }
         }
 
-        // T�m ki?m v� l?c
+        // Tìm kiếm
         String keyword = request.getParameter("keyword");
         if (keyword == null) keyword = "";
         String startDate = request.getParameter("startDate");
@@ -55,11 +56,11 @@ public class HistoryExportServlet extends HttpServlet {
             sortOrder = "asc";
         }
 
-        // L?y t?ng s? b?n ghi v� danh s�ch
-        int totalRecords = dao.getTotalHistoryRecords(keyword, startDate, endDate, user.getID());
+        // Lấy tổng số bản ghi danh sách
+        int totalRecords = dao.getTotalImportHistoryRecords(keyword, startDate, endDate, user.getID());
         int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
         if (currentPage > totalPages && totalPages > 0) currentPage = totalPages; // ?i?u ch?nh n?u trang v??t qu�
-        List<ProductPriceHistory> historyList = dao.getExportPriceHistory(keyword, startDate, endDate, currentPage, recordsPerPage, user.getID(), sortOrder);
+        List<ProductPriceHistory> historyList = dao.getImportPriceHistory(keyword, startDate, endDate, currentPage, recordsPerPage, user.getID(), sortOrder);
 
         // Set attributes
         request.setAttribute("HistoryList", historyList);
@@ -69,12 +70,11 @@ public class HistoryExportServlet extends HttpServlet {
         request.setAttribute("startDate", startDate);
         request.setAttribute("endDate", endDate);
         request.setAttribute("sortOrder", sortOrder);
-        String message = "";
-        
+
       
 
         System.out.println("Total Records: " + totalRecords + ", Total Pages: " + totalPages + ", Current Page: " + currentPage + ", HistoryList Size: " + historyList.size());
-        request.getRequestDispatcher("ProductsManager/HistoryExport.jsp").forward(request, response);
+        request.getRequestDispatcher("ProductsManager/HistoryImport.jsp").forward(request, response);
     }
 
     @Override
