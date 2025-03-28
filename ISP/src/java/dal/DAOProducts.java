@@ -623,6 +623,25 @@ public class DAOProducts {
         }
         return historyList;
     }
+    
+    public List<Integer> getProductUnitsByProductID(int productID) {
+        List<Integer> unitSizes = new ArrayList<>();
+        String sql = "SELECT unitSize FROM ProductUnits WHERE ID = ? ORDER BY unitSize ASC";
+
+        try (PreparedStatement stmt = connect.prepareStatement(sql)) {
+
+            stmt.setInt(1, productID);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                unitSizes.add(rs.getInt("unitSize"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return unitSizes;
+    }
 
     public static void main(String[] args) throws Exception {
         DAOProducts dao = DAOProducts.INSTANCE;

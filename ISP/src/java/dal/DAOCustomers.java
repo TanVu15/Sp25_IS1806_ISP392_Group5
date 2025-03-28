@@ -276,6 +276,40 @@ public class DAOCustomers {
     }
     return false; // Trả về false nếu có lỗi hoặc không tìm thấy hóa đơn
 }
+    
+    
+    public ArrayList<Customers> findByNameOrPhone(String searchValue) {
+        ArrayList<Customers> customers = new ArrayList<>();
+        String sql = "SELECT * FROM customers WHERE (phone LIKE ? OR name LIKE ?) ";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, "%" + searchValue + "%"); // Tìm số điện thoại chứa searchPhone
+             ps.setString(2, "%" + searchValue + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Customers cs = new Customers();
+                cs.setID(rs.getInt("ID"));
+                cs.setWallet(rs.getInt("Wallet"));
+                cs.setName(rs.getString("Name"));
+                cs.setPhone(rs.getString("Phone"));
+                cs.setAddress(rs.getString("Address"));
+                cs.setShopID(rs.getInt("ShopID"));
+                cs.setBankAcc(rs.getString("BankAcc"));
+                cs.setCreateAt(rs.getDate("CreateAt"));
+                cs.setUpdateAt(rs.getDate("UpdateAt"));
+                cs.setCreateBy(rs.getInt("CreateBy"));
+                cs.setIsDelete(rs.getInt("isDelete"));
+                cs.setDeletedAt(rs.getDate("DeletedAt"));
+                cs.setDeleteBy(rs.getInt("DeleteBy"));
+                customers.add(cs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return customers;
+    }
 
     public static void main(String[] args) throws Exception {
         DAOCustomers dao = new DAOCustomers();
@@ -285,6 +319,7 @@ public class DAOCustomers {
         //dao.deleteCustomers(4, 1);
         //Customers cu = new Customers(0, 0, Name, Phone, Address, 0, BankAcc, today, today, 0, 0, today, 0);
         //dao.updateCustomers(cu);
+        System.out.println(dao.findByNameOrPhone("Việt"));
         
     }
 }
