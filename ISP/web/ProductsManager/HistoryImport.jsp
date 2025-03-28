@@ -1,8 +1,9 @@
 <%-- 
-    Document   : HistoryExport
-    Created on : Mar 24, 2025
-    Author     : [Your Name]
+    Document   : HistoryImport
+    Created on : Mar 25, 2025, 8:51:48 PM
+    Author     : ASUS
 --%>
+
 
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.ProductPriceHistory" %>
@@ -18,7 +19,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Lịch sử giá bán</title>
+        <title>Lịch sử giá nhập</title>
         <link rel="stylesheet" href="css/product.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
@@ -69,16 +70,15 @@
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
                         <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
-                        <li class="mainmenu__list-item"><a href="analysis"><i class="fa-solid fa-chart-simple list-item-icon"></i></i>Báo Cáo</a></li>
                         <li class="mainmenu__list-item"><a href="historyexport"><i class="fa-solid fa-history list-item-icon"></i>Lịch sử</a></li>
                     </ul>
                 </div>
 
                 <div class="homepage-body">
                     <div class="body-head">
-                        <h3 class="body__head-title">Lịch sử giá bán</h3>
+                        <h3 class="body__head-title">Lịch sử giá nhập</h3>
                         <div class="search-container">
-                            <form action="historyexport" method="get">
+                            <form action="historyimport" method="get">
                                 <input type="text" id="information" name="keyword" placeholder="Tìm kiếm sản phẩm..." class="search-input" value="<%= keyword != null ? keyword : "" %>">
                                 <label for="sortOrder">Sắp xếp:</label>
                                 <select id="sortOrder" class="sort-dropdown" name="sortOrder" onchange="this.form.submit();">
@@ -87,7 +87,7 @@
                                 </select>
                                 <label for="startDate">Từ ngày:</label>
                                 <input type="date" id="startDate" name="startDate" placeholder="Từ ngày..." class="date-input" value="<%= startDate != null ? startDate : "" %>">
-                                <label for="startDate">Đến ngày:</label>
+                                <label for="endDate">Đến ngày:</label>
                                 <input type="date" id="endDate" name="endDate" placeholder="Đến ngày..." class="date-input" value="<%= endDate != null ? endDate : "" %>">
                                 <input type="hidden" name="page" value="1">
                                 <button type="submit" class="search-button">Tìm kiếm</button>
@@ -108,23 +108,24 @@
                                     }
                                 };
                             </script>
-                            <a href="historyexport?page=1&sortOrder=asc" class="add-product-button">Xóa bộ lọc</a>
+                            <a href="historyimport?page=1&sortOrder=asc" class="add-product-button">Xóa bộ lọc</a>             
                         </div>
                     </div>
-                        <div style="text-align: right;">
-                            
+
+                    <div style="text-align: right;">
                         <button type="button" class ="add-product-button" onclick="exportToExcel()">Xuất Excel</button>
-                        <a href="historyimport" class="add-product-button">Lịch sử giá nhập</a>
+                        <a href="historyexport" class="add-product-button">Lịch sử giá bán</a>
                     </div>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>    
-                            
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+
                     <div class="table-container">
                         <table class="product-table">
                             <thead>
                                 <tr class="table-header">
                                     <th class="table-header-item">Hình ảnh</th>
                                     <th class="table-header-item">Tên sản phẩm</th>
-                                    <th class="table-header-item">Giá bán</th>
+                                    <th class="table-header-item">Giá nhập</th>
                                     <th class="table-header-item">Ngày thay đổi</th>
                                     <th class="table-header-item">Người thay đổi</th>
                                 </tr>
@@ -142,7 +143,7 @@
                                 </tr>
                                 <% } } else { %>
                                 <tr class="table-row">
-                                    <td colspan="5" class="table-cell" style="text-align: center;">Không có lịch sử giá bán nào.</td>
+                                    <td colspan="5" class="table-cell" style="text-align: center;">Không có lịch sử giá nhập nào.</td>
                                 </tr>
                                 <% } %>
                             </tbody>
@@ -153,7 +154,7 @@
                         <div class="pagination-controls">
                             <% 
                                 String searchTerm = (String) (keyword != null ? keyword : "");
-                                String pageUrl = "historyexport?";
+                                String pageUrl = "historyimport?";
                                 if (!searchTerm.isEmpty()) pageUrl += "keyword=" + searchTerm + "&";
                                 if (startDate != null && !startDate.isEmpty()) pageUrl += "startDate=" + startDate + "&";
                                 if (endDate != null && !endDate.isEmpty()) pageUrl += "endDate=" + endDate + "&";
@@ -179,17 +180,17 @@
                 <p>© 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
             </div>
         </div>
-                        <script>
+        <script>
             
             async function exportToExcel() {
                 try {
-                    let response = await fetch("excelexport");
+                    let response = await fetch("exportexcel");
                     let data = await response.json();
 
                     let worksheet = XLSX.utils.json_to_sheet(data.map(item => ({
                             "Tên sản phẩm": item.productName,
                             "Giá": item.price +" " + "VND",
-                            "Loại": item.priceType === "export" ? "Bán hàng" : item.priceType,
+                            "Loại": item.priceType === "import" ? "Nhập hàng" : item.priceType,
                             "Ngày thay đổi": item.changedAt,
                             "Người thay đổi": item.changedBy // Giờ đây là userName thay vì ID
                         })));

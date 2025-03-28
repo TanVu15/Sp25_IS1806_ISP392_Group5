@@ -16,13 +16,13 @@
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <link rel="stylesheet" href="css/add.css">  
-    <title>Cập Nhật Kho</title>  
+    <title>Cập Nhật Khu vực</title>  
     <link rel="stylesheet" href="css/product.css">  
 </head>  
 
 <body>  
     <div class="container">  
-        <h2>Cập Nhật Kho</h2>  
+        <h2>Cập Nhật Khu vực</h2>  
 
         <%  
             String errorMessage = (String) request.getAttribute("errorMessage");  
@@ -45,9 +45,7 @@
                 <label for="zone">Khu vực:</label>  
                 <input type="text" id="zone" name="zone" value="<%= z.getZoneName() %>" required>
                 
-                <label for="zone">Shop:</label>  
-                <input type="hidden" id="shop" name="shop" value="<%= z.getShopID() %>" required>
-                <span class="input-info" ><%= shop.getShopName() %></span>
+
             </div>  
             <div class="button-container">  
                 <input type="submit" class="btn add-button" value="Cập nhật">  

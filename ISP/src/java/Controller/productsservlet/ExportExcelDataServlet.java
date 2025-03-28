@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package Controller.zonesservlet;
+package Controller.productsservlet;
 
-import dal.DAOZones;
-import jakarta.servlet.RequestDispatcher;
+import dal.DAOProducts;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,15 +13,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.Customers;
-import model.Shops;
-import model.Zones;
+import java.util.List;
+import model.ProductPriceHistory;
+import model.Users;
 
 /**
  *
- * @author ASUS
+ * @author Admin
  */
-public class UpdateZoneServlet extends HttpServlet {
+public class ExportExcelDataServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +40,10 @@ public class UpdateZoneServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateZoneServlet</title>");
+            out.println("<title>Servlet ExportExcelDataServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdateZoneServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ExportExcelDataServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,30 +61,22 @@ public class UpdateZoneServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        DAOZones dao = new DAOZones();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
+        request.setAttribute("message", "");
+        Users user = (Users) session.getAttribute("user");
 
-        int zoneId = Integer.parseInt(request.getParameter("id"));
+        // Lấy toàn bộ dữ liệu (không phân trang)
+        List<ProductPriceHistory> historyList = DAOProducts.INSTANCE.getAllImportPriceHistory(user.getID());
 
-        try {
-            Zones zone = dao.getZonesByID(zoneId);
-            Shops shop = (Shops) session.getAttribute("shop");
-            if (shop.getID() != zone.getShopID()) {
-                request.getRequestDispatcher("logout").forward(request, response);
-                return;
-            }
-            request.setAttribute("z", zone);
-            request.getRequestDispatcher("ZoneManager/UpdateZones.jsp").forward(request, response);
-        } catch (Exception ex) {
-            ex.printStackTrace(); // In lỗi ra console
+        // Chuyển danh sách sang JSON
+        String json = new Gson().toJson(historyList);
 
-            // In lỗi trực tiếp lên trình duyệt
-            response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().println("<h2>Đã xảy ra lỗi!</h2>");
-            response.getWriter().println("<p><b>Chi tiết lỗi:</b> " + ex.getMessage() + "</p>");
-            response.getWriter().println("<a href='home.jsp'>Quay lại trang chủ</a>");
-        }
+        PrintWriter out = response.getWriter();
+        out.print(json);
+        out.flush();
     }
 
     /**
@@ -98,26 +90,7 @@ public class UpdateZoneServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        int zoneId = Integer.parseInt(request.getParameter("id"));
-        String zoneName = request.getParameter("zone");
-        Shops shop1 = (Shops) session.getAttribute("shop");
-        int shop = shop1.getID();
-
-        if ("".equals(zoneName)) {
-            request.setAttribute("message", "Hãy xem lại!");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("ZoneManager/UpdateZones.jsp");
-            dispatcher.forward(request, response);
-            return;
-        }
-        Zones zone = new Zones();
-        zone.setID(zoneId);
-        zone.setZoneName(zoneName);
-
-        DAOZones.INSTANCE.updateZones(zone);
-
-        // Chuyển hướng tới trang danh sách người dùng sau khi cập nhật thành công
-        response.sendRedirect("listzones");
+        processRequest(request, response);
     }
 
     /**

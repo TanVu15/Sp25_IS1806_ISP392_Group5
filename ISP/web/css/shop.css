@@ -30,8 +30,8 @@
 
 .home-logo {
     height: auto;
-    width: 128px;
-    margin-top: 8px;
+    max-width: 96px;
+    margin-top: 10px;
 }
 
 .header__navbar-item {

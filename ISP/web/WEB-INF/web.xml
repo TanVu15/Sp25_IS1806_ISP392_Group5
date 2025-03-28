@@ -186,12 +186,24 @@
         <servlet-class>Controller.analysis.AnalysisServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>SearchOrder</servlet-name>
+        <servlet-class>Controller.orderservlet.SearchOrder</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>HistoryExportServlet</servlet-name>
         <servlet-class>Controller.productsservlet.HistoryExportServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SearchOrder</servlet-name>
-        <servlet-class>Controller.orderservlet.SearchOrder</servlet-class>
+        <servlet-name>HistoryImportServlet</servlet-name>
+        <servlet-class>Controller.productsservlet.HistoryImportServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ExportExcelDataServlet</servlet-name>
+        <servlet-class>Controller.productsservlet.ExportExcelDataServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ExportExcelImportServlet</servlet-name>
+        <servlet-class>Controller.productsservlet.ExportExcelImportServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
@@ -338,12 +350,28 @@
         <url-pattern>/analysis</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>SearchOrder</servlet-name>
+        <url-pattern>/searchorder</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>HistoryExportServlet</servlet-name>
         <url-pattern>/historyexport</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SearchOrder</servlet-name>
-        <url-pattern>/searchorder</url-pattern>
+        <servlet-name>HistoryImportServlet</servlet-name>
+        <url-pattern>/historyimport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExportExcelDataServlet</servlet-name>
+        <url-pattern>/exportexcel</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExportExcelImportServlet</servlet-name>
+        <url-pattern>/excelexport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HistoryExportServlet</servlet-name>
+        <url-pattern>/pricechart</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Login/login.jsp</welcome-file>
