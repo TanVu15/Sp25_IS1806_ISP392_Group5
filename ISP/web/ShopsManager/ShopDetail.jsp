@@ -43,10 +43,12 @@
                 </a>
             </div>
             <div class="header__navbar-item navbar__user">
-                <span class="navbar__user--name"> <%= u.getFullName() %></span>
+                <span class="navbar__user--name">
+                    <%= u.getFullName()%>
+                </span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="userdetail?id=<%= u.getID() %>" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u.getID()%>"class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
