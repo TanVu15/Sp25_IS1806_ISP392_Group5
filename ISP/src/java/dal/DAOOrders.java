@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.sql.Date;
 import model.Customers;
 import java.sql.Statement;
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+import model.OrderItems;
 
 public class DAOOrders {
 
@@ -46,13 +49,12 @@ public class DAOOrders {
                 o.setUpdateAt(rs.getDate("UpdateAt"));
                 o.setCreateBy(rs.getInt("CreateBy"));
                 o.setIsDelete(rs.getInt("isDelete"));
-                o.setDeletedAt(rs.getDate("DeletedAt"));
                 o.setDeleteBy(rs.getInt("DeleteBy"));
+                o.setDeletedAt(rs.getDate("DeletedAt"));
                 orders.add(o);
-
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Handle SQL exceptions
+            e.printStackTrace();
         }
         return orders;
     }
@@ -97,8 +99,6 @@ public class DAOOrders {
         }
         return orderID;
     }
-
-    
 
     public void updateOrders(Orders orders) {
         String sql = "UPDATE Orders SET CustomerID = ?, UserID = ?, OrderItemID = ?, TotalAmount = ?, ShopID = ?, Status = ?, UpdateAt = ?, ImageLink = ?, Location = ? WHERE ID = ?";
@@ -155,67 +155,59 @@ public class DAOOrders {
 
     public ArrayList<Orders> getOrdersBySearch(String information) throws Exception {
         ArrayList<Orders> orders = new ArrayList<>();
-        String sql = "SELECT * FROM Orders"; // Lấy toàn bộ dữ liệu từ bảng Orders
+        String sql = "SELECT * FROM Orders";
 
         try (PreparedStatement statement = connect.prepareStatement(sql); ResultSet rs = statement.executeQuery()) {
 
+            // Chuẩn hóa chuỗi tìm kiếm: loại bỏ dấu và chuyển về chữ thường
+            String searchInput = normalizeString(information);
+            System.out.println("Search input (normalized): " + searchInput);
+
             while (rs.next()) {
-                Orders o = new Orders();
-                o.setID(rs.getInt("ID"));
-                o.setCustomerID(rs.getInt("CustomerID"));
-                o.setTotalAmount(rs.getFloat("TotalAmount"));
-                o.setShopID(rs.getInt("ShopID"));
-                o.setStatus(rs.getInt("status"));
-                o.setCreateAt(rs.getDate("CreateAt"));
-                o.setUpdateAt(rs.getDate("UpdateAt"));
-                o.setCreateBy(rs.getInt("CreateBy"));
-                o.setIsDelete(rs.getInt("isDelete"));
-                o.setDeleteBy(rs.getInt("DeleteBy"));
-                o.setDeletedAt(rs.getDate("DeletedAt"));
+                int customerID = rs.getInt("CustomerID");
+                Customers customer = DAOCustomers.INSTANCE.getCustomersByID(customerID);
+                String customerName = (customer != null && customer.getName() != null)
+                        ? normalizeString(customer.getName())
+                        : "";
 
-                // Lấy thông tin người tạo 
-                Users userCreate = DAO.INSTANCE.getUserByID(o.getCreateBy());
+                System.out.println("CustomerID: " + customerID + " | Name (normalized): " + customerName);
 
-                Customers customerOr = DAOCustomers.INSTANCE.getCustomersByID(o.getCustomerID());
-                String customerName = (customerOr != null) ? customerOr.getName() : "Unknown Customer";
+                if (customerName.contains(searchInput)) {
+                    Orders o = new Orders();
+                    o.setID(rs.getInt("ID"));
+                    o.setCustomerID(customerID);
+                    o.setTotalAmount(rs.getFloat("TotalAmount"));
+                    o.setShopID(rs.getInt("ShopID"));
+                    o.setStatus(rs.getInt("status"));
+                    o.setCreateAt(rs.getDate("CreateAt"));
+                    o.setUpdateAt(rs.getDate("UpdateAt"));
+                    o.setCreateBy(rs.getInt("CreateBy"));
+                    o.setIsDelete(rs.getInt("isDelete"));
+                    o.setDeleteBy(rs.getInt("DeleteBy"));
+                    o.setDeletedAt(rs.getDate("DeletedAt"));
 
-                // Tạo một chuỗi chứa toàn bộ thông tin của order
-                String orderData = (o.getCustomerID() + " "
-                        + customerName + " "
-                        + o.getShopID() + " "
-                        + o.getStatus() + " "
-                        + o.getCreateAt() + " "
-                        + o.getUpdateAt() + " "
-                        + userCreate.getFullName().toLowerCase() + " "
-                        + o.getIsDelete());
-                if(o.getStatus()==1){
-                    orderData+="Nhập hàng ";
-                }
-                if(o.getStatus()== -1){
-                    orderData+="Bán hàng ";
-                }
-                
-                // Lấy thông tin người xóa nếu có
-                if (o.getIsDelete() != 0) {
-                    Users userDelete = DAO.INSTANCE.getUserByID(o.getDeleteBy());
-                    orderData += ("xóa" + o.getIsDelete() + " "
-                            + o.getDeletedAt() + " "
-                            + userDelete.getFullName().toLowerCase());
-                } else {
-                    orderData += "Hoạt Động";
-                }
-
-                // Kiểm tra nếu information xuất hiện trong bất kỳ trường nào của order
-                if (orderData.toLowerCase().contains(information.toLowerCase())) {
+                    System.out.println("Match found for Order ID: " + o.getID());
                     orders.add(o);
                 }
             }
+            System.out.println("Total orders found: " + orders.size());
         } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
             e.printStackTrace();
         }
         return orders;
     }
-    
+
+// Phương thức chuẩn hóa chuỗi: loại bỏ dấu và chuyển về chữ thường
+    private String normalizeString(String input) {
+        if (input == null) {
+            return "";
+        }
+        String normalized = Normalizer.normalize(input.trim(), Normalizer.Form.NFD);
+        normalized = normalized.replaceAll("\\p{M}", "").toLowerCase();
+        return normalized;
+    }
+
     public int getTotalOrdersByShopId(int shopId) {
         String sql = "SELECT COUNT(*) FROM Orders WHERE ShopID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
@@ -242,17 +234,17 @@ public class DAOOrders {
 
             while (rs.next()) {
                 Orders o = new Orders();
-            o.setID(rs.getInt("ID"));
-            o.setCustomerID(rs.getInt("CustomerID"));
-            o.setTotalAmount(rs.getInt("TotalAmount"));
-            o.setShopID(rs.getInt("ShopID"));
-            o.setStatus(rs.getInt("status"));
-            o.setCreateAt(rs.getDate("CreateAt"));
-            o.setUpdateAt(rs.getDate("UpdateAt"));
-            o.setCreateBy(rs.getInt("CreateBy"));
-            o.setIsDelete(rs.getInt("isDelete"));
-            o.setDeleteBy(rs.getInt("DeleteBy"));
-            o.setDeletedAt(rs.getDate("DeletedAt"));
+                o.setID(rs.getInt("ID"));
+                o.setCustomerID(rs.getInt("CustomerID"));
+                o.setTotalAmount(rs.getInt("TotalAmount"));
+                o.setShopID(rs.getInt("ShopID"));
+                o.setStatus(rs.getInt("status"));
+                o.setCreateAt(rs.getDate("CreateAt"));
+                o.setUpdateAt(rs.getDate("UpdateAt"));
+                o.setCreateBy(rs.getInt("CreateBy"));
+                o.setIsDelete(rs.getInt("isDelete"));
+                o.setDeleteBy(rs.getInt("DeleteBy"));
+                o.setDeletedAt(rs.getDate("DeletedAt"));
                 order.add(o);
             }
         } catch (SQLException e) {
@@ -261,9 +253,55 @@ public class DAOOrders {
         return order;
     }
 
+    public int getTotalOrdersByShopIdAndStatus(int shopId, int status) {
+        int total = 0;
+        String sql = "SELECT COUNT(*) FROM Orders WHERE ShopID = ? AND Status = ?";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ps.setInt(2, status);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public ArrayList<Orders> getOrdersByPageAndStatus(int page, int ordersPerPage, int shopId, int status) {
+        ArrayList<Orders> orders = new ArrayList<>();
+        String sql = "SELECT * FROM Orders WHERE ShopID = ? AND Status = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ps.setInt(2, status);
+            ps.setInt(3, (page - 1) * ordersPerPage);
+            ps.setInt(4, ordersPerPage);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Orders order = new Orders();
+                order.setID(rs.getInt("ID"));
+                order.setCustomerID(rs.getInt("CustomerID"));
+                order.setTotalAmount(rs.getFloat("TotalAmount"));
+                order.setShopID(rs.getInt("ShopID"));
+                order.setStatus(rs.getInt("status"));
+                order.setCreateAt(rs.getDate("CreateAt"));
+                order.setUpdateAt(rs.getDate("UpdateAt"));
+                order.setCreateBy(rs.getInt("CreateBy"));
+                order.setIsDelete(rs.getInt("isDelete"));
+                order.setDeleteBy(rs.getInt("DeleteBy"));
+                order.setDeletedAt(rs.getDate("DeletedAt"));
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
     public static void main(String[] args) throws Exception {
         DAOOrders dao = new DAOOrders();
-        System.out.println(dao.getAllOrders());
+
         System.out.println("================");
         //dao.addOrders(orders, 0);
         DAOCustomers cus = new DAOCustomers();

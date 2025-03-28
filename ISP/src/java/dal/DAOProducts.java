@@ -305,16 +305,16 @@ public class DAOProducts {
         }
         return products;
     }
-    
+
     public ArrayList<Products> getAllProductsByShopId(int shopID) {
-    ArrayList<Products> productList = new ArrayList<>();
-    String query = "SELECT * FROM Products WHERE shopID = ?";
-    try (
-         PreparedStatement ps = connect.prepareStatement(query)) {
-        ps.setInt(1, shopID);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-             Products product = new Products();
+        ArrayList<Products> productList = new ArrayList<>();
+        String query = "SELECT * FROM Products WHERE shopID = ?";
+        try (
+                PreparedStatement ps = connect.prepareStatement(query)) {
+            ps.setInt(1, shopID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Products product = new Products();
                 product.setID(rs.getInt("ID"));
                 product.setProductName(rs.getString("ProductName"));
                 product.setDescription(rs.getString("Description"));
@@ -325,7 +325,7 @@ public class DAOProducts {
 //                productZone.setID(rs.getInt("ID"));
 //                productZone.setZoneName(rs.getString("ZoneName")); 
 //                product.setProductZone(productZone);
-                
+
                 product.setImageLink(rs.getString("ImageLink"));
                 product.setShopID(rs.getInt("ShopID"));
                 product.setCreateAt(rs.getDate("CreateAt"));
@@ -333,13 +333,12 @@ public class DAOProducts {
                 product.setCreateBy(rs.getInt("CreateBy"));
                 product.setIsDelete(rs.getInt("isDelete"));
                 productList.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return productList;
     }
-    return productList;
-}
-
 
 //    search product by name for order
     public ArrayList<Products> searchProductsByName(String productName) {
@@ -477,6 +476,29 @@ public class DAOProducts {
             stmt.setString(3, priceType);
             stmt.setInt(4, userId);
             stmt.setInt(5, storeId);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean logPriceChange1(int productId, int newPrice, String priceType, int userId, int supplierId) {
+        Integer storeId = getStoreIdByUserId(userId);
+        if (storeId == null) {
+            System.err.println("Không tìm thấy ShopID cho userId: " + userId);
+            return false;
+        }
+
+        String sql = "INSERT INTO ProductPriceHistory (productID, price, priceType, changedBy, ShopID, supplierID) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = connect.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            stmt.setInt(2, newPrice);
+            stmt.setString(3, priceType);
+            stmt.setInt(4, userId);
+            stmt.setInt(5, storeId);
+            stmt.setInt(6, supplierId);
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -623,7 +645,7 @@ public class DAOProducts {
         }
         return historyList;
     }
-    
+
     public List<Integer> getProductUnitsByProductID(int productID) {
         List<Integer> unitSizes = new ArrayList<>();
         String sql = "SELECT unitSize FROM ProductUnits WHERE ID = ? ORDER BY unitSize ASC";
@@ -680,14 +702,17 @@ public class DAOProducts {
         List<ProductPriceHistory> historyList = new ArrayList<>();
         int offset = (page - 1) * recordsPerPage;
         String sql = """
-            SELECT pph.historyID, pph.productID, p.productName, p.ImageLink AS image, 
-                   pph.price, pph.priceType, pph.changedAt, u.FullName AS changedBy
-            FROM ProductPriceHistory pph
-            JOIN Products p ON pph.productID = p.ID
-            JOIN Users u ON pph.changedBy = u.ID
-            WHERE p.ShopID = ? AND pph.priceType = 'import'
-                  AND p.productName COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ?
-        """;
+        SELECT pph.historyID, pph.productID, p.productName, p.ImageLink AS image, 
+               pph.price, pph.priceType, pph.changedAt, u.FullName AS changedBy,
+               pph.supplierID, c.Name AS supplierName
+        FROM ProductPriceHistory pph
+        JOIN Products p ON pph.productID = p.ID
+        JOIN Users u ON pph.changedBy = u.ID
+        LEFT JOIN Customers c ON pph.supplierID = c.ID
+        WHERE p.ShopID = ? AND pph.priceType = 'import'
+              AND (p.productName COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ? 
+                   OR c.Name COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ?)
+    """;
         if (startDate != null && !startDate.isEmpty()) {
             sql += " AND pph.changedAt >= ?";
         }
@@ -699,6 +724,7 @@ public class DAOProducts {
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             int paramIndex = 1;
             ps.setInt(paramIndex++, storeId);
+            ps.setString(paramIndex++, "%" + keyword + "%");
             ps.setString(paramIndex++, "%" + keyword + "%");
             if (startDate != null && !startDate.isEmpty()) {
                 ps.setString(paramIndex++, startDate + " 00:00:00");
@@ -718,7 +744,9 @@ public class DAOProducts {
                             rs.getInt("price"),
                             rs.getString("priceType"),
                             rs.getTimestamp("changedAt"),
-                            rs.getString("changedBy")
+                            rs.getString("changedBy"),
+                            rs.getInt("supplierID"), // supplierID là int
+                            rs.getString("supplierName") // supplierName là String
                     );
                     historyList.add(history);
                 }
@@ -737,12 +765,14 @@ public class DAOProducts {
         }
 
         String sql = """
-            SELECT COUNT(*) AS total
-            FROM ProductPriceHistory pph
-            JOIN Products p ON pph.productID = p.ID
-            WHERE p.ShopID = ? AND pph.priceType = 'import'
-                  AND p.productName COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ?
-        """;
+        SELECT COUNT(*) AS total
+        FROM ProductPriceHistory pph
+        JOIN Products p ON pph.productID = p.ID
+        LEFT JOIN Customers c ON pph.supplierID = c.ID
+        WHERE p.ShopID = ? AND pph.priceType = 'import'
+              AND (p.productName COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ? 
+                   OR c.Name COLLATE SQL_Latin1_General_CP1_CI_AI LIKE ?)
+    """;
         if (startDate != null && !startDate.isEmpty()) {
             sql += " AND pph.changedAt >= ?";
         }
@@ -753,6 +783,7 @@ public class DAOProducts {
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             int paramIndex = 1;
             ps.setInt(paramIndex++, storeId);
+            ps.setString(paramIndex++, "%" + keyword + "%");
             ps.setString(paramIndex++, "%" + keyword + "%");
             if (startDate != null && !startDate.isEmpty()) {
                 ps.setString(paramIndex++, startDate + " 00:00:00");
@@ -780,10 +811,12 @@ public class DAOProducts {
         List<ProductPriceHistory> historyList = new ArrayList<>();
         String sql = """
             SELECT pph.historyID, pph.productID, p.productName, p.ImageLink AS image, 
-                   pph.price, pph.priceType, pph.changedAt, u.FullName AS changedBy
+                   pph.price, pph.priceType, pph.changedAt, u.FullName AS changedBy,
+                   pph.supplierID, c.Name AS supplierName
             FROM ProductPriceHistory pph
             JOIN Products p ON pph.productID = p.ID
             JOIN Users u ON pph.changedBy = u.ID
+            LEFT JOIN Customers c ON pph.supplierID = c.ID
             WHERE p.ShopID = ? AND pph.priceType = 'import'
             ORDER BY pph.changedAt DESC
         """;
@@ -812,11 +845,13 @@ public class DAOProducts {
     }
 
     public List<ProductPriceHistory> getAllExportPriceHistory1(int userId) {
-    Integer storeId = getStoreIdByUserId(userId);
-    if (storeId == null) return new ArrayList<>();
+        Integer storeId = getStoreIdByUserId(userId);
+        if (storeId == null) {
+            return new ArrayList<>();
+        }
 
-    List<ProductPriceHistory> historyList = new ArrayList<>();
-    String sql = """
+        List<ProductPriceHistory> historyList = new ArrayList<>();
+        String sql = """
         SELECT pph.historyID, pph.productID, p.productName, p.ImageLink AS image, 
                pph.price, pph.priceType, pph.changedAt, u.Username AS changedBy
         FROM ProductPriceHistory pph
@@ -825,29 +860,30 @@ public class DAOProducts {
         WHERE p.ShopID = ? AND pph.priceType = 'export'
     """;
 
-    try (PreparedStatement ps = connect.prepareStatement(sql)) {
-        ps.setInt(1, storeId);
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                ProductPriceHistory history = new ProductPriceHistory(
-                        rs.getInt("historyID"),
-                        rs.getInt("productID"),
-                        rs.getString("productName"),
-                        rs.getString("image"),
-                        rs.getInt("price"),
-                        rs.getString("priceType"),
-                        rs.getTimestamp("changedAt"),
-                        rs.getString("changedBy")
-                );
-                historyList.add(history);
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, storeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ProductPriceHistory history = new ProductPriceHistory(
+                            rs.getInt("historyID"),
+                            rs.getInt("productID"),
+                            rs.getString("productName"),
+                            rs.getString("image"),
+                            rs.getInt("price"),
+                            rs.getString("priceType"),
+                            rs.getTimestamp("changedAt"),
+                            rs.getString("changedBy")
+                    );
+                    historyList.add(history);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        System.out.println("Số bản ghi từ DB: " + historyList.size()); // Thêm log
+        return historyList;
     }
-    System.out.println("Số bản ghi từ DB: " + historyList.size()); // Thêm log
-    return historyList;
-}
+
     public static void main(String[] args) throws Exception {
         DAOProducts dao = DAOProducts.INSTANCE;
 

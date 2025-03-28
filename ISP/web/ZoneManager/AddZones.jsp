@@ -47,7 +47,9 @@
             <div class="form-group">
                 <label for="zone">Khu vực:</label>
                 <input type="text" id="zone" name="zone" required>
- 
+                
+                <label for="description">Mô tả:</label>
+                <input type="text" id="description" name="description" required>
             </div>
             
             <div class="button-container">

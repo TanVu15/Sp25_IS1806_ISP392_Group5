@@ -44,7 +44,8 @@
                 <input type="hidden" name="id" value="<%= z.getID() %>">  
                 <label for="zone">Khu vực:</label>  
                 <input type="text" id="zone" name="zone" value="<%= z.getZoneName() %>" required>
-                
+                <label for="description">Mô tả:</label>  
+                <input type="text" id="description" name="description" placeholder="Nhập mô tả..." value="<%= z.getDescription() %>" required>
 
             </div>  
             <div class="button-container">  

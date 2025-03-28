@@ -65,14 +65,13 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Khu vực</a></li>
                         <li class="mainmenu__list-item"><a href="listorders"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
                         <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
-                        <li class="mainmenu__list-item"><a href="analysis"><i class="fa-solid fa-chart-simple list-item-icon"></i></i>Báo Cáo</a></li>
-                        <li class="mainmenu__list-item"><a href="historyexport"><i class="fa-solid fa-history list-item-icon"></i>Lịch sử</a></li>
+                        <li class="mainmenu__list-item"><a href="historyexport"><i class="fa-solid fa-history list-item-icon"></i>Lịch sử giá</a></li>
                     </ul>
                 </div>
 
@@ -102,7 +101,14 @@
                                     }
                                 };
                             </script>
-                            <a href="addzone" class="add-product-button">Thêm kho</a>
+                            <form action="listzones" method="get">
+                                <select name="sortBy" class="sort-dropdown" onchange="this.form.submit()">
+                                    <option class="dropdown-default" value="" disabled selected>Sắp xếp theo</option>
+                                    <option class="dropdown-value" value="name_asc">Tên A → Z</option>
+                                    <option class="dropdown-value" value="name_desc">Tên Z → A</option>
+                                </select>
+                            </form>
+                            <a href="addzone" class="add-product-button">Thêm khu vực</a>
                         </div>
                     </div>
                     <div class="table-container">
@@ -111,13 +117,13 @@
                                 <tr class="table-header">
 
                                     <th class="table-header-item">Khu vực</th>
+                                    <th class="table-header-item">Mô tả</th>
                                     <th class="table-header-item">Ngày tạo</th>
                                     <th class="table-header-item">Ngày cập nhật</th>
                                     <th class="table-header-item">Người tạo</th>
-                                    <th class="table-header-item">Ngày xóa</th>
-                                    <th class="table-header-item">Người xóa</th>
                                     <th class="table-header-item">Hành động</th>
                                     <th class="table-header-item">Trạng thái</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -128,21 +134,22 @@
                                 <tr class="table-row">
 
                                     <td class="table-cell"><%= cus.getZoneName() %></td>
+                                    <td class="table-cell"><%= cus.getDescription() %></td>
                                     <td class="table-cell"><%= cus.getCreateAt() %></td>
                                     <td class="table-cell"><%= cus.getUpdateAt() %></td>
                                     <td class="table-cell"><%= dao.getUserByID(cus.getCreateBy()).getFullName() %></td>
 
-                                    <td class="table-cell"><%= cus.getDeletedAt() %></td>
-                                    <td class="table-cell"><%= (cus.getIsDelete() == 0) ? "Null" : dao.getUserByID(cus.getDeleteBy()).getFullName() %></td>
+                                  
 
                                     <td class="table-cell">
                                         <button class="action-button" onclick="window.location.href = 'updatezone?id=<%= cus.getID() %>'">Sửa</button>
 
                                         <button class="action-button" onclick="if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
                                                     window.location.href = 'deletezone?deleteid=<%= cus.getID() %>&userid=<%= u.getID() %>';
-                                                }">Xóa</button>
+                                                }">Ban</button>
                                     </td>
                                     <td class="table-cell"><%= cus.getIsDelete() == 0 ? "Hoạt động" : "Khóa"%></td>
+                                   
 
                                 </tr>
                                 <% } 
