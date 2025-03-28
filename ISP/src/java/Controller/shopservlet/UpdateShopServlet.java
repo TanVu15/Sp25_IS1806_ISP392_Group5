@@ -87,6 +87,10 @@ public class UpdateShopServlet extends HttpServlet {
 
         try {
             shop = daoShop.getShopByID(user.getShopID());
+            if (shop.getID() != user.getShopID() && user.getRoleid() != 2) {
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("shop", shop);
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("ShopsManager/UpdateShop.jsp");
             requestDispatcher.forward(request, response);
