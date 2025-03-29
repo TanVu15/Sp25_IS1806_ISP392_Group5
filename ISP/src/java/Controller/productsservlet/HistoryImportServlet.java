@@ -34,7 +34,7 @@ public class HistoryImportServlet extends HttpServlet {
         }
 
         // Phân trang
-        int recordsPerPage = 5;
+        int recordsPerPage = 10;
         int currentPage = 1;
         String pageParam = request.getParameter("page");
         if (pageParam != null) {

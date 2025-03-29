@@ -11,6 +11,8 @@
 <%@ page import="dal.DAOUser" %>
 <%@ page import="model.Shops" %>
 <%@ page import="dal.DAOShops" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -37,6 +39,8 @@
             String startDate = (String) request.getAttribute("startDate");
             String endDate = (String) request.getAttribute("endDate");
             String sortOrder = (String) request.getAttribute("sortOrder");
+            
+            NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
 
             if (currentPage == null || totalPages == null) {
                 out.println("<script>alert('Không thể nhận được currentPage hoặc totalPages.');</script>");
@@ -64,13 +68,13 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Khu vực</a></li>
                         <li class="mainmenu__list-item"><a href="listorders"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
                         <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
-                        <li class="mainmenu__list-item"><a href="historyexport"><i class="fa-solid fa-history list-item-icon"></i>Lịch sử</a></li>
+                        <li class="mainmenu__list-item"><a href="historyexport"><i class="fa-solid fa-history list-item-icon"></i>Lịch sử giá</a></li>
                     </ul>
                 </div>
 
@@ -113,7 +117,6 @@
                     </div>
 
                     <div style="text-align: right;">
-                        <button type="button" class ="add-product-button" onclick="exportToExcel()">Xuất Excel</button>
                         <a href="historyexport" class="add-product-button">Lịch sử giá bán</a>
                     </div>
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -124,6 +127,7 @@
                             <thead>
                                 <tr class="table-header">
                                     <th class="table-header-item">Hình ảnh</th>
+                                    <th class="table-header-item">Nhà cung cấp</th>
                                     <th class="table-header-item">Tên sản phẩm</th>
                                     <th class="table-header-item">Giá nhập</th>
                                     <th class="table-header-item">Ngày thay đổi</th>
@@ -136,8 +140,9 @@
                                 %>
                                 <tr class="table-row">
                                     <td class="table-cell"><img src="<%= history.getImage() %>" alt="Ảnh sản phẩm" width="50" height="50"></td>
+                                    <td class="table-cell"><%= history.getSupplierName() != null ? history.getSupplierName() : "Không có" %></td>
                                     <td class="table-cell"><%= history.getProductName() %></td>
-                                    <td class="table-cell"><%= String.format("%d VND", history.getPrice()) %></td>
+                                    <td class="table-cell"><%= currencyFormat.format(history.getPrice()) + " VND"%></td>
                                     <td class="table-cell"><%= sdf.format(history.getChangedAt()) %></td>
                                     <td class="table-cell"><%= history.getChangedBy() %></td>
                                 </tr>
@@ -180,30 +185,6 @@
                 <p>© 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
             </div>
         </div>
-        <script>
-            
-            async function exportToExcel() {
-                try {
-                    let response = await fetch("exportexcel");
-                    let data = await response.json();
-
-                    let worksheet = XLSX.utils.json_to_sheet(data.map(item => ({
-                            "Tên sản phẩm": item.productName,
-                            "Giá": item.price +" " + "VND",
-                            "Loại": item.priceType === "import" ? "Nhập hàng" : item.priceType,
-                            "Ngày thay đổi": item.changedAt,
-                            "Người thay đổi": item.changedBy // Giờ đây là userName thay vì ID
-                        })));
-
-                    let workbook = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(workbook, worksheet, "LichSuGia");
-
-                    XLSX.writeFile(workbook, "LichSuGia.xlsx");
-                } catch (error) {
-                    console.error("Lỗi khi xuất Excel:", error);
-                    alert("Có lỗi xảy ra khi xuất Excel!");
-                }
-            }
-        </script>
+        
     </body>
 </html>

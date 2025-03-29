@@ -74,7 +74,7 @@ public class AddZoneServlet extends HttpServlet {
         
         response.setContentType("text/html;charset=UTF-8");
         String zone = request.getParameter("zone");
-        
+        String description = request.getParameter("description");
         if ( "".equals(zone)) {
             request.setAttribute("message", "Hãy xem lại!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("ZoneManager/AddZones.jsp");
@@ -93,6 +93,7 @@ public class AddZoneServlet extends HttpServlet {
                 Zones addzone = new Zones();
 
                 addzone.setZoneName(zone);
+                addzone.setDescription(description);
                 addzone.setShopID(user.getShopID());
                 dao.addZone(addzone, user.getID());
                 response.sendRedirect("listzones");

@@ -101,6 +101,7 @@ public class UpdateZoneServlet extends HttpServlet {
         HttpSession session = request.getSession();
         int zoneId = Integer.parseInt(request.getParameter("id"));
         String zoneName = request.getParameter("zone");
+        String description = request.getParameter("description"); // Lấy giá trị từ form
         Shops shop1 = (Shops) session.getAttribute("shop");
         int shop = shop1.getID();
 
@@ -112,7 +113,9 @@ public class UpdateZoneServlet extends HttpServlet {
         }
         Zones zone = new Zones();
         zone.setID(zoneId);
+        zone.setDescription(description); // Sử dụng giá trị từ form thay vì chuỗi cứng "description"
         zone.setZoneName(zoneName);
+        zone.setShopID(shop); // Thêm shopID để đảm bảo liên kết với shop đúng
 
         DAOZones.INSTANCE.updateZones(zone);
 
