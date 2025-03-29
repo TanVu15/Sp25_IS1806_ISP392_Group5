@@ -49,6 +49,7 @@ public class DAOCustomers {
                 cs.setPhone(rs.getString("Phone"));
                 cs.setAddress(rs.getString("Address"));
                 cs.setShopID(rs.getInt("ShopID"));
+                cs.setBankAcc(rs.getString("BankAcc"));
                 cs.setCreateAt(rs.getDate("CreateAt"));
                 cs.setUpdateAt(rs.getDate("UpdateAt"));
                 cs.setCreateBy(rs.getInt("CreateBy"));
@@ -78,13 +79,14 @@ public class DAOCustomers {
     }
 
     public void updateCustomers(Customers customers) {
-        String sql = "UPDATE Customers SET Name = ?,Phone = ? , Address = ?, UpdateAt = ? WHERE id = ?";
+        String sql = "UPDATE Customers SET Name = ?, Phone = ? , Address = ?, BankAcc = ?, UpdateAt = ? WHERE id = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, customers.getName());
             ps.setString(2, customers.getPhone());
             ps.setString(3, customers.getAddress());
-            ps.setDate(4, today);
-            ps.setInt(5, customers.getID());
+            ps.setDate(5, today);
+            ps.setString(4, customers.getBankAcc());
+            ps.setInt(6, customers.getID());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -106,6 +108,7 @@ public class DAOCustomers {
             cus.setPhone(rs.getString("Phone"));
             cus.setAddress(rs.getString("Address"));
             cus.setShopID(rs.getInt("ShopID"));
+            cus.setBankAcc(rs.getString("BankAcc"));
             cus.setCreateAt(rs.getDate("CreateAt"));
             cus.setUpdateAt(rs.getDate("UpdateAt"));
             cus.setCreateBy(rs.getInt("CreateBy"));
@@ -119,7 +122,7 @@ public class DAOCustomers {
     }
 
     public void AddCustomer(Customers customer, int userid) throws Exception {
-        String sql = "INSERT INTO Customers (Name, Phone, Address, CreateAt, CreateBy, isDelete, Wallet, shopid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ";
+        String sql = "INSERT INTO Customers (Name, Phone, Address, CreateAt, CreateBy, isDelete, Wallet, shopid, BankAcc) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, customer.getName());
             ps.setString(2, customer.getPhone());
@@ -129,6 +132,7 @@ public class DAOCustomers {
             ps.setInt(6, 0);
             ps.setInt(7, 0);
             ps.setInt(8, customer.getShopID());
+            ps.setString(9, customer.getBankAcc());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -151,6 +155,7 @@ public class DAOCustomers {
                 cs.setPhone(rs.getString("Phone"));
                 cs.setAddress(rs.getString("Address"));
                 cs.setShopID(rs.getInt("ShopID"));
+                cs.setBankAcc(rs.getString("BankAcc"));
                 cs.setCreateAt(rs.getDate("CreateAt"));
                 cs.setUpdateAt(rs.getDate("UpdateAt"));
                 cs.setCreateBy(rs.getInt("CreateBy"));
@@ -224,6 +229,7 @@ public class DAOCustomers {
                 cs.setPhone(rs.getString("Phone"));
                 cs.setAddress(rs.getString("Address"));
                 cs.setShopID(rs.getInt("ShopID"));
+                cs.setBankAcc(rs.getString("BankAcc"));
                 cs.setCreateAt(rs.getDate("CreateAt"));
                 cs.setUpdateAt(rs.getDate("UpdateAt"));
                 cs.setCreateBy(rs.getInt("CreateBy"));
@@ -328,32 +334,50 @@ public class DAOCustomers {
     }
     return 0;
 }
+    
+    
+    public ArrayList<Customers> findByNameOrPhone(String searchValue) {
+        ArrayList<Customers> customers = new ArrayList<>();
+        String sql = "SELECT * FROM customers WHERE (phone LIKE ? OR name LIKE ?) ";
+
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setString(1, "%" + searchValue + "%"); // Tìm số điện thoại chứa searchPhone
+             ps.setString(2, "%" + searchValue + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Customers cs = new Customers();
+                cs.setID(rs.getInt("ID"));
+                cs.setWallet(rs.getInt("Wallet"));
+                cs.setName(rs.getString("Name"));
+                cs.setPhone(rs.getString("Phone"));
+                cs.setAddress(rs.getString("Address"));
+                cs.setShopID(rs.getInt("ShopID"));
+                cs.setBankAcc(rs.getString("BankAcc"));
+                cs.setCreateAt(rs.getDate("CreateAt"));
+                cs.setUpdateAt(rs.getDate("UpdateAt"));
+                cs.setCreateBy(rs.getInt("CreateBy"));
+                cs.setIsDelete(rs.getInt("isDelete"));
+                cs.setDeletedAt(rs.getDate("DeletedAt"));
+                cs.setDeleteBy(rs.getInt("DeleteBy"));
+                customers.add(cs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return customers;
+    }
 
     public static void main(String[] args) throws Exception {
-         DAOCustomers dao = new DAOCustomers();
-    int customerId = 1; // Thay bằng ID thực tế từ cơ sở dữ liệu của bạn
-    int currentPage = 2;
-    int ordersPerPage = 5; // Số đơn hàng mỗi trang
-
-    // Kiểm tra tổng số đơn hàng của khách hàng
-    int totalOrders = dao.getTotalOrdersByCustomerId(customerId);
-    System.out.println("Tổng số đơn hàng của khách hàng có ID " + customerId + ": " + totalOrders);
-
-    // Kiểm tra danh sách đơn hàng theo phân trang
-    List<Orders> paginatedOrders = dao.getOrdersByCustomerId(customerId, currentPage, ordersPerPage);
-
-    // Kiểm tra và in ra kết quả
-    if (paginatedOrders.isEmpty()) {
-        System.out.println("Không tìm thấy đơn hàng nào cho khách hàng có ID = " + customerId);
-    } else {
-        System.out.println("Danh sách đơn hàng cho khách hàng ID = " + customerId + " (Trang " + currentPage + "):");
-        for (Orders order : paginatedOrders) {
-            System.out.println("Order ID: " + order.getID());
-            System.out.println("Total Amount: " + order.getTotalAmount());
-            System.out.println("Status: " + order.getStatus());
-            System.out.println("Created At: " + order.getCreateAt());
-            System.out.println("===================================");
-        }
-    }
+        DAOCustomers dao = new DAOCustomers();
+        dao.getAllCustomers();
+        System.out.println(dao.getCustomersByID(3));
+        System.out.println(dao.getAllCustomers());
+        //dao.deleteCustomers(4, 1);
+        //Customers cu = new Customers(0, 0, Name, Phone, Address, 0, BankAcc, today, today, 0, 0, today, 0);
+        //dao.updateCustomers(cu);
+        System.out.println(dao.findByNameOrPhone("Việt"));
+        
     }
 }

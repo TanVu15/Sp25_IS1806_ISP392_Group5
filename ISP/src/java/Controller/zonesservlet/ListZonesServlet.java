@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -77,7 +78,7 @@ public class ListZonesServlet extends HttpServlet {
         }
 
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-        int zonesPerPage = 5; // Số sản phẩm trên mỗi trang
+        int zonesPerPage = 10; // Số sản phẩm trên mỗi trang
 
         // Lấy tổng số sản phẩm cho shop hiện tại
         int totalZones = dao.getTotalZonesByShopId(user.getShopID());
@@ -85,6 +86,20 @@ public class ListZonesServlet extends HttpServlet {
 
         // Lấy danh sách sản phẩm cho trang hiện tại
         ArrayList<Zones> zones = dao.getZonesByPage(currentPage, zonesPerPage, user.getShopID());
+        
+        // Xử lý sắp xếp
+        String sortBy = request.getParameter("sortBy");
+            if (sortBy != null) {
+                switch (sortBy) {
+                    case "name_asc":
+                        zones.sort(Comparator.comparing(Zones::getZoneName));
+                        break;
+                    case "name_desc":
+                        zones.sort(Comparator.comparing(Zones::getZoneName).reversed());
+                        break;
+                }
+            }
+            request.setAttribute("sortBy", sortBy);
 
         // Thiết lập các thuộc tính cho JSP
         request.setAttribute("zones", zones);
@@ -109,7 +124,7 @@ public class ListZonesServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String information = request.getParameter("information");
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-        int zonesPerPage = 5;
+        int zonesPerPage = 10;
 
         DAOZones dao = new DAOZones();
         HttpSession session = request.getSession();

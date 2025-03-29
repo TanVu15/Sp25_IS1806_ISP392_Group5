@@ -251,7 +251,7 @@ public class AddImportOrderServlet extends HttpServlet {
 
                 // So sánh giá cũ và giá mới, lưu lịch sử nếu khác
                 if (oldImportPrice == -1 || oldImportPrice != price) {
-                    dao2.logPriceChange(pId, price, "import", user.getID());
+                    dao2.logPriceChange1(pId, price, "import", user.getID(), customerID);
                 }
             
             java.sql.Date today = new java.sql.Date(System.currentTimeMillis());

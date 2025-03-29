@@ -59,12 +59,14 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Khu vực</a></li>
                         <li class="mainmenu__list-item"><a href="listorders"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
-                        <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-user list-item-icon"></i>Cửa Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
+                        <li class="mainmenu__list-item"><a href="analysis"><i class="fa-solid fa-chart-simple list-item-icon"></i></i>Báo Cáo</a></li>
+                        <li class="mainmenu__list-item"><a href="historyexport"><i class="fa-solid fa-history list-item-icon"></i>Lịch sử giá</a></li>
                     </ul>
                 </div>
                 
@@ -122,8 +124,16 @@
                         <div class="user-info-item">
                             <span class="user-info-label">Ghi chú</span>
                             <span class="user-info-value"><%= debtrecords.getNote() %></span>
-                        </div>      
-                        <button class="action-button" onclick="window.location.href = 'listdebtrecords'">quay lại danh sách công nợ</button>
+                        </div>
+                                <%
+                                    if (debtrecords.getOrderID() != 0) {
+                                %>
+                                <button class="action-button" onclick="window.location.href = 'listorderitems?id=<%= debtrecords.getOrderID() %>'">Hóa đơn</button>
+                                <%
+                                    }
+                                %>
+                        <button class="action-button" onclick="window.location.href = 'customerdetail?customerid=<%= debtrecords.getCustomerID() %>'">khách hàng</button>
+                        <button class="action-button" onclick="window.location.href = 'listdebtrecords'">danh sách công nợ</button>
                         <%  
                                 } 
                         %>

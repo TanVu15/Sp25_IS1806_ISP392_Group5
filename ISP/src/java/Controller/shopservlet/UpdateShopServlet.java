@@ -82,11 +82,20 @@ public class UpdateShopServlet extends HttpServlet {
             requestDispatcher.forward(request, response);
             return;
         }
+        if (user.getShopID() != 0 || user.getRoleid() == 3) {
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("logout");
+            requestDispatcher.forward(request, response);
+            return;
+        }
         request.setAttribute("user", user);
         Shops shop = new Shops();
 
         try {
             shop = daoShop.getShopByID(user.getShopID());
+            if (shop.getID() != user.getShopID() && user.getRoleid() != 2) {
+                request.getRequestDispatcher("logout").forward(request, response);
+                return;
+            }
             request.setAttribute("shop", shop);
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("ShopsManager/UpdateShop.jsp");
             requestDispatcher.forward(request, response);

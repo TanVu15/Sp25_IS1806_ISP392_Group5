@@ -32,6 +32,7 @@ public class DAOZones {
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
                 z.setShopID(rs.getInt("shopid"));
+                z.setDescription("Description");
                 z.setProductID(rs.getInt("ProductID")); // Set ProductID
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
@@ -79,10 +80,10 @@ public void deleteZones(int deleteid) {
 
 
     public void updateZones(Zones zones) {
-        String sql = "UPDATE Zones SET ZoneName = ?, ProductID = ?, UpdateAt = ? WHERE ID = ?";
+        String sql = "UPDATE Zones SET ZoneName = ?, Description = ?, UpdateAt = ? WHERE ID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, zones.getZoneName());
-            ps.setInt(2, zones.getProductID()); // Update ProductID
+            ps.setString(2, zones.getDescription());
             ps.setDate(3, today);
             ps.setInt(4, zones.getID());
             ps.executeUpdate();
@@ -90,7 +91,6 @@ public void deleteZones(int deleteid) {
             System.err.println("Error updating zone: " + e.getMessage());
         }
     }
-    
 
     public Zones getZonesByID(int ID) {
         Zones z = null;
@@ -103,6 +103,7 @@ public void deleteZones(int deleteid) {
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
                 z.setShopID(rs.getInt("shopid"));
+                z.setDescription(rs.getString("Description"));
                 z.setProductID(rs.getInt("ProductID")); // Set ProductID
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
@@ -118,13 +119,14 @@ public void deleteZones(int deleteid) {
     }
 
     public void addZone(Zones zone, int userid) {
-        String sql = "INSERT INTO Zones (ZoneName, shopid, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Zones (ZoneName, shopid, Description, CreateAt, CreateBy, isDelete) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, zone.getZoneName());
             ps.setInt(2, zone.getShopID());
-            ps.setDate(3, today);
-            ps.setInt(4, userid);
-            ps.setInt(5, 0);
+            ps.setString(3, zone.getDescription());
+            ps.setDate(4, today);
+            ps.setInt(5, userid);
+            ps.setInt(6, 0);
             ps.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error adding zone: " + e.getMessage());
@@ -144,6 +146,7 @@ public void deleteZones(int deleteid) {
                 Zones z = new Zones();
                 z.setID(rs.getInt("ID"));
                 z.setZoneName(rs.getString("ZoneName"));
+                z.setDescription(rs.getString("Description"));
                 z.setShopID(rs.getInt("ShopID"));
                 z.setProductID(rs.getInt("ProductID")); // Set ProductID
                 z.setCreateAt(rs.getDate("CreateAt"));
@@ -159,7 +162,7 @@ public void deleteZones(int deleteid) {
         }
         return zones;
     }
-    
+
         public void updateZoneImportOrder(String zoneName,int ProductID, int shopid) {
         String sql = "UPDATE Zones SET ProductID = ? WHERE zoneName = ? And shopID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
@@ -171,8 +174,8 @@ public void deleteZones(int deleteid) {
             e.printStackTrace();
         }
     }
-        
-        public ArrayList<Zones> getZonesBySearch(String information) throws Exception {
+
+    public ArrayList<Zones> getZonesBySearch(String information) throws Exception {
         // Chuẩn hóa từ khóa tìm kiếm (bỏ dấu, chuyển thành chữ thường, xóa khoảng trắng thừa)
         String normalizedSearch = Normalizer.normalize(information, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
@@ -184,7 +187,7 @@ public void deleteZones(int deleteid) {
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 
         ArrayList<Zones> zones = new ArrayList<>();
-        String sql = "SELECT * FROM Zones WHERE isDelete = 0";
+        String sql = "SELECT * FROM Zones";
 
         try (PreparedStatement statement = connect.prepareStatement(sql); ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
@@ -192,6 +195,7 @@ public void deleteZones(int deleteid) {
                 z.setID(rs.getInt("ID"));
                 z.setShopID(rs.getInt("ShopID"));
                 z.setZoneName(rs.getString("ZoneName"));
+                z.setDescription(rs.getString("Description"));
                 z.setProductID(rs.getInt("ProductID"));
                 z.setCreateAt(rs.getDate("CreateAt"));
                 z.setUpdateAt(rs.getDate("UpdateAt"));
@@ -200,14 +204,22 @@ public void deleteZones(int deleteid) {
                 z.setDeletedAt(rs.getDate("DeletedAt"));
                 z.setDeleteBy(rs.getInt("DeleteBy"));
 
-                // Chuẩn hóa dữ liệu khu vực để tìm kiếm
-                String zoneData = Normalizer.normalize(z.getZoneName(), Normalizer.Form.NFD)
+                // Chuẩn hóa dữ liệu ZoneName để tìm kiếm
+                String zoneNameData = Normalizer.normalize(z.getZoneName(), Normalizer.Form.NFD)
                         .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
                         .replaceAll("đ", "d").replaceAll("Đ", "D")
                         .toLowerCase().replaceAll("\\s+", " ").trim();
 
-                // Kiểm tra nếu dữ liệu khớp với regex
-                if (pattern.matcher(zoneData).find()) {
+                // Chuẩn hóa dữ liệu Description để tìm kiếm (nếu null thì gán chuỗi rỗng)
+                String descriptionData = z.getDescription() != null
+                        ? Normalizer.normalize(z.getDescription(), Normalizer.Form.NFD)
+                                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                                .replaceAll("đ", "d").replaceAll("Đ", "D")
+                                .toLowerCase().replaceAll("\\s+", " ").trim()
+                        : "";
+
+                // Kiểm tra nếu ZoneName hoặc Description khớp với regex
+                if (pattern.matcher(zoneNameData).find() || pattern.matcher(descriptionData).find()) {
                     zones.add(z);
                 }
             }
@@ -218,7 +230,7 @@ public void deleteZones(int deleteid) {
     }
 
     public int getTotalZonesByShopId(int shopId) {
-        String sql = "SELECT COUNT(*) FROM Zones WHERE isDelete = 0 AND ShopID = ?";
+        String sql = "SELECT COUNT(*) FROM Zones WHERE ShopID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, shopId);
             ResultSet rs = ps.executeQuery();
@@ -233,7 +245,7 @@ public void deleteZones(int deleteid) {
 
     public ArrayList<Zones> getZonesByPage(int page, int zonesPerPage, int shopId) {
         ArrayList<Zones> zones = new ArrayList<>();
-        String sql = "SELECT * FROM Zones WHERE isDelete = 0 AND ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT * FROM Zones WHERE ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, shopId);
@@ -245,6 +257,7 @@ public void deleteZones(int deleteid) {
                 Zones zone = new Zones();
                 zone.setID(rs.getInt("ID"));
                 zone.setZoneName(rs.getString("ZoneName"));
+                zone.setDescription(rs.getString("Description"));
                 zone.setProductID(rs.getInt("ProductID"));
                 zone.setShopID(rs.getInt("ShopID"));
                 zone.setCreateAt(rs.getDate("CreateAt"));

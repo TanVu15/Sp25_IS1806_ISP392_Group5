@@ -45,24 +45,29 @@ public class UserDetailServlet extends HttpServlet {
         Users users = new Users();
         try {
             users = dao.getUserByID(userid);
-            if (user.getRoleid() != 1) {
-                int shopid = users.getShopID();
-                int shopid2 = user.getShopID();
-                if (users.getRoleid() > user.getRoleid()) {
-                    request.getRequestDispatcher("logout").forward(request, response);
-                    return;
-                }
+            int sessionRole = user.getRoleid(); // Role của người đang thao tác
+                int userRole = users.getRoleid(); // Role của người bị chỉnh sửa
+                int shopid = dao.getUserByID(userid).getShopID(); // Shop của người bị chỉnh sửa
+                int shopid2 = user.getShopID(); // Shop của người thao tác
 
-                if ((user.getRoleid() == 3) && users.getRoleid() != user.getRoleid()) {
-                    request.getRequestDispatcher("logout").forward(request, response);
-                    return;
-                }
+                    // Nếu người thao tác không phải là role 1, thì kiểm tra các điều kiện
+                if (sessionRole != 1) {
+                    // Role 3 chỉ có thể sửa người có role 3 cùng shopID
+                    if (sessionRole == 3) {
+                        if (userRole != 3 || shopid != shopid2) {
+                            request.getRequestDispatcher("logout").forward(request, response);
+                            return;
+                        }
+                    }
 
-                if (shopid != shopid2 && user.getRoleid() != 1) {
-                    request.getRequestDispatcher("logout").forward(request, response);
-                    return;
+                    // Role 2 chỉ có thể sửa role 2 hoặc 3 cùng shopID, không sửa được role 1
+                    if (sessionRole == 2) {
+                        if (userRole == 1 || shopid != shopid2) {
+                            request.getRequestDispatcher("logout").forward(request, response);
+                            return;
+                        }
+                    }
                 }
-            }
             request.setAttribute("users", users);
         } catch (Exception ex) {
             Logger.getLogger(UserDetailServlet.class.getName()).log(Level.SEVERE, null, ex);

@@ -34,7 +34,7 @@
             ArrayList<Customers> customers = (ArrayList<Customers>) request.getAttribute("customers");
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
         %>
-        
+
         <%
             Integer currentPage = (Integer) request.getAttribute("currentPage");
             Integer totalPages = (Integer) request.getAttribute("totalPages");
@@ -68,14 +68,14 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Kho</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Khu vực</a></li>
                         <li class="mainmenu__list-item"><a href="listorders"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
                         <li class="mainmenu__list-item"><a href="listusers"><i class="fa-solid fa-user list-item-icon"></i>Tài Khoản</a></li>
                         <li class="mainmenu__list-item"><a href="shopdetail"><i class="fa-solid fa-shop list-item-icon"></i>Cửa Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="analysis"><i class="fa-solid fa-chart-simple list-item-icon"></i></i>Báo Cáo</a></li>
-                        <li class="mainmenu__list-item"><a href="historyexport"><i class="fa-solid fa-history list-item-icon"></i>Lịch sử</a></li>
+                        <li class="mainmenu__list-item"><a href="historyexport"><i class="fa-solid fa-history list-item-icon"></i>Lịch sử giá</a></li>
                     </ul>
                 </div>
 
@@ -104,6 +104,13 @@
                                     }
                                 };
                             </script>
+                            <form action="listcustomers" method="get">
+                                <select name="sortBy" class="sort-dropdown" onchange="this.form.submit()">
+                                    <option class="dropdown-default" value="" disabled selected>Sắp xếp theo</option>
+                                    <option class="dropdown-value" value="name_asc">Tên A → Z</option>
+                                    <option class="dropdown-value" value="name_desc">Tên Z → A</option>
+                                </select>
+                            </form>
                             <a href="addcustomer" class="add-product-button">Thêm khách hàng</a>
                         </div>
                     </div>
@@ -129,7 +136,10 @@
                                     <td class="table-cell"><%= currencyFormat.format(cus.getWallet()) + " VND"%></td>
                                     <td class="table-cell"><%= cus.getPhone() %></td>
                                     <td class="table-cell">
+                                        <% if(u.getRoleid() != 3) { %>
                                         <button class="action-button" onclick="window.location.href = 'updatecustomer?id=<%= cus.getID() %>'">Chỉnh sửa</button>
+                                        <% } %>
+
                                         <button class="action-button" onclick="window.location.href = 'listcustomerdebtrecords?customerid=<%= cus.getID() %>'">Công nợ</button>
                                         <button class="action-button" onclick="window.location.href = 'customerdetail?customerid=<%= cus.getID() %>'">Chi tiết khách hàng</button>
                                         <button class="action-button" onclick="window.location.href = 'listcustomerorders?customerid=<%= cus.getID() %>'">Hóa Đơn</button>

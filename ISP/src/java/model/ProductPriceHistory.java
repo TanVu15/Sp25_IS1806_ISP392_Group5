@@ -1,19 +1,35 @@
 package model;
 
-import java.sql.Timestamp; 
+import java.sql.Timestamp;
 
 public class ProductPriceHistory {
     private int historyID;
     private int productID;
     private String productName;
     private String image;
-    private int price; 
+    private int price;
     private String priceType;
-    private Timestamp changedAt; 
+    private Timestamp changedAt;
     private String changedBy;
+    private int supplierID;
+    private String supplierName;
 
     public ProductPriceHistory() {
     }
+
+    public ProductPriceHistory(int historyID, int productID, String productName, String image, int price, String priceType, Timestamp changedAt, String changedBy, int supplierID, String supplierName) {
+        this.historyID = historyID;
+        this.productID = productID;
+        this.productName = productName;
+        this.image = image;
+        this.price = price;
+        this.priceType = priceType;
+        this.changedAt = changedAt;
+        this.changedBy = changedBy;
+        this.supplierID = supplierID;
+        this.supplierName = supplierName;
+    }
+    
 
     public ProductPriceHistory(int historyID, int productID, String productName, String image, int price, String priceType, Timestamp changedAt, String changedBy) {
         this.historyID = historyID;
@@ -25,7 +41,7 @@ public class ProductPriceHistory {
         this.changedAt = changedAt;
         this.changedBy = changedBy;
     }
-    
+
     public ProductPriceHistory(int productID, String productName, int price, String priceType, Timestamp changedAt, String changedBy) {
         this.productID = productID;
         this.productName = productName;
@@ -67,7 +83,7 @@ public class ProductPriceHistory {
         this.image = image;
     }
 
-    public int getPrice() { 
+    public int getPrice() {
         return price;
     }
 
@@ -83,11 +99,11 @@ public class ProductPriceHistory {
         this.priceType = priceType;
     }
 
-    public Timestamp getChangedAt() { 
+    public Timestamp getChangedAt() {
         return changedAt;
     }
 
-    public void setChangedAt(Timestamp changedAt) { 
+    public void setChangedAt(Timestamp changedAt) {
         this.changedAt = changedAt;
     }
 
@@ -98,4 +114,21 @@ public class ProductPriceHistory {
     public void setChangedBy(String changedBy) {
         this.changedBy = changedBy;
     }
-}
+
+    public int getSupplierID() {
+        return supplierID;
+    }
+
+    public void setSupplierID(int supplierID) {
+        this.supplierID = supplierID;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
+    
+    }
