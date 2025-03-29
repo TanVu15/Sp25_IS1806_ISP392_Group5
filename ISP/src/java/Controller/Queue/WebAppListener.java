@@ -16,7 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class WebAppListener implements ServletContextListener {
 
     public static final BlockingQueue<DebtRecords> debtQueue = new LinkedBlockingQueue<>();
-    private final ExecutorService executorService = Executors.newFixedThreadPool(5); // 5 luồng xử lý chính
+    private final ExecutorService executorService = Executors.newFixedThreadPool(1); // 1 luồng xử lý chính
     private final ExecutorService debtChecker = Executors.newSingleThreadExecutor(); // 1 luồng check lại mỗi 5 giây
     private final Lock lock = new ReentrantLock();
 
@@ -25,7 +25,6 @@ public class WebAppListener implements ServletContextListener {
         DAODebtRecords dao = new DAODebtRecords();
 
         // Luồng chính xử lý hàng đợi debtQueue
-        for (int i = 0; i < 5; i++) {
             executorService.submit(() -> {
                 while (true) {
                     try {
@@ -37,7 +36,7 @@ public class WebAppListener implements ServletContextListener {
                     }
                 }
             });
-        }
+        
 
         // Luồng phụ check lại các bản ghi chưa xử lý mỗi 5 giây
         debtChecker.submit(() -> {
