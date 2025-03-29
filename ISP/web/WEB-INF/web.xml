@@ -37,7 +37,6 @@
         <url-pattern>/listorders</url-pattern>
         <url-pattern>/addimportorder</url-pattern>
         <url-pattern>/addexportorder</url-pattern>
-        <url-pattern>/addorder</url-pattern>
         <url-pattern>/orderdetail</url-pattern>
         <url-pattern>/listorderitems</url-pattern>
     </filter-mapping>
@@ -168,10 +167,6 @@
     <servlet>
         <servlet-name>AddExportOrderServlet</servlet-name>
         <servlet-class>Controller.orderservlet.AddExportOrderServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>AddOrderServlet</servlet-name>
-        <servlet-class>Controller.orderservlet.AddOrderServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>OrderDetailServlet</servlet-name>
@@ -336,10 +331,6 @@
     <servlet-mapping>
         <servlet-name>AddExportOrderServlet</servlet-name>
         <url-pattern>/addexportorder</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AddOrderServlet</servlet-name>
-        <url-pattern>/addorder</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>OrderDetailServlet</servlet-name>

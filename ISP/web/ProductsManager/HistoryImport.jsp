@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
-        <% 
+        <%
             DAOUser dao = new DAOUser();
             DAOShops daoShop = new DAOShops();
             Shops shop = (Shops) session.getAttribute("shop");
@@ -39,7 +39,7 @@
             String startDate = (String) request.getAttribute("startDate");
             String endDate = (String) request.getAttribute("endDate");
             String sortOrder = (String) request.getAttribute("sortOrder");
-            
+
             NumberFormat currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
 
             if (currentPage == null || totalPages == null) {
@@ -48,13 +48,13 @@
         %>
         <div class="header">
             <div class="container">
-                <img src="<%= shop != null ? shop.getLogoShop() : "" %>" alt="logo" class="home-logo">
+                <img src="<%= shop != null ? shop.getLogoShop() : ""%>" alt="logo" class="home-logo">
             </div>
             <div class="header__navbar-item navbar__user">
-                <span class="navbar__user--name"><%= u != null ? u.getFullName() : "Khách" %></span>
+                <span class="navbar__user--name"><%= u != null ? u.getFullName() : "Khách"%></span>
                 <div class="navbar__user--info">
                     <div class="navbar__info--wrapper">
-                        <a href="userdetail?id=<%= u != null ? u.getID() : 0 %>" class="navbar__info--item">Tài khoản của tôi</a>
+                        <a href="userdetail?id=<%= u != null ? u.getID() : 0%>" class="navbar__info--item">Tài khoản của tôi</a>
                     </div>
                     <div class="navbar__info--wrapper">
                         <a href="logout" class="navbar__info--item">Đăng xuất</a>
@@ -80,25 +80,25 @@
 
                 <div class="homepage-body">
                     <div class="body-head">
-                        <h3 class="body__head-title">Lịch sử giá nhập</h3>
+
                         <div class="search-container">
                             <form action="historyimport" method="get">
-                                <input type="text" id="information" name="keyword" placeholder="Tìm kiếm sản phẩm..." class="search-input" value="<%= keyword != null ? keyword : "" %>">
+                                <input style="margin-right: 40px;" type="text" id="information" name="keyword" placeholder="Tìm kiếm sản phẩm..." class="search-input" value="<%= keyword != null ? keyword : ""%>">
                                 <label for="sortOrder">Sắp xếp:</label>
-                                <select id="sortOrder" class="sort-dropdown" name="sortOrder" onchange="this.form.submit();">
-                                    <option class="dropdown-value" value="asc" <%= "asc".equals(sortOrder) ? "selected" : "" %>>Cũ nhất → Mới nhất</option>
-                                    <option class="dropdown-value" value="desc" <%= "desc".equals(sortOrder) ? "selected" : "" %>>Mới nhất → Cũ nhất</option>
+                                <select style="margin-left: 0; margin-right: 30px;" id="sortOrder" class="sort-dropdown" name="sortOrder" onchange="this.form.submit();">
+                                    <option class="dropdown-value" value="asc" <%= "asc".equals(sortOrder) ? "selected" : ""%>>Cũ nhất → Mới nhất</option>
+                                    <option class="dropdown-value" value="desc" <%= "desc".equals(sortOrder) ? "selected" : ""%>>Mới nhất → Cũ nhất</option>
                                 </select>
                                 <label for="startDate">Từ ngày:</label>
-                                <input type="date" id="startDate" name="startDate" placeholder="Từ ngày..." class="date-input" value="<%= startDate != null ? startDate : "" %>">
+                                <input type="date" id="startDate" name="startDate" placeholder="Từ ngày..." class="date-input" value="<%= startDate != null ? startDate : ""%>">
                                 <label for="endDate">Đến ngày:</label>
-                                <input type="date" id="endDate" name="endDate" placeholder="Đến ngày..." class="date-input" value="<%= endDate != null ? endDate : "" %>">
+                                <input type="date" id="endDate" name="endDate" placeholder="Đến ngày..." class="date-input" value="<%= endDate != null ? endDate : ""%>">
                                 <input type="hidden" name="page" value="1">
                                 <button type="submit" class="search-button">Tìm kiếm</button>
                             </form>
                             <% String message = (String) request.getAttribute("message"); %>
-                            <% if (message != null && !message.isEmpty()) { %>
-                            <div id="toast-message" class="toast-message"><%= message %></div>
+                            <% if (message != null && !message.isEmpty()) {%>
+                            <div id="toast-message" class="toast-message"><%= message%></div>
                             <% } %>
                             <script>
                                 window.onload = function () {
@@ -112,14 +112,20 @@
                                     }
                                 };
                             </script>
-                            <a href="historyimport?page=1&sortOrder=asc" class="add-product-button">Xóa bộ lọc</a>             
+
                         </div>
                     </div>
 
-                    <div style="text-align: right;">
-                        <button type="button" class ="add-product-button" onclick="exportToExcel()">Xuất Excel</button>
-                        <a href="historyexport" class="add-product-button">Lịch sử giá bán</a>
+                    <div class="heading-title">
+                        <h3 class="body__head-title">Lịch sử giá nhập</h3>
+                        <div class="button-filter">
+                            <div>
+                                <a href="historyexport" class="add-product-button">Lịch sử giá bán</a>
+                            </div>
+                            <a href="historyimport?page=1&sortOrder=asc" class="add-product-button">Xóa bộ lọc</a> 
+                        </div>
                     </div>
+
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 
@@ -136,18 +142,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% if (historyList != null && !historyList.isEmpty()) { 
-                                    for (ProductPriceHistory history : historyList) {
+                                <% if (historyList != null && !historyList.isEmpty()) {
+                                        for (ProductPriceHistory history : historyList) {
                                 %>
                                 <tr class="table-row">
-                                    <td class="table-cell"><img src="<%= history.getImage() %>" alt="Ảnh sản phẩm" width="50" height="50"></td>
-                                    <td class="table-cell"><%= history.getSupplierName() != null ? history.getSupplierName() : "Không có" %></td>
-                                    <td class="table-cell"><%= history.getProductName() %></td>
+                                    <td class="table-cell"><img src="<%= history.getImage()%>" alt="Ảnh sản phẩm" width="50" height="50"></td>
+                                    <td class="table-cell"><%= history.getSupplierName() != null ? history.getSupplierName() : "Không có"%></td>
+                                    <td class="table-cell"><%= history.getProductName()%></td>
                                     <td class="table-cell"><%= currencyFormat.format(history.getPrice()) + " VND"%></td>
-                                    <td class="table-cell"><%= sdf.format(history.getChangedAt()) %></td>
-                                    <td class="table-cell"><%= history.getChangedBy() %></td>
+                                    <td class="table-cell"><%= sdf.format(history.getChangedAt())%></td>
+                                    <td class="table-cell"><%= history.getChangedBy()%></td>
                                 </tr>
-                                <% } } else { %>
+                                <% }
+                                } else { %>
                                 <tr class="table-row">
                                     <td colspan="5" class="table-cell" style="text-align: center;">Không có lịch sử giá nhập nào.</td>
                                 </tr>
@@ -158,23 +165,29 @@
                     <!-- Pagination -->
                     <div class="pagination">
                         <div class="pagination-controls">
-                            <% 
+                            <%
                                 String searchTerm = (String) (keyword != null ? keyword : "");
                                 String pageUrl = "historyimport?";
-                                if (!searchTerm.isEmpty()) pageUrl += "keyword=" + searchTerm + "&";
-                                if (startDate != null && !startDate.isEmpty()) pageUrl += "startDate=" + startDate + "&";
-                                if (endDate != null && !endDate.isEmpty()) pageUrl += "endDate=" + endDate + "&";
+                                if (!searchTerm.isEmpty()) {
+                                    pageUrl += "keyword=" + searchTerm + "&";
+                                }
+                                if (startDate != null && !startDate.isEmpty()) {
+                                    pageUrl += "startDate=" + startDate + "&";
+                                }
+                                if (endDate != null && !endDate.isEmpty()) {
+                                    pageUrl += "endDate=" + endDate + "&";
+                                }
                                 pageUrl += "sortOrder=" + (sortOrder != null ? sortOrder : "asc") + "&page=";
                             %>
                             <button 
                                 class="pagination-button" 
-                                <% if (currentPage <= 1) { %> disabled <% } %> 
-                                onclick="window.location.href = '<%= pageUrl %><%= currentPage - 1 %>'">Trước</button>
-                            <span class="pagination-info">Trang <%= currentPage %> / <%= totalPages %></span>
+                                <% if (currentPage <= 1) { %> disabled <% }%> 
+                                onclick="window.location.href = '<%= pageUrl%><%= currentPage - 1%>'">Trước</button>
+                            <span class="pagination-info">Trang <%= currentPage%> / <%= totalPages%></span>
                             <button 
                                 class="pagination-button" 
-                                <% if (currentPage >= totalPages) { %> disabled <% } %> 
-                                onclick="window.location.href = '<%= pageUrl %><%= currentPage + 1 %>'">Sau</button>
+                                <% if (currentPage >= totalPages) { %> disabled <% }%> 
+                                onclick="window.location.href = '<%= pageUrl%><%= currentPage + 1%>'">Sau</button>
                         </div>
                     </div>
                 </div>
@@ -186,6 +199,6 @@
                 <p>© 2025 Công ty TNHH G5. Tất cả quyền được bảo lưu.</p>
             </div>
         </div>
-        
+
     </body>
 </html>

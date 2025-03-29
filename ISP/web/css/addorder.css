@@ -10,7 +10,7 @@ body {
     gap: 20px;
     background: rgb(62,180,137);
     background: linear-gradient(159deg, rgba(62,180,137,1) 0%, rgba(144,238,144,1) 100%);
-
+    align-items: center;
 
 }
 
@@ -46,6 +46,7 @@ body {
 .invoice-details {
     flex: 2;
     min-width: 400px;
+    margin-left: 220px;
 }
 
 h2 {
@@ -257,4 +258,18 @@ th {
 }
 .hidden-column{
     display: none;
+}
+
+.addproduct-row{
+    background-color: white;
+    border-radius: 2px;
+    outline: none;
+    border: none;
+    margin-top: 8px;
+    padding: 4px;
+}
+
+.addproduct-row:hover{
+    cursor: pointer;
+    opacity: 0.8;
 }

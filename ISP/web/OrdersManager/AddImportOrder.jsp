@@ -124,11 +124,11 @@
                                 <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
                                 <td class="hidden-column"><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
                                 <td><input type="text" name="total" readonly></td>
-                                <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
+                                <td><button class="addproduct-row" type="button" onclick="deleteProductRow(this)">Xóa</button></td>
                             </tr>
                         </tbody>
                     </table>
-                    <button type="button" onclick="addProductRow()">Thêm Sản Phẩm</button>
+                    <button class="addproduct-row" type="button" onclick="addProductRow()">Thêm Sản Phẩm</button>
                 </div>
                 <script>
                     $(document).ready(function () {
@@ -263,7 +263,7 @@ function addProductRow() {
         <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
         <td class="hidden-column"><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
         <td><input type="text" name="total" readonly></td>
-        <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
+        <td><button class="addproduct-row" type="button" onclick="deleteProductRow(this)">Xóa</button></td>
     </tr>
     `;
 

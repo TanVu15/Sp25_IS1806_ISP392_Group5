@@ -79,12 +79,11 @@
 
                 <div class="homepage-body">
                     <div class="body-head">
-                        <h3 class="body__head-title">Lịch sử giá bán</h3>
                         <div class="search-container">
                             <form action="historyexport" method="get">
-                                <input type="text" id="information" name="keyword" placeholder="Tìm kiếm sản phẩm..." class="search-input" value="<%= keyword != null ? keyword : "" %>">
+                                <input style="margin-right: 40px;" type="text" id="information" name="keyword" placeholder="Tìm kiếm sản phẩm..." class="search-input" value="<%= keyword != null ? keyword : "" %>">
                                 <label for="sortOrder">Sắp xếp:</label>
-                                <select id="sortOrder" class="sort-dropdown" name="sortOrder" onchange="this.form.submit();">
+                                <select style="margin-left: 0; margin-right: 30px;" id="sortOrder" class="sort-dropdown" name="sortOrder" onchange="this.form.submit();">
                                     <option class="dropdown-value" value="asc" <%= "asc".equals(sortOrder) ? "selected" : "" %>>Cũ nhất → Mới nhất</option>
                                     <option class="dropdown-value" value="desc" <%= "desc".equals(sortOrder) ? "selected" : "" %>>Mới nhất → Cũ nhất</option>
                                 </select>
@@ -111,13 +110,17 @@
                                     }
                                 };
                             </script>
-                            <a href="historyexport?page=1&sortOrder=asc" class="add-product-button">Xóa bộ lọc</a>
+                           
                         </div>
                     </div>
-                        <div style="text-align: right;">
-                            
-                        <button type="button" class ="add-product-button" onclick="exportToExcel()">Xuất Excel</button>
-                        <a href="historyimport" class="add-product-button">Lịch sử giá nhập</a>
+                             <div class="heading-title">
+                        <h3 class="body__head-title">Lịch sử giá bán</h3>
+                        <div class="button-filter">
+                        <div>
+                           <a href="historyimport" class="add-product-button">Lịch sử giá nhập</a>
+                        </div>
+                             <a href="historyexport?page=1&sortOrder=asc" class="add-product-button">Xóa bộ lọc</a>
+                            </div>
                     </div>
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>    
                             

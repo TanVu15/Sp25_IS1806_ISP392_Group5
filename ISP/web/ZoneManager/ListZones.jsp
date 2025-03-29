@@ -122,7 +122,6 @@
                                     <th class="table-header-item">Ngày cập nhật</th>
                                     <th class="table-header-item">Người tạo</th>
                                     <th class="table-header-item">Hành động</th>
-                                    <th class="table-header-item">Trạng thái</th>
                                     
                                 </tr>
                             </thead>
@@ -148,7 +147,6 @@
                                                     window.location.href = 'deletezone?deleteid=<%= cus.getID() %>&userid=<%= u.getID() %>';
                                                 }">Ban</button>
                                     </td>
-                                    <td class="table-cell"><%= cus.getIsDelete() == 0 ? "Hoạt động" : "Khóa"%></td>
                                    
 
                                 </tr>

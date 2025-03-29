@@ -609,3 +609,14 @@ a {
     border-radius: 4px;
     font-size: 16px;
 }
+
+.heading-title{
+    display: flex;
+    margin-top: 20px;
+    margin-left: 8px;
+    justify-content: space-around;
+}
+
+.button-filter{
+    display: flex;
+}
