@@ -213,7 +213,7 @@ public class DAOProducts {
 
     public ArrayList<Products> getProductsByPage(int page, int productsPerPage, int shopId) {
         ArrayList<Products> products = new ArrayList<>();
-        String sql = "SELECT * FROM Products WHERE isDelete = 0 AND ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        String sql = "SELECT * FROM Products WHERE ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, shopId);
@@ -241,7 +241,38 @@ public class DAOProducts {
         }
         return products;
     }
+ 
+    // For staff screen
+        public ArrayList<Products> getProductsByPage2(int page, int productsPerPage, int shopId) {
+        ArrayList<Products> products = new ArrayList<>();
+        String sql = "SELECT * FROM Products WHERE IsDelete = 0 and ShopID = ? ORDER BY ID OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
+        try (PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, shopId);
+            ps.setInt(2, (page - 1) * productsPerPage);
+            ps.setInt(3, productsPerPage);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Products product = new Products();
+                product.setID(rs.getInt("ID"));
+                product.setProductName(rs.getString("ProductName"));
+                product.setDescription(rs.getString("Description"));
+                product.setPrice(rs.getInt("Price"));
+                product.setQuantity(rs.getInt("Quantity"));
+                product.setImageLink(rs.getString("ImageLink"));
+                product.setShopID(rs.getInt("ShopID"));
+                product.setCreateAt(rs.getDate("CreateAt"));
+                product.setUpdateAt(rs.getDate("UpdateAt"));
+                product.setCreateBy(rs.getInt("CreateBy"));
+                product.setIsDelete(rs.getInt("isDelete"));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
     public ArrayList<Products> getProductsBySearch(String information) throws Exception {
         information = information.toLowerCase();
         ArrayList<Products> products = new ArrayList<>();
@@ -284,27 +315,36 @@ public class DAOProducts {
     }
 
     // Method to get products by shop ID
-    public ArrayList<Products> getProductsByShopId(int shopID) throws SQLException {
-        ArrayList<Products> products = new ArrayList<>();
-        String sql = "SELECT * FROM Products WHERE ShopID = ?";
+     // Method to get products by shop ID
+   public ArrayList<Products> getProductsByShopId(int shopID) {
+    ArrayList<Products> products = new ArrayList<>();
+    String sql = "SELECT * FROM Products WHERE ShopID = ? AND isDelete = 0"; // Chỉ lấy sản phẩm chưa bị xóa
 
-        try (PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, shopID);
-            ResultSet rs = ps.executeQuery();
+    try (PreparedStatement ps = connect.prepareStatement(sql)) {
+        ps.setInt(1, shopID);
+        ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                Products product = new Products();
-                product.setID(rs.getInt("ID"));
-                product.setProductName(rs.getString("ProductName"));
-                product.setShopID(rs.getInt("ShopID"));
-                product.setQuantity(rs.getInt("Quantity"));
-                // Set other product properties as needed
-
-                products.add(product);
-            }
+        while (rs.next()) {
+            Products product = new Products();
+            product.setID(rs.getInt("ID"));
+            product.setProductName(rs.getString("ProductName"));
+            product.setDescription(rs.getString("Description"));
+            product.setPrice(rs.getInt("Price"));
+            product.setQuantity(rs.getInt("Quantity"));
+            product.setImageLink(rs.getString("ImageLink"));
+            product.setShopID(rs.getInt("ShopID"));
+            product.setCreateAt(rs.getDate("CreateAt"));
+            product.setUpdateAt(rs.getDate("UpdateAt"));
+            product.setCreateBy(rs.getInt("CreateBy"));
+            product.setIsDelete(rs.getInt("isDelete"));
+            
+            products.add(product);
         }
-        return products;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return products;
+}
 
 //    search product by name for order
     public ArrayList<Products> searchProductsByName(String productName) {
@@ -795,14 +835,19 @@ public class DAOProducts {
     return historyList;
 }
     public static void main(String[] args) throws Exception {
-        DAOProducts dao = DAOProducts.INSTANCE;
-
-        // Test update product with ID = 3
-        int productIdToUpdate = 3; // ID của sản phẩm cần cập nhật
-        Products productToUpdate = dao.getProductByID(productIdToUpdate);
-        int quantity = 400;
-        System.out.println(dao.getProductIdByNameAndShop("Gạo", 2));
-
+         DAOProducts dao = DAOProducts.INSTANCE;
+    int shopID = 2; // Giả sử shopID là 1
+    
+    ArrayList<Products> products = dao.getProductsByShopId(shopID);
+    
+    if (products.isEmpty()) {
+        System.out.println("Không có sản phẩm nào thuộc shop ID: " + shopID);
+    } else {
+        System.out.println("Danh sách sản phẩm thuộc shop ID: " + shopID);
+        for (Products product : products) {
+            System.out.println("ID: " + product.getID() + ", Tên: " + product.getProductName() + ", Giá: " + product.getPrice() + ", Số lượng: " + product.getQuantity());
+        }
+    }
     }
 
 }

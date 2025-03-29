@@ -158,7 +158,6 @@ public class DAOOrders {
         String sql = "SELECT * FROM Orders"; // Lấy toàn bộ dữ liệu từ bảng Orders
 
         try (PreparedStatement statement = connect.prepareStatement(sql); ResultSet rs = statement.executeQuery()) {
-
             while (rs.next()) {
                 Orders o = new Orders();
                 o.setID(rs.getInt("ID"));
@@ -260,19 +259,77 @@ public class DAOOrders {
         }
         return order;
     }
+    
+    public ArrayList<Orders> getOrdersBySearch(String information, Integer customerID) throws Exception {
+    information = information.toLowerCase();
+    ArrayList<Orders> orders = new ArrayList<>();
+    String sql = "SELECT * FROM Orders";
+    
+    // Nếu có customerID, thêm điều kiện lọc vào SQL
+    if (customerID != null) {
+        sql += " WHERE CustomerID = ?";
+    }
+
+    try (PreparedStatement statement = connect.prepareStatement(sql)) {
+        // Nếu có customerID, set giá trị cho câu lệnh SQL
+        if (customerID != null) {
+            statement.setInt(1, customerID);
+        }
+
+        try (ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                Orders order = new Orders();
+                order.setID(rs.getInt("ID"));
+                order.setCustomerID(rs.getInt("CustomerID"));
+                order.setTotalAmount(rs.getInt("TotalAmount"));
+                order.setShopID(rs.getInt("ShopID"));
+                order.setStatus(rs.getInt("Status"));
+                order.setCreateAt(rs.getDate("CreateAt"));
+                order.setUpdateAt(rs.getDate("UpdateAt"));
+                order.setCreateBy(rs.getInt("CreateBy"));
+                order.setIsDelete(rs.getInt("isDelete"));
+                order.setDeletedAt(rs.getDate("deletedAt"));
+                order.setDeleteBy(rs.getInt("deleteBy"));
+
+                // Lấy thông tin người tạo
+                Users userCreate = DAO.INSTANCE.getUserByID(order.getCreateBy());
+
+                // Chuỗi dữ liệu đơn hàng để kiểm tra tìm kiếm
+                String orderData = (order.getTotalAmount() + " "
+                        + order.getStatus() + " "
+                        + order.getCreateAt() + " "
+                        + order.getUpdateAt() + " "
+                        + userCreate.getFullName().toLowerCase() + " "
+                        + order.getIsDelete() + " ");
+
+                // Nếu đơn hàng bị xóa, lấy thêm thông tin người xóa
+                if (order.getIsDelete() != 0) {
+                    Users userDelete = DAO.INSTANCE.getUserByID(order.getDeleteBy());
+                    orderData += ("xóa " + order.getDeletedAt() + " " + userDelete.getFullName().toLowerCase());
+                } else {
+                    orderData += "Hoạt Động";
+                }
+
+                // Kiểm tra nếu thông tin tìm kiếm xuất hiện trong dữ liệu đơn hàng
+                if (orderData.toLowerCase().contains(information.toLowerCase())) {
+                    orders.add(order);
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return orders;
+}
+
 
     public static void main(String[] args) throws Exception {
         DAOOrders dao = new DAOOrders();
-        System.out.println(dao.getAllOrders());
-        System.out.println("================");
-        //dao.addOrders(orders, 0);
-        DAOCustomers cus = new DAOCustomers();
-
-        int id = cus.getCustomerIdByNameAndShop("Nguyen Van D", 2);
-        Orders orders = new Orders(2, id, 1000, 2, today, today, 3, 0, today, 0, 1);
-        //dao.addOrders(orders, 3);
-        System.out.println(dao.getOrderByID(1));
-        Customers c = new Customers();
-        System.out.println(cus.getCustomersByID(2).getName());
+         // Test 2: Tìm kiếm đơn hàng có chứa "2024" và thuộc về CustomerID = 5
+            System.out.println("\nTest 2: Tìm kiếm đơn hàng có chứa '2024' của CustomerID = 5");
+            ArrayList<Orders> result2 = dao.getOrdersBySearch("200", 1);
+            for (Orders order : result2) {
+                System.out.println(order);
+            }
     }
 }

@@ -255,3 +255,6 @@ th {
     from { opacity: 1; }
     to { opacity: 0; }
 }
+.hidden-column{
+    display: none;
+}

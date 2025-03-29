@@ -39,8 +39,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
         
         // Lấy danh sách sản phẩm cho trang hiện tại
+        if(user.getRoleid() == 2){
         ArrayList<Products> products = dao.getProductsByPage(currentPage, productsPerPage, user.getShopID());
-        
         // Xử lý sắp xếp
             if (sortBy != null) {
                 switch (sortBy) {
@@ -64,9 +64,39 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                         break;
                 }
             }
-            
+                request.setAttribute("products", products);
+        } 
+        else{
+           ArrayList<Products> products = dao.getProductsByPage2(currentPage, productsPerPage, user.getShopID());
+           // Xử lý sắp xếp
+            if (sortBy != null) {
+                switch (sortBy) {
+                    case "price_asc":
+                        products.sort(Comparator.comparingDouble(Products::getPrice));
+                        break;
+                    case "price_desc":
+                        products.sort(Comparator.comparingDouble(Products::getPrice).reversed());
+                        break;
+                    case "quantity_asc":
+                        products.sort(Comparator.comparingInt(Products::getQuantity));
+                        break;
+                    case "quantity_desc":
+                        products.sort(Comparator.comparingInt(Products::getQuantity).reversed());
+                        break;
+                    case "name_asc":
+                        products.sort(Comparator.comparing(Products::getProductName));
+                        break;
+                    case "name_desc":
+                        products.sort(Comparator.comparing(Products::getProductName).reversed());
+                        break;
+                }
+            }
+               request.setAttribute("products", products);
+        }
+        
+                    
         // Thiết lập các thuộc tính cho JSP
-        request.setAttribute("products", products);
+        
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("sortBy", sortBy);
@@ -101,6 +131,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         
         ArrayList<Products> products;
         try {
+         
             products = dao.getProductsBySearch(information);
             if (products == null || products.isEmpty()) {
                 request.setAttribute("message", "Không tìm thấy sản phẩm nào.");

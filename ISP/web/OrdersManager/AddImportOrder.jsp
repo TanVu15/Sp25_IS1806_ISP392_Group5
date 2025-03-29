@@ -58,7 +58,7 @@
                 <div class="invoice-info">
                     <div class="input-container">
                         <label for="customerName">Tên Khách Hàng:</label>
-                        <input class="input-info" type="text" id="customerName" name="customerName" list="customersList" placeholder="Tìm kiếm khách hàng." .." required>
+                        <input class="input-info" type="text" id="customerName" name="customerName" list="customersList" placeholder="Tìm kiếm khách hàng..." required>
                         <datalist id="customersList">
                             <%
                            if (customers != null && !customers.isEmpty()) {
@@ -80,23 +80,7 @@
                         <span class="input-info"><%= u.getFullName() %></span>
                     </div>
                 </div>
-                    
-                    <div class="search-container">
-                        <h2 class="search-heading">Tìm kiếm sản phẩm</h2>
-                        <input type="text" id="productSearch" list="productsList" placeholder="Nhập tên sản phẩm...">
-                        <datalist id="productsList">
-                            <%
-                           if (products != null && !products.isEmpty()) {
-                           for (Products produc : products) { 
-                                if(produc.getShopID() == u.getShopID()){
-                            %>
-                            <option value="ten san pham:<%= produc.getProductName() %> |
-                                    gia: <%= produc.getPrice() %> | 
-                                    so luong:<%= produc.getQuantity() %> " ></option>
-                            <% } } }%>
-                        </datalist>
-                    </div>
-        
+
                 <div class="product-list">
                     <table id="productTable">
                         <thead>
@@ -104,10 +88,10 @@
                                 <th>Tên Sản Phẩm</th>
                                 <th>Số Lượng</th>
                                 <th>Khu Vực</th>
-                                <th>Số kv</th>
+                                <th class="hidden-column">Số kv</th>
                                 <th>Quy Cách</th>
                                 <th>Giá Gốc</th>
-                                <th>Giảm giá</th>
+                                <th class="hidden-column">Giảm giá</th>
                                 <th>Thành Tiền</th>
                                 <th>Xóa</th>
                             </tr>
@@ -115,7 +99,7 @@
                         <tbody id="productList">
                             <tr>
                                 <td>
-                                    <select class="product-select" name="productName" multiple="multiple" required style="width: 100%;">
+                                    <select class="product-select" name="productName" required style="width: 100%;">
                                         <% 
                                           for (Products product : products) { 
                                                if(product.getShopID() == u.getShopID()) {
@@ -135,10 +119,10 @@
                                         <% } } %>
                                     </select>
                                 </td>
-                                <td><input type="number" class="zone-count-hidden" name="zoneCount" value="0" readonly></td>
+                                <td class="hidden-column"><input  type="number" class="zone-count-hidden" name="zoneCount" value="0" readonly></td>
                                 <td><input type="text" name="spec" placeholder="Kg/bao"></td>
                                 <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
-                                <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
+                                <td class="hidden-column"><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
                                 <td><input type="text" name="total" readonly></td>
                                 <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
                             </tr>
@@ -225,30 +209,15 @@
                             // Lấy giá trị các input
                             let quantityVal = $(this).find('input[name="quantity"]').val();
                             let priceVal = $(this).find('input[name="price"]').val();
-                            let discountVal = $(this).find('input[name="discount"]').val();
+                            let specVal = $(this).find('input[name="spec"]').val();
 
                             // Chuyển đổi về số, nếu rỗng thì thành 0
                             const quantity = quantityVal.trim() === "" ? 0 : parseInt(quantityVal);
                             const price = priceVal.trim() === "" ? 0 : parseFloat(priceVal);
-                            const discount = discountVal.trim() === "" ? 0 : parseFloat(discountVal);
-                            
-                            if (discount > price) {
-                                showToast("Giảm giá không thể lớn hơn giá gốc!");
-                                $(this).find('input[name="discount"]').val(0); // Đặt lại giá trị giảm giá
-                                isValid = false;
-                                }
-                                 function showToast(message) {
-                                var toast = $('<div class="toast-message">' + message + '</div>');
-                                $('body').append(toast);
-                                setTimeout(function () {
-                                    toast.fadeOut(500, function () {
-                                        $(this).remove();
-                                    });
-                                }, 3000);
-                                }
-                            
+                            const spec = specVal.trim() === "" ? 0 : parseInt(specVal);
+
                             // Tính thành tiền
-                            let totalPrice = (price * quantity) - discount;
+                            let totalPrice = (price * quantity * spec);
                             totalPrice = totalPrice < 0 ? 0 : totalPrice; // Không cho âm tiền
 
                             // Cập nhật ô thành tiền, định dạng kiểu số Việt Nam
@@ -283,16 +252,16 @@ function addProductRow() {
     const newRow = `
     <tr>
         <td>
-            <select class="product-select product-select" name="productName" multiple="multiple" required style="width: 100%;"></select>
+            <select class="product-select product-select" name="productName" required style="width: 100%;"></select>
         </td>
         <td><input type="number" name="quantity" min="1" required onchange="calculateTotal()"></td>
         <td>
             <select class="area-select zone-select" name="area" multiple="multiple" required style="width: 100%;"></select>
         </td>
-        <td><input type="number" class="zone-count-hidden" name="zoneCount" value="0" readonly></td>
+        <td class="hidden-column"><input type="number" class="zone-count-hidden" name="zoneCount" value="0" readonly></td>
         <td><input type="text" name="spec" placeholder="Kg/bao"></td>
         <td><input type="number" name="price" min="0" value="0" required onchange="calculateTotal()"></td>
-        <td><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
+        <td class="hidden-column"><input type="number" name="discount" min="0" value="0" onchange="calculateTotal()"></td>
         <td><input type="text" name="total" readonly></td>
         <td><button type="button" onclick="deleteProductRow(this)">Xóa</button></td>
     </tr>
@@ -301,11 +270,13 @@ function addProductRow() {
     $('#productList').append(newRow);
 
     // Gán lại Select2 cho phần tử mới được thêm vào
-    $('#productList tr:last .product-select').select2({
-        data: productList,
-        placeholder: "Chọn sản phẩm...",
-        allowClear: true
-    });
+   $('#productList tr:last .product-select').select2({
+    data: productList,
+    placeholder: "Chọn sản phẩm...",
+    allowClear: true,
+    maximumSelectionLength: 1 // Giới hạn chọn 1 sản phẩm
+});
+
 
     $('#productList tr:last .zone-select').select2({
         data: zoneList,
@@ -341,6 +312,25 @@ $("#invoiceForm").on("submit", function () {
         $(this).closest("tr").find(".zone-count-hidden").val(zoneCount);
     });
 });
+
+$(document).ready(function () {
+    // Tạo danh sách khách hàng với số điện thoại
+    const customersData = {
+        <% if (customers != null) { 
+            for (Customers customer1 : customers) { 
+                if (customer1.getShopID() == u.getShopID()) { %>
+        "<%= customer1.getName() %>": "<%= customer1.getPhone() %>",
+        <% } } } %>
+    };
+
+    // Khi chọn khách hàng, tự động điền số điện thoại
+    $("#customerName").on("change", function () {
+        let selectedCustomer = $(this).val();
+        let phone = customersData[selectedCustomer] || ""; // Lấy số điện thoại hoặc để trống nếu không tìm thấy
+        $("#customerPhone").val(phone);
+    });
+});
+
 
 
 

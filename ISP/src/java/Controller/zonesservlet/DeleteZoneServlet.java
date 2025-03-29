@@ -59,7 +59,7 @@ public class DeleteZoneServlet extends HttpServlet {
         int userid = Integer.parseInt(request.getParameter("userid"));
 
         try {
-            DAOZones.INSTANCE.deleteZones(deleteid, userid); 
+            DAOZones.INSTANCE.deleteZones(deleteid); 
             response.sendRedirect("listzones"); 
         } catch (Exception e) {
             e.printStackTrace();

@@ -139,6 +139,7 @@
                                     <th class="table-header-item" style="max-width: 30px">Số lượng</th>
                                     <th class="table-header-item">Vị trí</th>
                                     <th class="table-header-item" style="width: 180px">Mô tả</th>
+                                    <th class="table-header-item">Trạng Thái</th>
                                     <th class="table-header-item" style="width: 98px">Hành động</th>
                                 </tr>
                             </thead>
@@ -148,7 +149,7 @@
 
                                     for (Products product : products) {
                                         if (shop.getID() == product.getShopID()) {
-                                            if (product.getIsDelete() == 0) {
+                                           
                                                 // Lấy danh sách khu vực cho sản phẩm
                                                 String zoneDisplay = "Trống"; // Giá trị mặc định
                                                 ArrayList<Zones> zonesList = dao1.getZonesByProductId(product.getID());
@@ -168,17 +169,18 @@
                                     <td class="table-cell"><%= product.getProductName()%></td>
                                     <td class="table-cell"><%= currencyFormat.format(product.getPrice()) + " VND"%></td>
                                     <td class="table-cell"><%= product.getQuantity()%></td>
-                                    <td class="table-cell"><%= zoneDisplay%></td>
+                                    <td class="table-cell"><%= zoneDisplay%></td>                                    
                                     <td class="table-cell description" style="height: 80px"><%= product.getDescription()%></td>
+                                    <td class="table-cell"><%= product.getIsDelete() == 0 ? "Đang bán":"Ngừng bán"%></td>
                                     <td class="table-cell">
                                         <a href="updateproduct?id=<%= product.getID()%>" class="action-button">Sửa</a>
-                                        <button class="action-button" onclick="if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+                                        <button style="margin-top: 14px" class="action-button" onclick="if (confirm('Bạn có chắc chắn muốn ngừng bán sản phẩm này?')) {
                                                     window.location.href = 'deleteproduct?deleteid=<%= product.getID()%>&userid=<%= u.getID()%>';
-                                                }">Xóa</button>
+                                                }">Ngừng bán</button>
                                     </td>
                                 </tr>
                                 <%
-                                            }
+                                            
                                         }
 
                                     }

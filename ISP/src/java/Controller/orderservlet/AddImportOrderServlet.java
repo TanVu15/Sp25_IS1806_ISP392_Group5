@@ -8,6 +8,7 @@ import dal.DAOOrders;
 import dal.DAOProducts;
 import dal.DAOZones;
 import dal.DAODebtRecords;
+import dal.DAOShops;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -69,6 +70,7 @@ public class AddImportOrderServlet extends HttpServlet {
         DAOOrders dao = new DAOOrders();
         DAOCustomers dao1 = new DAOCustomers();
         DAOProducts dao2 = new DAOProducts();
+        DAOShops dao3 = new DAOShops();
         HttpSession session = request.getSession();
         request.setAttribute("message", "");
         Users user = (Users) session.getAttribute("user");
@@ -78,7 +80,8 @@ public class AddImportOrderServlet extends HttpServlet {
             requestDispatcher.forward(request, response);
             return;
         }
-
+        
+        int shopId = user.getShopID();
         // Lấy trang hiện tại từ tham số URL, mặc định là 1
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
         int productsPerPage = 5; // Số sản phẩm trên mỗi trang
@@ -91,7 +94,7 @@ public class AddImportOrderServlet extends HttpServlet {
         int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
 
         // Lấy danh sách sản phẩm cho trang hiện tại
-        ArrayList<Products> products = dao2.getProductsByPage(currentPage, productsPerPage, user.getShopID());
+        ArrayList<Products> products = dao2.getProductsByShopId(shopId);
         request.setAttribute("products", products);
 
         DAOZones zoneDAO = new DAOZones();

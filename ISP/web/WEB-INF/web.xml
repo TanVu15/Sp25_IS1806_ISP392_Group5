@@ -201,6 +201,10 @@
         <servlet-name>ExportExcelImportServlet</servlet-name>
         <servlet-class>Controller.productsservlet.ExportExcelImportServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ListCustomerOrders</servlet-name>
+        <servlet-class>Controller.customerservlet.ListCustomerOrders</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -365,10 +369,15 @@
         <servlet-name>HistoryExportServlet</servlet-name>
         <url-pattern>/pricechart</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ListCustomerOrders</servlet-name>
+        <url-pattern>/listcustomerorders</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
         <welcome-file>Login/login.jsp</welcome-file>
     </welcome-file-list>
     <listener>
         <listener-class>Controller.Queue.WebAppListener</listener-class>
     </listener>
+
 </web-app>

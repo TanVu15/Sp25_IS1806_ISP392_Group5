@@ -1,0 +1,171 @@
+.dashboard-header{
+    width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+
+.stat-box{
+background-color: #78ae39;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  height: 70px;
+  width: 160px;
+  margin: 10px;
+}
+
+
+.stat-boxe{
+background-color: #78ae39;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  height: 84px;
+  width: 160px;
+  margin: 10px;
+}
+
+.stat-boxe h3{
+  font-size: 18px;
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
+}
+
+.stat-boxe p{
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-top: 14px;
+  font-weight: 400;      
+}
+
+.stat-box h3{
+  font-size: 18px;
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
+}
+
+.stat-box p{
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-top: 18px;
+  font-weight: 400;    
+}
+
+.chart-container{
+    width: 100%;
+}
+
+.Chart-box{
+    display: flex;
+}
+
+.revenue-chart{
+    display: block;
+  box-sizing: border-box;
+  height: 231px;
+  width: 462px;
+  width: 500px;
+  height: auto;
+  border: 1px solid black;
+}
+
+.dashboard-box{
+    width: 100%;
+}
+
+.topsale-product{
+    width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+
+.dash-header{
+  background-color: green;
+  display: flex;
+  justify-content: center;
+  padding: 6px;
+  margin-bottom: 5px;
+  color: white;
+   width: 250px;
+   margin-left: 210px;
+  border-radius: 2px;
+  font-size: 14px;
+}
+
+.dash-header {
+    position: relative;
+    background: #3498db;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.dash-header::before,
+.dash-header::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-style: solid;
+    width: 0;
+    height: 0;
+}
+
+.dash-header::before {
+    left: -10px;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #3498db transparent transparent;
+}
+
+.dash-header::after {
+    right: -10px;
+    border-width: 10px 0 10px 10px;
+    border-color: transparent transparent transparent #3498db;
+}
+
+.slicer-container {
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 14px;
+    border-bottom: 1px solid #ccc;
+}
+
+.time-button{
+    display: flex;
+    justify-content: center;
+}
+.filter-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px 8px;
+}
+
+.filter-btn:hover {
+    background-color: #2980b9;
+}
+
+#startDate, #endDate {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.body-head{
+    padding:16px;
+}
