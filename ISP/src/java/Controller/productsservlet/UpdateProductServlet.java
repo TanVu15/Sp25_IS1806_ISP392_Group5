@@ -55,7 +55,6 @@ public class UpdateProductServlet extends HttpServlet {
             String description = request.getParameter("description");
             Part filePart = request.getPart("image");
         int price = Integer.parseInt(request.getParameter("price"));
-        int quantity = Integer.parseInt(request.getParameter("quantity"));
         String[] zoneIDs = request.getParameterValues("zoneIDs"); // Lấy danh sách ID khu vực
 
         if ( "".equals(productName) || zoneIDs == null) {
@@ -100,7 +99,6 @@ public class UpdateProductServlet extends HttpServlet {
             product.setDescription(description);
             product.setImageLink(imageLink);
             product.setPrice(price);
-            product.setQuantity(quantity);
 
             // Cập nhật sản phẩm
             DAOProducts.INSTANCE.updateProducts(product);

@@ -385,7 +385,8 @@ Author     : ADMIN
 
             // Giá gốc
             cell4.className = "text-center";
-            cell4.innerHTML = '<input type="number" name="price" class="price" value="' + price + '" readonly>';
+            cell4.innerHTML = '<span class="price">' + price + '</span>' +
+                                '<input type="hidden" name="price" value="' + price + '">';
 
             // Giảm giá
             cell5.className = "text-center";
@@ -394,8 +395,8 @@ Author     : ADMIN
             // Thành tiền
             cell6.className = "text-center total-price";
             cell6.innerHTML =
-                '<input type="hidden" name="totalPriceHidden" class="totalPriceHidden">' +
-                '<input type="text" name="totalPrice" class="totalPrice" readonly>';
+                            '<span class="totalPriceDisplay"></span>' +
+                            '<input type="hidden" name="totalPriceHidden" class="totalPriceHidden">';
 
             // Nút xóa
             cell7.className = "text-center";
@@ -454,7 +455,7 @@ Author     : ADMIN
             var discount = parseInt(discountInput.value) || 0;
 
             // Validate quantity against available stock
-            if (quantity > availableQuantity) {
+            if (quantity*unitMultiplier > availableQuantity) {
                 alert("Số lượng vượt quá số lượng tồn kho.");
                 quantityInput.value = availableQuantity; // Reset to max available
                 quantity = availableQuantity; // Update the quantity variable
@@ -471,7 +472,7 @@ Author     : ADMIN
             if (totalPrice < 0) totalPrice = 0;
 
             totalPriceHidden.value = totalPrice;
-            totalPriceInput.value = formatNumberVND(totalPrice);
+            row.querySelector(".totalPriceDisplay").innerText = formatNumberVND(totalPrice); // Hiển thị formatted number
             updateTotalOrderPrice();
         }
 

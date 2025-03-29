@@ -82,11 +82,11 @@
                    value="${product.price}" required>
         </div>
 
-        <div class="form-group">
-            <label for="quantity">Số lượng:</label>
-            <input type="number" id="quantity" name="quantity" class="form-control" 
-                   value="${product.quantity}" readonly>
-        </div>
+       <div class="form-group">
+    <label for="quantity">Số lượng:</label>
+    <span class="form-control" id="quantity">${product.quantity}</span>
+</div>
+
 
         <div class="form-group">
             <label for="zoneIDs">Khu vực:</label>

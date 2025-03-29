@@ -106,8 +106,16 @@ public class ListZonesServlet extends HttpServlet {
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
 
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("ZoneManager/ListZones.jsp");
-        requestDispatcher.forward(request, response);
+        // Chuyển đến trang dựa trên vai trò người dùng
+        if (user.getRoleid() == 1) {
+            request.getRequestDispatcher("listusers").forward(request, response);
+        } else if (user.getRoleid() == 2) {
+            request.getRequestDispatcher("ZoneManager/ListZones.jsp").forward(request, response);
+        } else if (user.getRoleid() == 3) {
+            request.getRequestDispatcher("ZoneManager/ListZoneForStaff.jsp").forward(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Không có quyền truy cập.");
+        }
     }
 
     /**

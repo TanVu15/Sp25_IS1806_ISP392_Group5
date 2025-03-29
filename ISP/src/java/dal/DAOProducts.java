@@ -86,15 +86,14 @@ public class DAOProducts {
     }
 
     public void updateProducts(Products product) {
-        String sql = "UPDATE Products SET ProductName = ?, Description = ?, Price = ?, Quantity = ?, UpdateAt = ?, ImageLink = ? WHERE ID = ?";
+        String sql = "UPDATE Products SET ProductName = ?, Description = ?, Price = ?, UpdateAt = ?, ImageLink = ? WHERE ID = ?";
         try (PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, product.getProductName());
             ps.setString(2, product.getDescription());
             ps.setInt(3, product.getPrice());
-            ps.setInt(4, product.getQuantity());
-            ps.setDate(5, today);
-            ps.setString(6, product.getImageLink());
-            ps.setInt(7, product.getID());
+            ps.setDate(4, today);
+            ps.setString(5, product.getImageLink());
+            ps.setInt(6, product.getID());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
