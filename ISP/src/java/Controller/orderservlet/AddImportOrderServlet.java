@@ -22,6 +22,7 @@ import java.sql.Date;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jdk.jfr.Description;
 import model.Customers;
 import model.DebtRecords;
 import model.OrderItems;
@@ -242,6 +243,7 @@ public class AddImportOrderServlet extends HttpServlet {
             String decription = spec[i].trim();
             int discount = Integer.parseInt(discounts[i].trim());
             int pId = dao2.getProductIdByNameAndShop(productName, user.getShopID());
+            int spec1 = Integer.parseInt(decription);
             
             // Lấy giá nhập cũ từ Products
                 int oldImportPrice = dao2.getImportPrice(pId);
@@ -272,7 +274,7 @@ public class AddImportOrderServlet extends HttpServlet {
             dao3.AddOrderItems(orderItem, user.getID());
 
             // Cập nhật số lượng sản phẩm trong kho
-            dao2.updateProductQuantity(productName, quantity, user.getShopID());
+            dao2.updateProductQuantity(productName, quantity*spec1, user.getShopID());
 
             // 🔹 **Xử lý nhiều khu vực**
             int zoneCount = Integer.parseInt(zoneCounts[i].trim());

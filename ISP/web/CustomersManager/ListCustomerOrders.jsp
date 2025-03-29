@@ -157,7 +157,7 @@
                                 <% }
                             } else { %>
                                 <tr>
-                                    <td colspan="5" class="table-cell">Không có đơn hàng nào.</td>
+                        
                                 </tr>
                                 <% } %>
                             </tbody>

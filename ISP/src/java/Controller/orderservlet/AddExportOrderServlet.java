@@ -201,7 +201,7 @@ public class AddExportOrderServlet extends HttpServlet {
                     orderItem.setCreateBy(user.getID());
 
                     dao3.AddOrderItems(orderItem, user.getID());
-                    dao2.updateProductQuantitydecre(productName, quantity, user.getShopID());
+                    dao2.updateProductQuantitydecre(productName, quantity*spec, user.getShopID());
 
                 } catch (NumberFormatException e) {
                     out.println("<h3 style='color:red;'>Lỗi định dạng số ở sản phẩm thứ " + (i + 1) + ": " + e.getMessage() + "</h3>");

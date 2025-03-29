@@ -73,7 +73,7 @@
                 <div class="mainmenu">
                     <ul class="mainmenu-list row no-gutters">
                         <li class="mainmenu__list-item"><a href="listproducts"><i class="fa-solid fa-bowl-rice list-item-icon"></i>Sản Phẩm</a></li>
-                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Khu vực</a></li>
+                        <li class="mainmenu__list-item"><a href="listzones"><i class="fa-solid fa-box list-item-icon"></i>Khu Vực</a></li>
                         <li class="mainmenu__list-item"><a href="listorders"><i class="fa-solid fa-dollar-sign list-item-icon"></i>Bán Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listcustomers"><i class="fa-solid fa-person list-item-icon"></i>Khách Hàng</a></li>
                         <li class="mainmenu__list-item"><a href="listdebtrecords"><i class="fa-solid fa-wallet list-item-icon"></i>Công Nợ</a></li>
@@ -132,7 +132,7 @@
                                     <th class="table-header-item" style="max-width: 24px">Mã sản phẩm</th>
                                     <th class="table-header-item">Tên sản phẩm</th>
                                     <th class="table-header-item">Giá tiền / KG</th>
-                                    <th class="table-header-item" style="max-width: 30px">Số lượng</th>
+                                    <th class="table-header-item" style="max-width: 30px">Số lượng(kg)</th>
                                     <th class="table-header-item">Vị trí</th>
                                     <th class="table-header-item" style="width: 180px">Mô tả</th>
                                 </tr>
