@@ -46,9 +46,10 @@ public class DebtRecordDetailServlet extends HttpServlet {
 
         request.setAttribute("message", "");
 
-        int debtid = Integer.parseInt(request.getParameter("debtid"));
+        
         DebtRecords debtrecords;
         try {
+            int debtid = Integer.parseInt(request.getParameter("debtid"));
             // lay customer đang cần
             debtrecords = dao.getDebtRecordByID(debtid);
             Shops shop = (Shops) session.getAttribute("shop");

@@ -50,9 +50,10 @@ public class ListDebtRecordDetailServlet extends HttpServlet {
             requestDispatcher.forward(request, response);
             return;
         }
-        int debtid = Integer.parseInt(request.getParameter("debtid"));
+        
         DebtRecords debtrecords;
         try {
+            int debtid = Integer.parseInt(request.getParameter("debtid"));
             debtrecords = dao.getDebtRecordByID(debtid);
             Shops shop = (Shops) session.getAttribute("shop");
             if (shop.getID() != debtrecords.getShopID() || debtrecords == null) {

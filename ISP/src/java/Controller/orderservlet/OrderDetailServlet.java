@@ -64,11 +64,12 @@ public class OrderDetailServlet extends HttpServlet {
         DAOOrders dao = new DAOOrders();
         HttpSession session = request.getSession();
         request.setAttribute("message", "");
-        int orderid = Integer.parseInt(request.getParameter("id"));
+        
         Users user = (Users) session.getAttribute("user");
         request.setAttribute("user", user);
         Orders orders = new Orders();
         try {
+            int orderid = Integer.parseInt(request.getParameter("id"));
             orders = dao.getOrderByID(orderid);
             request.setAttribute("order", orders);
         } catch (Exception ex) {

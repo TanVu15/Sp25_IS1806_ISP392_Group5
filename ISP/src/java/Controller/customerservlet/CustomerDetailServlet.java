@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package Controller.customerservlet;
 
 import Controller.debtrecordservlet.ListCustomerDebtRecordsServlet;
@@ -28,11 +27,11 @@ import model.Users;
  * @author ADMIN
  */
 public class CustomerDetailServlet extends HttpServlet {
-   
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -40,7 +39,7 @@ public class CustomerDetailServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         DAOCustomers dao = new DAOCustomers();
         DAOCustomers dao1 = new DAOCustomers();
         HttpSession session = request.getSession();
@@ -52,9 +51,10 @@ public class CustomerDetailServlet extends HttpServlet {
             requestDispatcher.forward(request, response);
             return;
         }
-        int customerID = Integer.parseInt(request.getParameter("customerid"));
         Customers customer = new Customers();
         try {
+            int customerID = Integer.parseInt(request.getParameter("customerid"));
+
             customer = dao1.getCustomersByID(customerID);
             Shops shop = (Shops) session.getAttribute("shop");
             if (shop.getID() != customer.getShopID() || customer == null) {
@@ -64,16 +64,17 @@ public class CustomerDetailServlet extends HttpServlet {
             request.setAttribute("customer", customer);
         } catch (Exception ex) {
             request.getRequestDispatcher("logout").forward(request, response);
-                return;
+            return;
         }
-        
+
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("CustomersManager/CustomerDetail.jsp");
         requestDispatcher.forward(request, response);
-    
-    } 
 
-    /** 
+    }
+
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -81,11 +82,12 @@ public class CustomerDetailServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

@@ -46,11 +46,11 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String sortBy = request.getParameter("sortBy");
         request.setAttribute("message", "");
-        int customerID = Integer.parseInt(request.getParameter("customerid"));
         Customers customer;
         try {
+            int customerID2 = Integer.parseInt(request.getParameter("customerid"));
             // lay customer đang cần
-            customer = dao1.getCustomersByID(customerID);
+            customer = dao1.getCustomersByID(customerID2);
             Shops shop = (Shops) session.getAttribute("shop");
             if (shop.getID() != customer.getShopID() || customer == null) {
                 request.getRequestDispatcher("logout").forward(request, response);
@@ -73,6 +73,8 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
         int totalPages = (int) Math.ceil((double) totalCustomer / debtsPerPage);
 
         // lay líst debt của customer
+        int customerID = Integer.parseInt(request.getParameter("customerid"));
+
         ArrayList<DebtRecords> debtrecords = dao.getCustomerDebtRecords(customerID);
         // Xử lý sắp xếp
         if (sortBy != null) {
@@ -85,7 +87,7 @@ public class ListCustomerDebtRecordsServlet extends HttpServlet {
                     break;
             }
         }
-        
+
         request.setAttribute("currentPage", currentPage);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("sortBy", sortBy);

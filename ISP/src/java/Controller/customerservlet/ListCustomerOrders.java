@@ -35,13 +35,14 @@ public class ListCustomerOrders extends HttpServlet {
         String sortBy = request.getParameter("sortBy");
         request.setAttribute("message", "");
         
-                int customerID = Integer.parseInt(request.getParameter("customerid"));
+                
         Customers customer;
 
         
           try {
+              int customerID2 = Integer.parseInt(request.getParameter("customerid"));
             // lay customer đang cần
-            customer = dao1.getCustomersByID(customerID);
+            customer = dao1.getCustomersByID(customerID2);
             Shops shop = (Shops) session.getAttribute("shop");
             if (shop.getID() != customer.getShopID() || customer == null) {
                 request.getRequestDispatcher("logout").forward(request, response);
@@ -62,6 +63,7 @@ public class ListCustomerOrders extends HttpServlet {
         int ordersPerPage = 10;
 
         // Lấy tổng số đơn hàng của khách hàng
+        int customerID = Integer.parseInt(request.getParameter("customerid"));
         int totalOrders = dao1.getTotalOrdersByCustomerId(customerID);
         int totalPages = (int) Math.ceil((double) totalOrders / ordersPerPage);
 
