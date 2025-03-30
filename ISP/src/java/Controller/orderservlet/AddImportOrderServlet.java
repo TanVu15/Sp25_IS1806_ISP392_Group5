@@ -118,67 +118,77 @@ public class AddImportOrderServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    response.setContentType("text/html;charset=UTF-8");
+    request.setCharacterEncoding("UTF-8");
+    HttpSession session = request.getSession();
+    Users user = (Users) session.getAttribute("user");
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        request.setCharacterEncoding("UTF-8");
-        HttpSession session = request.getSession();
-        Users user = (Users) session.getAttribute("user");
-        if (user == null) {
-            response.sendRedirect("login");
-            return;
-        }
+    if (user == null) {
+        response.sendRedirect("login");
+        return;
+    }
 
-        DAOOrders dao = new DAOOrders();
-        DAOCustomers dao1 = new DAOCustomers();
-        DAOProducts dao2 = new DAOProducts();
-        DAOOrderItem dao3 = new DAOOrderItem();
-        DAOZones dao4 = new DAOZones();
+    DAOOrders dao = new DAOOrders();
+    DAOCustomers dao1 = new DAOCustomers();
+    DAOProducts dao2 = new DAOProducts();
+    DAOOrderItem dao3 = new DAOOrderItem();
+    DAOZones dao4 = new DAOZones();
 
-        int shopID = user.getShopID();
+    int shopID = user.getShopID();
 
-        // Lấy dữ liệu từ form
-        String customerName = request.getParameter("customerName");
-        String totalCostRaw = request.getParameter("totalCost");
-        String orderTypeStr = request.getParameter("orderType");
-        String paymentStatus = request.getParameter("paymentStatus");
+    // Lấy dữ liệu từ form
+    String customerName = request.getParameter("customerName");
+    String totalCostRaw = request.getParameter("totalCost");
+    String orderTypeStr = request.getParameter("orderType");
+    String paymentStatus = request.getParameter("paymentStatus");
 
-        if (customerName == null || customerName.trim().isEmpty()
-                || totalCostRaw == null || totalCostRaw.trim().isEmpty()
-                || orderTypeStr == null || orderTypeStr.trim().isEmpty()) {
-            request.setAttribute("message", "Vui lòng nhập đầy đủ thông tin hóa đơn.");
-            request.getRequestDispatcher("OrdersManager/AddImportOrder.jsp").forward(request, response);
-            return;
-        }
+    // Kiểm tra các trường bắt buộc
+    if (customerName == null || customerName.trim().isEmpty()
+            || totalCostRaw == null || totalCostRaw.trim().isEmpty()
+            || orderTypeStr == null || orderTypeStr.trim().isEmpty()) {
+        request.setAttribute("message", "Vui lòng nhập đầy đủ thông tin hóa đơn.");
+        response.sendRedirect("addimportorder");
+        return;
+    }
 
-        int totalCost = Integer.parseInt(totalCostRaw.replace(".", "").trim());
-        int status = Integer.parseInt(orderTypeStr);
+    // Chuyển đổi dữ liệu
+    int totalCost;
+    int status;
+    try {
+        totalCost = Integer.parseInt(totalCostRaw.replace(".", "").trim());
+        status = Integer.parseInt(orderTypeStr);
+    } catch (NumberFormatException e) {
+        request.setAttribute("message", "Số tiền hoặc trạng thái đơn hàng không hợp lệ.");
+        request.getRequestDispatcher("OrdersManager/AddImportOrder.jsp").forward(request, response);
+        return;
+    }
 
-        int customerID = dao1.getCustomerIdByNameAndShop(customerName.trim(), shopID);
-        if (customerID == -1) {
-            request.setAttribute("message", "Không tìm thấy khách hàng với tên: " + customerName);
-            request.getRequestDispatcher("OrdersManager/AddImportOrder.jsp").forward(request, response);
-            return;
-        }
+    int customerID = dao1.getCustomerIdByNameAndShop(customerName.trim(), shopID);
+    if (customerID == -1) {
+        request.setAttribute("message", "Không tìm thấy khách hàng với tên: " + customerName);
+        request.getRequestDispatcher("OrdersManager/AddImportOrder.jsp").forward(request, response);
+        return;
+    }
 
-        // Tạo order mới
-        Orders order = new Orders();
-        order.setCustomerID(customerID);
-        order.setTotalAmount(totalCost);
-        order.setShopID(shopID);
-        order.setStatus(status);
+    // Tạo order mới
+    Orders order = new Orders();
+    order.setCustomerID(customerID);
+    order.setTotalAmount(totalCost);
+    order.setShopID(shopID);
+    order.setStatus(status);
 
-        // Lưu order vào DB và lấy ID
-        int id = dao.addOrdersreturnID(order, user.getID());
+    // Lưu order vào DB và lấy ID
+    int id = dao.addOrdersreturnID(order, user.getID());
 
-        // Xử lý thanh toán nếu có ghi nợ
-        if ("partial".equals(paymentStatus) || "none".equals(paymentStatus)) {
-            int amountOwed;
-            String note = "Ghi nợ từ hóa đơn chủ cửa hàng nhập kho ";
-            java.sql.Date invoiceDate = new java.sql.Date(System.currentTimeMillis());
+    // Xử lý thanh toán nếu có ghi nợ
+    if ("partial".equals(paymentStatus) || "none".equals(paymentStatus)) {
+        int amountOwed;
+        String note = "Ghi nợ từ hóa đơn nhập kho ";
+        java.sql.Date invoiceDate = new java.sql.Date(System.currentTimeMillis());
 
+        try {
             if ("partial".equals(paymentStatus)) {
                 String partialPaymentStr = request.getParameter("partialPayment");
                 int partialPayment = Integer.parseInt(partialPaymentStr);
@@ -198,105 +208,97 @@ public class AddImportOrderServlet extends HttpServlet {
                 debtRecord.setShopID(shopID);
                 debtRecord.setOrderID(id);
 
-                try {
-                    DAODebtRecords.INSTANCE.AddDebtRecords(debtRecord, user.getID());
-                } catch (Exception ex) {
-                    Logger.getLogger(AddImportOrderServlet.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                DAODebtRecords.INSTANCE.AddDebtRecords(debtRecord, user.getID());
             }
-        }
-
-        // Lấy danh sách sản phẩm từ form
-        String[] productNames = request.getParameterValues("productName");
-        String[] quantities = request.getParameterValues("quantity");
-        String[] prices = request.getParameterValues("price");
-        String[] spec = request.getParameterValues("spec");
-        String[] discounts = request.getParameterValues("discount");
-        String[] zoneNames = request.getParameterValues("area");
-        String[] zoneCounts = request.getParameterValues("zoneCount"); // Lấy số lượng khu vực
-        int zoneIndex = 0;
-
-        // Kiểm tra dữ liệu đầu vào
-        if (productNames == null || quantities == null || prices == null || discounts == null || spec == null) {
-            out.println("<h3 style='color:red;'>Lỗi: Dữ liệu đầu vào bị thiếu.</h3>");
+        } catch (Exception e) {
+            request.setAttribute("message", "Lỗi khi xử lý thanh toán: " + e.getMessage());
+            request.getRequestDispatcher("OrdersManager/AddImportOrder.jsp").forward(request, response);
             return;
         }
+    }
 
-        // vòng for here!
-        for (int i = 0; i < productNames.length; i++) {
-            // Kiểm tra từng phần tử không được null hoặc rỗng
+    // Lấy danh sách sản phẩm từ form
+    String[] productNames = request.getParameterValues("productName");
+    String[] quantities = request.getParameterValues("quantity");
+    String[] prices = request.getParameterValues("price");
+    String[] spec = request.getParameterValues("spec");
+    String[] discounts = request.getParameterValues("discount");
+    String[] zoneNames = request.getParameterValues("area");
+    String[] zoneCounts = request.getParameterValues("zoneCount");
 
+    if (productNames == null || quantities == null || prices == null || discounts == null || spec == null) {
+        request.setAttribute("message", "Vui lòng nhập đầy đủ thông tin sản phẩm.");
+       response.sendRedirect("addimportorder");
+        return;
+    }
+
+    int zoneIndex = 0;
+
+    for (int i = 0; i < productNames.length; i++) {
+        try {
             if (productNames[i].trim().isEmpty()
                     || quantities[i].trim().isEmpty()
                     || prices[i].trim().isEmpty()
                     || discounts[i].trim().isEmpty()
                     || spec[i].trim().isEmpty()) {
-
-                out.println("<h3 style='color:red;'>Lỗi1: Thiếu thông tin sản phẩm thứ " + (i + 1) + ".</h3>");
-                return;
+                throw new IllegalArgumentException("Thiếu thông tin sản phẩm thứ " + (i + 1));
             }
 
-            // Chuyển đổi dữ liệu từ chuỗi sang số
             String productName = productNames[i].trim();
             int quantity = Integer.parseInt(quantities[i].trim());
             int price = Integer.parseInt(prices[i].trim());
-            String decription = spec[i].trim();
             int discount = Integer.parseInt(discounts[i].trim());
+            int spec1 = Integer.parseInt(spec[i].trim());
             int pId = dao2.getProductIdByNameAndShop(productName, user.getShopID());
-            int spec1 = Integer.parseInt(decription);
-            
-            // Lấy giá nhập cũ từ Products
-                int oldImportPrice = dao2.getImportPrice(pId);
 
-                // Cập nhật giá nhập mới vào Products
-                dao2.updateImportPrice(pId, price);
+            int oldImportPrice = dao2.getImportPrice(pId);
+            dao2.updateImportPrice(pId, price);
 
-                // So sánh giá cũ và giá mới, lưu lịch sử nếu khác
-                if (oldImportPrice == -1 || oldImportPrice != price) {
-                    dao2.logPriceChange1(pId, price, "import", user.getID(), customerID);
-                }
-            
+            if (oldImportPrice == -1 || oldImportPrice != price) {
+                dao2.logPriceChange1(pId, price, "import", user.getID(), customerID);
+            }
+
             java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
 
-            // Tạo đối tượng OrderItems
             OrderItems orderItem = new OrderItems();
             orderItem.setOrderID(id);
             orderItem.setProductName(productName);
             orderItem.setQuantity(quantity);
             orderItem.setPrice(price);
-            orderItem.setUnitPrice(discount); // Đảm bảo đơn giá hợp lệ
-            orderItem.setDescription(decription);
+            orderItem.setUnitPrice(discount);
+            orderItem.setDescription(spec[i].trim());
             orderItem.setShopID(shopID);
             orderItem.setCreateAt(today);
             orderItem.setCreateBy(user.getID());
 
-            // Thêm vào database
             dao3.AddOrderItems(orderItem, user.getID());
+            dao2.updateProductQuantity(productName, quantity * spec1, user.getShopID());
 
-            // Cập nhật số lượng sản phẩm trong kho
-            dao2.updateProductQuantity(productName, quantity*spec1, user.getShopID());
-
-            // 🔹 **Xử lý nhiều khu vực**
             int zoneCount = Integer.parseInt(zoneCounts[i].trim());
 
-            // Cập nhật zoneCount vào sản phẩm nếu cần
             if (zoneNames != null && zoneCount > 0) {
                 for (int j = 0; j < zoneCount; j++) {
                     if (zoneIndex >= zoneNames.length) {
-                        break; // Đảm bảo không vượt quá mảng
+                        break;
                     }
                     String zoneName = zoneNames[zoneIndex].trim();
                     dao4.updateZoneImportOrder(zoneName, pId, shopID);
-                    zoneIndex++; // Chuyển sang khu vực tiếp theo
+                    zoneIndex++;
                 }
             }
-
+        } catch (NumberFormatException e) {
+            request.setAttribute("message", "Lỗi định dạng dữ liệu sản phẩm: " + e.getMessage());
+            response.sendRedirect("addimportorder");
+            return;
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("message", e.getMessage());
+            response.sendRedirect("addimportorder");
+            return;
         }
-
-        // Chuyển hướng về danh sách đơn hàng
-        response.sendRedirect("listorders");
-
     }
+
+    response.sendRedirect("listorders");
+}
 
     /**
      * Returns a short description of the servlet.
