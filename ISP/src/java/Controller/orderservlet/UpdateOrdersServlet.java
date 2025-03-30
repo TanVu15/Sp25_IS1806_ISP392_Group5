@@ -31,8 +31,8 @@ public class UpdateOrdersServlet extends HttpServlet {
             request.setAttribute("order", order);
             request.getRequestDispatcher("OrdersManager/UpdateOrders.jsp").forward(request, response);
         } catch (Exception ex) {
-            request.setAttribute("errorMessage", "Không tìm thấy đơn hàng.");
-            request.getRequestDispatcher("OrdersManager/UpdateOrders.jsp").forward(request, response);
+            request.getRequestDispatcher("logout").forward(request, response);
+                return;
         }
     }
 

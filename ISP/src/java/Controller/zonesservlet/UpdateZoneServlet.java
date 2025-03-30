@@ -79,11 +79,8 @@ public class UpdateZoneServlet extends HttpServlet {
         } catch (Exception ex) {
             ex.printStackTrace(); // In lỗi ra console
 
-            // In lỗi trực tiếp lên trình duyệt
-            response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().println("<h2>Đã xảy ra lỗi!</h2>");
-            response.getWriter().println("<p><b>Chi tiết lỗi:</b> " + ex.getMessage() + "</p>");
-            response.getWriter().println("<a href='home.jsp'>Quay lại trang chủ</a>");
+            request.getRequestDispatcher("logout").forward(request, response);
+                return;
         }
     }
 

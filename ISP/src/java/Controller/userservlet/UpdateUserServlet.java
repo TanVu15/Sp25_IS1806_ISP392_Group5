@@ -74,6 +74,8 @@ public class UpdateUserServlet extends HttpServlet {
             request.setAttribute("user", user);
             request.getRequestDispatcher("UsersManager/UpdateUser.jsp").forward(request, response);
         } catch (Exception ex) {
+            request.getRequestDispatcher("logout").forward(request, response);
+                return;
         }
 
     }
