@@ -168,7 +168,7 @@ Author     : ADMIN
                             <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <input type="text" class="search-input" id="searchCustomerInput" placeholder="Tìm khách hàng theo SĐT...">
+                            <input type="text" class="search-input" id="searchCustomerInput" placeholder="Tìm khách hàng theo SĐT..." required="re">
                         </div>
 
                         <div class="search-results" id="suggestionsCustomer" style="display: none;">
@@ -198,12 +198,12 @@ Author     : ADMIN
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">
-                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
                             <path d="M9 6L9 7C9 8.65685 10.3431 10 12 10C13.6569 10 15 8.65685 15 7V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M15 10C16.6569 10 18 8.65685 18 7V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M9 6C7.34315 6 6 7.34315 6 9V11.7C5.4022 12.0906 5.00003 12.7342 5.00003 13.5C5.00003 14.0906 5.20586 14.6272 5.54578 15.0511L5.0368 18.7812C5.01438 18.9031 5.00003 19.0294 5.00003 19.1572C5.00003 20.1784 5.82163 21 6.84277 21H17.1573C18.1784 21 19 20.1784 19 19.1572C19 19.0294 18.9857 18.9031 18.9632 18.7812L18.4542 15.0511C18.7942 14.6272 19 14.0906 19 13.5C19 12.7342 18.5978 12.0906 18 11.7V9C18 7.34315 16.6569 6 15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
-                        Tìm Kiếm Sản Phẩm
+                        Tìm Kiếm Sản Phẩm 
                     </h2>
                 </div>
                 <div class="card-content">
@@ -212,7 +212,7 @@ Author     : ADMIN
                             <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <input type="text" class="search-input" id="search" placeholder="Nhập tên sản phẩm...">
+                            <input type="text" class="search-input" id="search" placeholder="Nhập tên sản phẩm..." required="">
                         </div>
 
                         <div class="search-results" id="suggestions" style="display: none;">
