@@ -171,7 +171,7 @@ public class AddExportOrderServlet extends HttpServlet {
                     OrderItems orderItem = new OrderItems();
                     orderItem.setOrderID(id);
                     orderItem.setProductName(productName);
-                    orderItem.setQuantity(quantity);
+                    orderItem.setQuantity(quantity*spec);
                     orderItem.setPrice(price);
                     orderItem.setUnitPrice(unitPrice);
                     orderItem.setDescription(String.valueOf(spec));
