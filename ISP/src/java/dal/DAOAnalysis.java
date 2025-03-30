@@ -1,3 +1,5 @@
+
+
 package dal;
 
 import java.sql.Connection;
@@ -228,7 +230,7 @@ public List<Integer> getFilteredMonthlyRevenue(String startDate, String endDate)
         System.out.println("Doanh thu theo từng tháng: " + monthlyRevenue);
 
         System.out.println("\n===== Kiểm tra Top 3 sản phẩm bán chạy =====");
-        List<Map<String, Object>> topProducts = dao.getTop3SellingProductsByDateRange("2025-02-28", "2025-03-28");
+        List<Map<String, Object>> topProducts = dao.getTop3SellingProductsByDateRange("2025-02-28", "2025-03-30");
         for (Map<String, Object> product : topProducts) {
             System.out.println("Sản phẩm: " + product.get("ProductName"));
             System.out.println("Số lượng bán: " + product.get("TotalQuantity"));

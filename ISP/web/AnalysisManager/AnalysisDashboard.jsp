@@ -172,7 +172,7 @@
                                     <div class="stat-boxe">
                     <h3><%= product.get("ProductName") %></h3>
                         <p>Doanh thu: <%= NumberFormat.getInstance(new Locale("vi", "VN")).format(product.get("TotalRevenue")) %> VND</p>
-                        <p>Số lượng: <%= product.get("TotalQuantity") %></p>
+                        <p>Số lượng: <%= product.get("TotalQuantity") %>kg</p>
                 </div>
     <%
          }

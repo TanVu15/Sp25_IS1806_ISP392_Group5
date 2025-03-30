@@ -20,7 +20,7 @@ background-color: #78ae39;
 .stat-boxe{
 background-color: #78ae39;
   color: white;
-  padding: 10px;
+  padding: 22px;
   border-radius: 4px;
   height: 84px;
   width: 160px;
@@ -29,7 +29,7 @@ background-color: #78ae39;
 
 .stat-boxe h3{
   font-size: 18px;
-  margin-top: 4px;
+  margin-top: 2px;
   display: flex;
   justify-content: center;
 }
@@ -97,7 +97,7 @@ background-color: #78ae39;
   margin-bottom: 5px;
   color: white;
    width: 250px;
-   margin-left: 210px;
+   margin-left: 224px;
   border-radius: 2px;
   font-size: 14px;
 }
