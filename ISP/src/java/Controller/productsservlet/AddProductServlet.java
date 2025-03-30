@@ -64,7 +64,7 @@ public class AddProductServlet extends HttpServlet {
         String[] zoneIDs = request.getParameterValues("zoneIDs"); // Get all zoneIDs
         
         if ( "".equals(productName) || "".equals(description) || "".equals(priceParam) || filePart == null || zoneIDs == null) {
-            request.setAttribute("message", "Hãy xem lại!");
+            request.setAttribute("errorMessage", "Hãy xem lại!");
             RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/AddProduct.jsp");
             dispatcher.forward(request, response);
             return;

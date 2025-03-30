@@ -59,69 +59,82 @@ public class AnalysisServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-         DAOAnalysis dao = new DAOAnalysis();
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    try {
+        DAOAnalysis dao = new DAOAnalysis();
         HttpSession session = request.getSession();
-    // Lấy ngày hiện tại làm mặc định
-    LocalDate today = LocalDate.now();
-    String startDate = today.withDayOfMonth(1).toString(); // Ngày đầu tháng
-    String endDate = today.toString(); // Ngày hiện tại
-    String chartType = "daily"; // Mặc định biểu đồ theo ngày
-     Users user = (Users) session.getAttribute("user");
-    
-    request.setAttribute("user", user);
-    String filter = request.getParameter("filter");
-    // Lấy tham số từ request
-    String startParam = request.getParameter("startDate");
-    String endParam = request.getParameter("endDate");
 
-    if (startParam != null && !startParam.isEmpty() && endParam != null && !endParam.isEmpty()) {
-        startDate = startParam;
-        endDate = endParam;
-    }
-    
-     // Xử lý lọc theo loại
-    if ("today".equals(filter)) {
-        startDate = today.toString();
-        endDate = today.toString();
-        chartType = "daily"; // Biểu đồ theo ngày
-    } else if ("week".equals(filter)) {
-        startDate = today.minusDays(today.getDayOfWeek().getValue() - 1).toString(); // Đầu tuần
-        endDate = today.toString(); // Ngày hiện tại
-        chartType = "weekly"; // Biểu đồ theo tuần
-    } else if ("month".equals(filter)) {
-        startDate = today.withDayOfMonth(1).toString(); // Đầu tháng
-        endDate = today.toString(); // Ngày hiện tại
-        chartType = "daily"; // Biểu đồ theo ngày trong tháng
-    } else if ("year".equals(filter)) {
-        startDate = today.withDayOfYear(1).toString(); // Đầu năm
-        endDate = today.toString(); // Ngày hiện tại
-        chartType = "monthly"; // Biểu đồ theo tháng trong năm
-    }
-   
-    
-    // Lấy dữ liệu từ DAO
-    double totalRevenue = dao.getRevenueByDateRange(startDate, endDate);
-    int totalOrders = dao.getTotalOrdersByDateRange(startDate, endDate);
-    List<Integer> monthlyRevenue = dao.getMonthlyRevenue(today.getYear());
-    List<Integer> weeklyRevenue = dao.getWeeklyRevenue(today.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
-    List<Integer> dailyRevenue = dao.getFilteredMonthlyRevenue(startDate, endDate);
-    List<Map<String, Object>> topProducts = dao.getTop3SellingProductsByDateRange(startDate, endDate);
+        // Kiểm tra người dùng đăng nhập
+        Users user = (Users) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect("login.jsp"); // Chuyển hướng đến trang đăng nhập
+            return;
+        }
+        request.setAttribute("user", user);
 
-    // Gửi dữ liệu đến JSP
-    request.setAttribute("totalRevenue", totalRevenue);
-    request.setAttribute("totalOrders", totalOrders);
-    request.setAttribute("monthlyRevenue", monthlyRevenue);
-    request.setAttribute("weeklyRevenue", weeklyRevenue);
-    request.setAttribute("dailyRevenue", dailyRevenue);
-    request.setAttribute("topProducts", topProducts);
-    request.setAttribute("startDate", startDate);
-    request.setAttribute("endDate", endDate);
-    request.setAttribute("chartType", chartType);
+        // Lấy ngày hiện tại làm mặc định
+        LocalDate today = LocalDate.now();
+        String startDate = today.withDayOfMonth(1).toString(); // Ngày đầu tháng
+        String endDate = today.toString(); // Ngày hiện tại
+        String chartType = "daily"; // Mặc định biểu đồ theo ngày
 
-    request.getRequestDispatcher("AnalysisManager/AnalysisDashboard.jsp").forward(request, response);
-    }
+        String filter = request.getParameter("filter");
+        String startParam = request.getParameter("startDate");
+        String endParam = request.getParameter("endDate");
+
+        if (startParam != null && !startParam.isEmpty() && endParam != null && !endParam.isEmpty()) {
+            startDate = startParam;
+            endDate = endParam;
+        }
+
+        // Xử lý lọc theo loại
+        if ("today".equals(filter)) {
+            startDate = today.toString();
+            endDate = today.toString();
+            chartType = "daily";
+        } else if ("week".equals(filter)) {
+            startDate = today.minusDays(today.getDayOfWeek().getValue() - 1).toString();
+            endDate = today.toString();
+            chartType = "weekly";
+        } else if ("month".equals(filter)) {
+            startDate = today.withDayOfMonth(1).toString();
+            endDate = today.toString();
+            chartType = "daily";
+        } else if ("year".equals(filter)) {
+            startDate = today.withDayOfYear(1).toString();
+            endDate = today.toString();
+            chartType = "monthly";
+        } else if (filter != null) {
+            throw new IllegalArgumentException("Lọc không hợp lệ: " + filter);
+        }
+
+        // Lấy dữ liệu từ DAO
+        double totalRevenue = dao.getRevenueByDateRange(startDate, endDate);
+        int totalOrders = dao.getTotalOrdersByDateRange(startDate, endDate);
+        List<Integer> monthlyRevenue = dao.getMonthlyRevenue(today.getYear());
+        List<Integer> weeklyRevenue = dao.getWeeklyRevenue(today.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()));
+        List<Integer> dailyRevenue = dao.getFilteredMonthlyRevenue(startDate, endDate);
+        List<Map<String, Object>> topProducts = dao.getTop3SellingProductsByDateRange(startDate, endDate);
+
+        // Gửi dữ liệu đến JSP
+        request.setAttribute("totalRevenue", totalRevenue);
+        request.setAttribute("totalOrders", totalOrders);
+        request.setAttribute("monthlyRevenue", monthlyRevenue);
+        request.setAttribute("weeklyRevenue", weeklyRevenue);
+        request.setAttribute("dailyRevenue", dailyRevenue);
+        request.setAttribute("topProducts", topProducts);
+        request.setAttribute("startDate", startDate);
+        request.setAttribute("endDate", endDate);
+        request.setAttribute("chartType", chartType);
+
+        request.getRequestDispatcher("AnalysisManager/AnalysisDashboard.jsp").forward(request, response);
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.getRequestDispatcher("logout").forward(request, response);
+            return;    }
+}
+
 
     /**
      * Handles the HTTP <code>POST</code> method.
