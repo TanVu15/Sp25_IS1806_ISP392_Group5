@@ -34,12 +34,13 @@ public class UpdateUserServlet extends HttpServlet {
         request.setAttribute("password", "");
         request.setAttribute("password2", "");
         request.setAttribute("fullname", "");
-        int userid = Integer.parseInt(request.getParameter("id"));
+        
         //authen
         HttpSession session = request.getSession();
         Users userSession = (Users) session.getAttribute("user");
 
         try {
+            int userid = Integer.parseInt(request.getParameter("id"));
             Users user = dao.getUserByID(userid);
             try {
                 int sessionRole = userSession.getRoleid(); // Role của người đang thao tác

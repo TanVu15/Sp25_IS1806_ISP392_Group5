@@ -64,10 +64,10 @@ public class UpdateZoneServlet extends HttpServlet {
         DAOZones dao = new DAOZones();
 
         HttpSession session = request.getSession();
-
-        int zoneId = Integer.parseInt(request.getParameter("id"));
+        
 
         try {
+            int zoneId = Integer.parseInt(request.getParameter("id"));
             Zones zone = dao.getZonesByID(zoneId);
             Shops shop = (Shops) session.getAttribute("shop");
             if (shop.getID() != zone.getShopID()) {

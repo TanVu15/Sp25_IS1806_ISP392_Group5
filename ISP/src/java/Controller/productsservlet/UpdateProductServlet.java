@@ -25,9 +25,10 @@ public class UpdateProductServlet extends HttpServlet {
             throws ServletException, IOException {
         DAOProducts dao = DAOProducts.INSTANCE;
         HttpSession session = request.getSession();
-        int productId = Integer.parseInt(request.getParameter("id"));
 
         try {
+            int productId = Integer.parseInt(request.getParameter("id"));
+
             Products product = dao.getProductByID(productId);
 
             int shopid = product.getShopID();
@@ -49,37 +50,37 @@ public class UpdateProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        try{
-        int productId = Integer.parseInt(request.getParameter("id"));
+        try {
+            int productId = Integer.parseInt(request.getParameter("id"));
             String productName = request.getParameter("productName");
             String description = request.getParameter("description");
             Part filePart = request.getPart("image");
-        int price = Integer.parseInt(request.getParameter("price"));
-        String[] zoneIDs = request.getParameterValues("zoneIDs"); // Lấy danh sách ID khu vực
+            int price = Integer.parseInt(request.getParameter("price"));
+            String[] zoneIDs = request.getParameterValues("zoneIDs"); // Lấy danh sách ID khu vực
 
-        if ( "".equals(productName) || zoneIDs == null) {
+            if ("".equals(productName) || zoneIDs == null) {
                 request.setAttribute("message", "Hãy xem lại!");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/UpdateProduct.jsp");
-            dispatcher.forward(request, response);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("ProductsManager/UpdateProduct.jsp");
+                dispatcher.forward(request, response);
                 return;
             }
 
-        // Lấy đường dẫn thư mục ảnh
+            // Lấy đường dẫn thư mục ảnh
             String imageDirectory = getServletContext().getRealPath("/Image/");
             String imageLink = "";
 
-        // Lưu ảnh vào thư mục nếu có
+            // Lưu ảnh vào thư mục nếu có
             if (filePart != null && filePart.getSize() > 0) {
                 String fileName = filePart.getSubmittedFileName();
                 File dir = new File(imageDirectory);
-            if (!dir.exists()) {
-                dir.mkdir();
+                if (!dir.exists()) {
+                    dir.mkdir();
                 }
                 File file = new File(dir, fileName);
                 filePart.write(file.getAbsolutePath());
-            imageLink = "Image/" + fileName; // Đường dẫn lưu trữ ảnh
+                imageLink = "Image/" + fileName; // Đường dẫn lưu trữ ảnh
             } else {
-            imageLink = request.getParameter("currentImageLink"); // Giữ ảnh cũ
+                imageLink = request.getParameter("currentImageLink"); // Giữ ảnh cũ
             }
 
             // Lấy thông tin sản phẩm cũ

@@ -23,9 +23,10 @@ public class UpdateOrdersServlet extends HttpServlet {
             throws ServletException, IOException {
         DAOOrders dao = DAOOrders.INSTANCE;
         HttpSession session = request.getSession();
-        int orderId = Integer.parseInt(request.getParameter("id"));
+        
 
         try {
+            int orderId = Integer.parseInt(request.getParameter("id"));
             Orders order = dao.getOrderByID(orderId);
             request.setAttribute("order", order);
             request.getRequestDispatcher("OrdersManager/UpdateOrders.jsp").forward(request, response);

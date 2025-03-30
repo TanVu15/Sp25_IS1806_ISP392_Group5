@@ -47,11 +47,12 @@ public class UpdateCustomerServlet extends HttpServlet {
         request.setAttribute("user", user);
         ArrayList<Customers> customers = dao.getAllCustomers();
         request.setAttribute("customers", customers);
-        int customerid = Integer.parseInt(request.getParameter("id"));
+        
         
 
         //authen
         try {
+            int customerid = Integer.parseInt(request.getParameter("id"));
             Customers cus = dao.getCustomersByID(customerid);
             Shops shop = (Shops) session.getAttribute("shop");
             if (shop.getID() != cus.getShopID() || cus == null || user.getRoleid()!= 2) {
