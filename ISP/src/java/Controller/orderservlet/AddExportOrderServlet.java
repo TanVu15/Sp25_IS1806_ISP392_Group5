@@ -1,10 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controller.orderservlet;
 
-import Controller.customerservlet.ListCustomersServlet;
 import dal.DAOCustomers;
 import dal.DAODebtRecords;
 import dal.DAOOrderItem;
@@ -31,21 +26,8 @@ import model.Products;
 import model.Users;
 import model.Zones;
 
-/**
- *
- * @author ADMIN
- */
 public class AddExportOrderServlet extends HttpServlet {
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -62,20 +44,16 @@ public class AddExportOrderServlet extends HttpServlet {
             return;
         }
 
-        // Lấy trang hiện tại từ tham số URL, mặc định là 1
         int currentPage = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-        int productsPerPage = 5; // Số sản phẩm trên mỗi trang
+        int productsPerPage = 5;
 
         ArrayList<Customers> customers = dao1.getCustomersByPage(currentPage, productsPerPage, user.getShopID());
         request.setAttribute("customers", customers);
 
-        // Lấy tổng số sản phẩm cho shop hiện tại
         int totalProducts = dao2.getTotalProductsByShopId(user.getShopID());
         int totalPages = (int) Math.ceil((double) totalProducts / productsPerPage);
 
-        // Lấy danh sách sản phẩm cho trang hiện tại
         ArrayList<Products> products = dao2.getProductsByPage(currentPage, productsPerPage, user.getShopID());
-        //ArrayList<Products> products = dao2.getAllProductsByShopId(user.getShopID());
         request.setAttribute("products", products);
 
         DAOZones zoneDAO = new DAOZones();
@@ -89,22 +67,14 @@ public class AddExportOrderServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("user");
+
         if (user == null) {
             response.sendRedirect("login");
             return;
@@ -115,6 +85,7 @@ public class AddExportOrderServlet extends HttpServlet {
         DAOProducts dao2 = new DAOProducts();
         DAOOrderItem dao3 = new DAOOrderItem();
         DAOZones dao4 = new DAOZones();
+
         try {
             int shopID = user.getShopID();
             int customerID = Integer.parseInt(request.getParameter("customerId"));
@@ -122,10 +93,26 @@ public class AddExportOrderServlet extends HttpServlet {
             String orderTypeStr = request.getParameter("orderType");
             String paymentStatus = request.getParameter("paymentStatus");
 
-            if (totalCostRaw == null || totalCostRaw.trim().isEmpty()
-                    || orderTypeStr == null || orderTypeStr.trim().isEmpty()) {
+            String[] productIDs = request.getParameterValues("productID");
+            String[] productNames = request.getParameterValues("productName");
+            String[] quantities = request.getParameterValues("quantity");
+            String[] prices = request.getParameterValues("price");
+            String[] specs = request.getParameterValues("spec");
+            String[] unitPrices = request.getParameterValues("unitPrice");
+
+            // **Kiểm tra dữ liệu đầu vào trước khi xử lý**
+            if (totalCostRaw == null || totalCostRaw.trim().isEmpty() ||
+                orderTypeStr == null || orderTypeStr.trim().isEmpty() ||
+                productIDs == null || productIDs.length == 0 ||
+                productNames == null || productNames.length == 0 ||
+                quantities == null || quantities.length == 0 ||
+                prices == null || prices.length == 0 ||
+                specs == null || specs.length == 0 ||
+                unitPrices == null || unitPrices.length == 0) {
+
+                // **Nếu có bất kỳ trường nào bị thiếu, load lại trang tạo hóa đơn với thông báo lỗi**
                 request.setAttribute("message", "Vui lòng nhập đầy đủ thông tin hóa đơn.");
-                request.getRequestDispatcher("OrdersManager/AddExportOrder.jsp").forward(request, response);
+                doGet(request, response); // Sử dụng doGet để load lại dữ liệu cần thiết
                 return;
             }
 
@@ -168,17 +155,9 @@ public class AddExportOrderServlet extends HttpServlet {
                     DAODebtRecords.INSTANCE.AddDebtRecords(debtRecord, user.getID());
                 }
             }
-            String[] productIDs = request.getParameterValues("productID");
-            String[] productNames = request.getParameterValues("productName");
-            String[] quantities = request.getParameterValues("quantity");
-            String[] prices = request.getParameterValues("price");
-            String[] specs = request.getParameterValues("spec");
-            String[] unitPrices = request.getParameterValues("unitPrice");
 
-            if (productNames == null || quantities == null || prices == null || specs == null || unitPrices == null || productIDs == null) {
-                out.println("<h3 style='color:red;'>Lỗi: Dữ liệu sản phẩm không đầy đủ.</h3>");
-                return;
-            }
+
+
             for (int i = 0; i < productNames.length; i++) {
                 try {
                     int productID = Integer.parseInt(productIDs[i]);
@@ -204,34 +183,29 @@ public class AddExportOrderServlet extends HttpServlet {
                     dao2.updateProductQuantitydecre(productName, quantity*spec, user.getShopID());
 
                 } catch (NumberFormatException e) {
-                    out.println("<h3 style='color:red;'>Lỗi định dạng số ở sản phẩm thứ " + (i + 1) + ": " + e.getMessage() + "</h3>");
+                    request.setAttribute("message", "Lỗi định dạng số ở sản phẩm thứ " + (i + 1) + ": " + e.getMessage());
+                    doGet(request, response); // Load lại trang với thông báo lỗi
                     return;
                 }
             }
 
-            // Nếu thành công, thông báo và chuyển hướng
-            out.println("<h3 style='color:green;'>Thêm đơn hàng thành công!</h3>");
             response.sendRedirect("listorders");
 
         } catch (NumberFormatException e) {
-            out.println("<h3 style='color:red;'>Lỗi: Dữ liệu đầu vào bị thiếu." + e.getMessage() + "</h3>");
+           request.setAttribute("message", "Vui lòng nhập đúng định dạng số.");
+            doGet(request, response);
             return;
-
-        } catch (Exception e) {
-            out.println("<h3 style='color:red;'>Lỗi hệ thống: " + e.getMessage() + "</h3>");
-            e.printStackTrace(out);
+        }
+         catch (Exception e) {
+            request.setAttribute("message", "Lỗi hệ thống: " + e.getMessage());
+            e.printStackTrace();
+            doGet(request, response); // Load lại trang với thông báo lỗi
             return;
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

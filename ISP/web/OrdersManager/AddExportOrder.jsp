@@ -328,27 +328,6 @@ Author     : ADMIN
         </div>
     </form>
 
-    <!-- Popup thêm khách hàng mới -->
-    <div id="addCustomerPopup" class="popup">
-        <span class="close" onclick="closeAddCustomerPopup()">×</span>
-        <h2>Thêm khách hàng mới</h2>
-
-        <form id="addCustomerForm">
-            <label for="newCustomerName">Tên khách hàng:</label>
-            <input type="text" id="newCustomerName" name="name" placeholder="Nhập tên khách hàng" required>
-
-            <label for="newCustomerPhone">Số điện thoại:</label>
-            <input type="number" id="newCustomerPhone" name="phone" placeholder="Nhập số điện thoại" required>
-
-            <label for="newCustomerAddress">Địa chỉ:</label>
-            <input type="text" id="newCustomerAddress" name="address" placeholder="Nhập địa chỉ" required>
-            <!-- Các input ẩn để Servlet nhận đủ dữ liệu -->
-            <input type="hidden" name="bankacc" value="">
-
-            <button type="button" onclick="saveNewCustomer()" class="submit-button">Lưu</button>
-        </form>
-    </div>
-
     <script>
         function addProductToOrder(productID, productName, price, availableQuantity, spec, unitPrice) {
             // Kiểm tra nếu sản phẩm hết hàng
@@ -526,54 +505,7 @@ Author     : ADMIN
             document.getElementById('remainingAmount').value = formatNumberVND(remainingAmount);
         }
 
-        function openAddCustomerPopup() {
-            $("#addCustomerPopup").show();
-        }
-
-        function closeAddCustomerPopup() {
-            $("#addCustomerPopup").hide();
-        }
-
-        function saveNewCustomer() {
-            let name = $("#newCustomerName").val().trim();
-            let phone = $("#newCustomerPhone").val().trim();
-            let address = $("#newCustomerAddress").val().trim();
-
-            if (name === "" || phone === "") {
-                alert("Vui lòng nhập đầy đủ thông tin!");
-                return;
-            }
-
-            // Tạo object chứa đầy đủ dữ liệu theo yêu cầu của Servlet
-            let customerData = {
-                name: name,
-                phone: phone,
-                address: address,
-                bankacc: "", // Giá trị mặc định
-            };
-
-            // Gửi dữ liệu lên server để lưu khách hàng mới
-            $.ajax({
-                url: "addcustomer",
-                type: "POST",
-                data: customerData,
-                success: function (response) {
-                    // Kiểm tra nội dung phản hồi từ Servlet
-                    // Tạo một thẻ div ẩn để chứa response HTML
-                    let tempDiv = $("<div>").html(response);
-                    // Kiểm tra xem có thông báo thành công hay không
-                    if (tempDiv.find("#successMessage").length > 0) {
-                        alert("Khách hàng đã được thêm!");
-                        closeAddCustomerPopup();
-                    } else if (tempDiv.find("#errorMessage").length > 0) {
-                        alert("Lỗi khi thêm khách hàng!");
-                    } else {
-                        alert("Không tìm thấy phản hồi từ server!");
-                    }
-                },
-            });
-        }
-
+       
         // Khởi tạo khi load trang
         $(document).ready(function () {
             // Sự kiện khi nhập số tiền trả
